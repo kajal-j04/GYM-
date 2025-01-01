@@ -33,7 +33,7 @@
 
     <!-- container div -->
 
-    <div class="container">
+    <div class="container glass">
  
 
         <!-- upper button section to select
@@ -44,9 +44,9 @@
 
         <div class="btn">
 
-            <button class="login">Login</button>
+            <button id="login" class="login">Login</button>
 
-            <button class="signup">Signup</button>
+            <button id="signup" class="signup">Signup</button>
 
         </div>
  
@@ -94,6 +94,20 @@
                        class="email ele"
 
                        placeholder="youremail@email.com">
+
+                <div style="display:flex">
+
+                    <input 
+                        id="phone-no"
+                        class="phone-no ele",
+
+                        minlength="10"
+                        maxlength="10"
+
+                        onkeydown="validateNumber(event)"
+
+                        placeholder="9876543210">
+                </div>
 
                 <input type="password"
 

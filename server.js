@@ -25,20 +25,26 @@ const userSchema = new mongoose.Schema({
     name: String,
     email: { type: String, unique: true },
     password: String,
+    phoneNo: Number
 });
 
 const User = mongoose.model('User', userSchema);
 
 // Routes
 app.post('/signup', async (req, res) => {
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, password, confirmPassword, phoneNo } = req.body;
 
     if (password !== confirmPassword) {
         return res.status(400).json({ message: 'Passwords do not match!' });
     }
 
     try {
-        const user = new User({ name, email, password });
+        const user = new User({ name, email, password, phoneNo });
+        const isPresent = await User.findOne({ email: email })
+        if(isPresent){
+            res.status(400).json({message: 'User already exists.'});
+            return;
+        }
         await user.save();
         res.status(200).json({ message: 'Signup successful!' });
     } catch (err) {
