@@ -1,22 +1,77 @@
 
 function validateNumber(event) {
     const key = event.key; // Get the key that was pressed
-  
+
     // Allow backspace, delete, arrows, and control keys like Tab
     if (key === "Backspace" || key === "Delete" || key === "ArrowLeft" || key === "ArrowRight" || key === "Tab" || key === "Enter") {
-      return; // Do nothing, let the action happen
+        return; // Do nothing, let the action happen
     }
-  
+
     // Check if the pressed key is a valid number (0-9)
     if (!/^[0-9]$/.test(key)) {
-      event.preventDefault(); // If it's not a number, prevent the input
+        event.preventDefault(); // If it's not a number, prevent the input
     }
-  }
+}
+
+function showAlert(message, type) {
+    document.getElementById("alertModal").style.display = "flex";
+    document.getElementById("alertType").textContent = type;
+    document.getElementById("alertMessage").textContent = message
+    if(type==="ERROR"){
+        document.getElementById("okBtn").style.backgroundColor="#d32f2f"
+    } else {
+        document.getElementById("okBtn").style.backgroundColor="#45a049"
+    }
+}
+
+// Function to close the alert
+function closeAlert() {
+    document.getElementById("alertModal").style.display = "none";
+    const msg = document.getElementById("alertMessage").textContent;
+    if(msg === "Signup successful!"){
+        window.location.href = './login_index.html';
+    }
+    if(msg === "Login successful!"){
+        window.location.href = './dashboard.html';
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const loginBtn = document.querySelector('.login');
     const signupBtn = document.querySelector('.signup');
     const loginBox = document.querySelector('.login-box');
     const signupBox = document.querySelector('.signup-box');
+
+    // Close the alert if the user clicks outside of the modal content
+    window.onclick = function (event) {
+        if (event.target == document.getElementById("alertModal")) {
+            closeAlert();
+        }
+    }
+
+    function validateEmail(email) {
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return emailPattern.test(email);
+    }
+    function validateString(str) {
+        if(str.length>20) return false;
+        const pattern = /^[A-Za-z]+(\s[A-Za-z]+)*$/; // Only alphabets, spaces allowed between words
+        return pattern.test(str);
+    }
+    function validatePhone(str) {
+        if (str.length < 10) {
+            return false;
+        }
+        return true;
+    }
+    function validateDate(date) {
+        var currDate = new Date().toLocaleDateString("en-CA");
+        if (date < currDate) {
+            return false;
+        }
+        return true;
+    }
 
     // Switch to Login form
     loginBtn.addEventListener('click', function () {
@@ -42,40 +97,16 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({ email, password }),
         })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            if (data.message === 'Login successful!') {
-                window.location.href = './dashboard.html'; // Redirect after successful login
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Error logging in!');
-        });
+            .then(response => response.json())
+            .then(data => {
+                showAlert(data.message,"SUCCESS");
+            })
+            .catch(err => {
+                console.error(err);
+                showAlert('Error logging in!',"ERROR");
+            });
     });
-    function validateEmail(email) {
-        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return emailPattern.test(email);
-    }
-    function validateString(str) {
-        const pattern = /^[A-Za-z]+(\s[A-Za-z]+)*$/; // Only alphabets, spaces allowed between words
-        return pattern.test(str);
-    }
-    function validatePhone(str) {
-        if(str.length<10){
-            return false;
-        }
-        return true;
-    }
-    function validateDate(date) {
-        var currDate = new Date().toLocaleDateString("en-CA");
-        if(date < currDate){
-            return false;
-        }
-        return true;
-    }
-    
+
     // Handle Signup form submission
     document.querySelector('.signup-box .clkbtn').addEventListener('click', function () {
         const name = document.querySelector('.signup-box .name').value;
@@ -85,25 +116,25 @@ document.addEventListener('DOMContentLoaded', function () {
         const phoneNo = document.querySelector('.signup-box .phone-no').value;
         const date = document.querySelector('.signup-box .date').value;
         if (!validateEmail(email)) {
-            alert("Please enter a valid email address.");
+            showAlert("Please enter a valid email address.","ERROR");
             return;
-        }  
+        }
         if (!validateString(name)) {
-            alert("Please enter a valid name.");
+            showAlert("Please enter valid alphabets with less than 20 charcters","ERROR");
             return;
-        }  
+        }
         if (!validatePhone(phoneNo)) {
-            alert("Please enter a valid 10 digit phoneNo.");
+            showAlert("Please enter a valid 10 digit phoneNo.","ERROR");
             return;
-        }  
+        }
         if (!validateDate(date)) {
-            alert("Date should be greater than current date");
+            showAlert("Date should be greater than current date","ERROR");
             return;
-        }  
+        }
 
         // Check if the confirmPassword field exists and if passwords match
-        if ( password !== confirmPassword) {
-            alert("Passwords do not match!");
+        if ((!password || !confirmPassword) || password !== confirmPassword) {
+            showAlert("Passwords do not match!","ERROR");
             return; // Exit the function if passwords don't match
         }
 
@@ -112,19 +143,16 @@ document.addEventListener('DOMContentLoaded', function () {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, email, password,confirmPassword, phoneNo, date}),
+            body: JSON.stringify({ name, email, password, confirmPassword, phoneNo, date }),
         })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            if (data.message === 'Signup successful!') {
-                window.location.href = './login_index.html'; // Redirect to login page after successful signup
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Error signing up!');
-        });
+            .then(response => response.json())
+            .then(data => {
+                showAlert("Signup successful!","SUCCESS");
+            })
+            .catch(err => {
+                console.error(err);
+                showAlert("Error signing up!","ERROR");
+            });
     });
 
     var login = document.getElementById("login");
@@ -132,18 +160,18 @@ document.addEventListener('DOMContentLoaded', function () {
     var slider = document.getElementsByClassName("slider")[0];
     var loginActive = true;
 
-    login.addEventListener('click',()=>{
+    login.addEventListener('click', () => {
         slider.classList.add("slide-left");
-        setTimeout(()=>{
+        setTimeout(() => {
             slider.classList.remove("slide-right")
-        },100)
+        }, 100)
     })
 
-    signup.addEventListener('click',()=>{
+    signup.addEventListener('click', () => {
         slider.classList.add("slide-right")
-        setTimeout(()=>{
+        setTimeout(() => {
             slider.classList.remove("slide-left")
-        },100)
+        }, 100)
     })
 
 });
