@@ -572,3 +572,53 @@ header {
     background-color: #45a049;
 }
 
+
+/* Default Light Theme */
+body {
+    background-color: #ffffff;
+    color: #333;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+button.theme-toggle {
+    background-color: transparent;
+    border: none;
+    font-size: 60px;
+    cursor: pointer;
+    padding: 10px;
+    position: fixed;
+    bottom: 20px; /* Distance from the bottom */
+    left: 20px;   /* Distance from the left */
+    z-index: 9999; /* Ensure the button stays above other content */
+}
+
+button.theme-toggle:focus {
+    outline: none;
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+    background-color: #091919;
+    color: #f9f9f9;
+}
+
+body.dark-theme .theme-toggle .icon {
+    content: "🌞"; /* Sun icon for Dark theme */
+}
+
+/* Light Theme Styles */
+body.light-theme {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+body.light-theme .theme-toggle .icon {
+    content: "🌙"; /* Moon icon for Light theme */
+}
+

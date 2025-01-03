@@ -36,6 +36,19 @@ function closeAlert() {
     }
 }
 
+function toggleTheme() {
+    if (document.body.classList.contains("light-theme")) {
+        document.body.classList.remove("light-theme");
+        document.body.classList.add("dark-theme");
+        document.getElementById("themeIcon").textContent = "🌞"; // Sun icon for dark theme
+        localStorage.setItem("theme", "dark"); // Save the theme to localStorage
+    } else {
+        document.body.classList.remove("dark-theme");
+        document.body.classList.add("light-theme");
+        document.getElementById("themeIcon").textContent = "🌙"; // Moon icon for light theme
+        localStorage.setItem("theme", "light"); // Save the theme to localStorage
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginBtn = document.querySelector('.login');
@@ -48,6 +61,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target == document.getElementById("alertModal")) {
             closeAlert();
         }
+    }
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-theme");
+        document.getElementById("themeIcon").textContent = "🌞"; // Sun icon for dark theme
+    } else {
+        document.body.classList.add("light-theme");
+        document.getElementById("themeIcon").textContent = "🌙"; // Moon icon for light theme
     }
 
     function validateEmail(email) {
