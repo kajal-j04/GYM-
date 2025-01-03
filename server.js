@@ -25,10 +25,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/minnat_vigour_gym', {
 
 // Mongoose Schema
 const userSchema = new mongoose.Schema({
-    name: String,
+    name: { type: String, unique: true },
     email: { type: String, unique: true },
     password: String,
-    phoneNo: Number,
+    phoneNo: { type: Number, unique: true },
     date: String
 });
 
@@ -44,9 +44,19 @@ app.post('/signup', async (req, res) => {
 
     try {
         const user = new User({ name, email, password, phoneNo, date });
-        const isPresent = await User.findOne({ email: email })
-        if (isPresent) {
-            res.status(400).json({ message: 'User already exists.' });
+        const isEmailPresent = await User.findOne({ email: email })
+        const isNamePresent = await User.findOne({ name })
+        const isNoPresent = await User.findOne({ phoneNo })
+        if (isEmailPresent) {
+            res.status(400).json({ message: 'Email already exists.' });
+            return;
+        }
+        if (isNamePresent) {
+            res.status(400).json({ message: 'Name already exists.' });
+            return;
+        }
+        if (isNoPresent) {
+            res.status(400).json({ message: 'Phone No already exists.' });
             return;
         }
         await user.save();

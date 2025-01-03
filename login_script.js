@@ -120,7 +120,11 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => response.json())
             .then(data => {
-                showAlert(data.message,"SUCCESS");
+                const msg = data.message
+                if(msg === "Login successful!")
+                    showAlert(msg,"SUCCESS");
+                else 
+                    showAlert(msg,"ERROR");
             })
             .catch(err => {
                 console.error(err);
@@ -168,11 +172,14 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => response.json())
             .then(data => {
-                showAlert("Signup successful!","SUCCESS");
+                const msg = data.message
+                if(msg === "Signup successful!")
+                    showAlert(msg,"SUCCESS");
+                else 
+                    showAlert(msg,"ERROR");
             })
             .catch(err => {
-                console.error(err);
-                showAlert("Error signing up!","ERROR");
+                showAlert(err.message,"ERROR");
             });
     });
 

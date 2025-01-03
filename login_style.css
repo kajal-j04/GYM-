@@ -15,7 +15,9 @@
  
 body {
 
-    height: 100vh;
+    height: 100%;
+
+    overflow: scroll;
 
     width: 100vw;
 
@@ -590,12 +592,12 @@ body {
 button.theme-toggle {
     background-color: transparent;
     border: none;
-    font-size: 60px;
+    font-size: 30px;
     cursor: pointer;
     padding: 10px;
     position: fixed;
-    bottom: 20px; /* Distance from the bottom */
-    left: 20px;   /* Distance from the left */
+    top: 10px; /* Distance from the bottom */
+    left: 10px;   /* Distance from the left */
     z-index: 9999; /* Ensure the button stays above other content */
 }
 
