@@ -68,6 +68,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return true;
     }
+    function validateDate(date) {
+        var currDate = new Date().toLocaleDateString("en-CA");
+        if(date < currDate){
+            return false;
+        }
+        return true;
+    }
     
     // Handle Signup form submission
     document.querySelector('.signup-box .clkbtn').addEventListener('click', function () {
@@ -76,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const password = document.querySelector('.signup-box .password').value;
         const confirmPassword = document.querySelector('.signup-box .confirm-password')?.value; // Using optional chaining
         const phoneNo = document.querySelector('.signup-box .phone-no').value;
+        const date = document.querySelector('.signup-box .date').value;
         if (!validateEmail(email)) {
             alert("Please enter a valid email address.");
             return;
@@ -86,6 +94,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }  
         if (!validatePhone(phoneNo)) {
             alert("Please enter a valid 10 digit phoneNo.");
+            return;
+        }  
+        if (!validateDate(date)) {
+            alert("Date should be greater than current date");
             return;
         }  
 
@@ -100,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, email, password,confirmPassword, phoneNo}),
+            body: JSON.stringify({ name, email, password,confirmPassword, phoneNo, date}),
         })
         .then(response => response.json())
         .then(data => {

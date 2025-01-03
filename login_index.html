@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 
 <html lang="en">
- 
+
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-
-          content="width=device-width, 
+    <meta name="viewport" content="width=device-width, 
 
                          initial-scale=1.0">
 
     <title>kalyan's GYM</title>
 
-    <link rel="stylesheet"
-
-          href="login_style.css">
+    <link rel="stylesheet" href="login_style.css">
 
 </head>
- 
+
 
 <body>
 
@@ -29,12 +25,12 @@
         <h1 class="heading">Kalyan's GYM</h1>
 
     </header>
- 
+
 
     <!-- container div -->
 
     <div class="container glass">
- 
+
 
         <!-- upper button section to select
 
@@ -49,77 +45,44 @@
             <button id="signup" class="signup">Signup</button>
 
         </div>
- 
+
 
         <!-- Form section that contains the
 
              login and the signup form -->
 
         <div class="form-section">
- 
+
 
             <!-- login form -->
 
             <div class="login-box">
 
-                <input type="email"
+                <input type="email" class="email ele" placeholder="youremail@email.com">
 
-                       class="email ele"
-
-                       placeholder="youremail@email.com">
-
-                <input type="password"
-
-                       class="password ele"
-
-                       placeholder="password">
+                <input type="password" class="password ele" placeholder="password">
 
                 <button class="clkbtn">Login</button>
 
             </div>
- 
+
 
             <!-- signup form -->
 
             <div class="signup-box">
 
-                <input type="text"
+                <input type="text" class="name ele" placeholder="Enter your name">
 
-                       class="name ele"
+                <input type="email" class="email ele" placeholder="youremail@email.com">
 
-                       placeholder="Enter your name">
+                <input id="phone-no" class="phone-no ele" minlength="10" maxlength="10"
+                    onkeydown="validateNumber(event)" placeholder="9876543210">
 
-                <input type="email"
+                <input type="date" id="date" class="date ele" placeholder="2000-01-01">
 
-                       class="email ele"
+                <input type="password" class="password ele" placeholder="password">
 
-                       placeholder="youremail@email.com">
-
-                <div style="display:flex">
-
-                    <input 
-                        id="phone-no"
-                        class="phone-no ele",
-
-                        minlength="10"
-                        maxlength="10"
-
-                        onkeydown="validateNumber(event)"
-
-                        placeholder="9876543210">
-                </div>
-
-                <input type="password"
-
-                       class="password ele"
-
-                       placeholder="password">
-
-                <input type="password"
-
-                       class="confirm-password ele"
-
-                       placeholder="Confirm password">
+                <input type="password" class="confirm-password ele" placeholder="Confirm password">
 
                 <button class="clkbtn">Signup</button>
 
@@ -132,7 +95,6 @@
     <script src="login_script.js"></script>
 
 </body>
- 
+
 
 </html>
- 
