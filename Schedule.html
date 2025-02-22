@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalyan's Gym</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            height: 100%;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+            backdrop-filter: blur(5px);
+            background-color: #091919;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .heading {
+            color: #29a396;
+            font-size: 80px;
+            text-align: center;
+        }
+
+        .container {
+            height: 850px;
+            width: 550px;
+            background-color: white;
+            box-shadow: 8px 8px 20px rgb(128, 128, 128);
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .btn {
+            height: 60px;
+            width: 320px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .schedule-btn {
+            height: 50px;
+            width: 200px;
+            border-radius: 30px;
+            background-color: #29a396;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(41, 163, 150, 0.4);
+        }
+
+        .schedule-btn:hover {
+            background-color: #3be0c4;
+            box-shadow: 0 6px 15px rgba(59, 224, 196, 0.5);
+            transform: scale(1.05);
+        }
+
+        .schedule-btn:active {
+            transform: scale(0.98);
+            box-shadow: none;
+        }
+
+        .form-section {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .Schedule-box {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .field {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            font-size: 18px;
+            color: #29a396;
+            margin-bottom: 8px;
+            display: block;
+            text-align: left;
+        }
+
+        .ele {
+            height: 50px;
+            width: 100%;
+            outline: none;
+            border: none;
+            background-color: rgb(240, 240, 240);
+            border-radius: 50px;
+            padding-left: 20px;
+            font-size: 16px;
+        }
+
+        .clkbtn {
+            height: 50px;
+            width: 100%;
+            border-radius: 50px;
+            background-color: #29a396;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clkbtn:hover {
+            background-color: #3be0c4;
+            box-shadow: 0 4px 15px rgba(41, 163, 150, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Cancel Button Styling */
+        .cancelbtn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 16px;
+            border-radius: 50px;
+        }
+
+        .cancelbtn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 650px) {
+            .container {
+                height: 700px;
+                width: 320px;
+            }
+
+            .btn {
+                height: 50px;
+                width: 200px;
+            }
+
+            .schedule-btn {
+                height: 45px;
+                font-size: 16px;
+            }
+
+            .clkbtn {
+                height: 50px;
+                width: 200px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 class="heading">Minnat Vigour Gym</h1>
+    </header>
+
+    <div class="container glass">
+        <div class="btn">
+            <button id="schedule" class="schedule-btn">Schedule</button>
+        </div>
+
+        <div class="form-section" style="display: none;">
+            <!-- Cancel Button -->
+            <button class="cancelbtn" id="cancelBtn">Cancel</button>
+
+            <div class="Schedule-box">
+
+                <!-- Class ID Field -->
+                <div class="field">
+                    <label for="class_id">Class ID:</label>
+                    <input type="number" id="class_id" class="class-id ele" placeholder="Enter class ID (e.g., 101)" required>
+                </div>
+
+                <!-- Class Name Field -->
+                <div class="field">
+                    <label for="class_name">Class Name:</label>
+                    <input type="text" id="class_name" class="class-name ele" placeholder="Enter class name" required>
+                </div>
+
+                <!-- Trainer ID Field -->
+                <div class="field">
+                    <label for="trainer_id">Trainer ID:</label>
+                    <input type="number" id="trainer_id" class="trainer-id ele" placeholder="Enter trainer ID" required>
+                </div>
+
+                <!-- Schedule Field -->
+                <div class="field">
+                    <label for="schedule">Schedule (Date and Time):</label>
+                    <input type="datetime-local" id="schedule" class="schedule ele" required>
+                </div>
+
+                <!-- Max Capacity Field -->
+                <div class="field">
+                    <label for="max_capacity">Max Capacity:</label>
+                    <input type="number" id="max_capacity" class="max-capacity ele" placeholder="Enter max capacity" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="clkbtn">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get elements
+            const scheduleBtn = document.getElementById("schedule");
+            const submitBtn = document.querySelector(".clkbtn");
+            const cancelBtn = document.getElementById("cancelBtn");
+            const formSection = document.querySelector(".form-section");
+
+            // Show the form when the "Schedule" button is clicked
+            scheduleBtn.addEventListener("click", function () {
+                formSection.style.display = "block"; // Show the form
+            });
+
+            // Form submission handling
+            submitBtn.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent form submission to handle validation manually
+
+                // Get input values
+                const classId = document.getElementById("class_id").value;
+                const className = document.getElementById("class_name").value;
+                const trainerId = document.getElementById("trainer_id").value;
+                const schedule = document.getElementById("schedule").value;
+                const maxCapacity = document.getElementById("max_capacity").value;
+
+                // Validate class ID (must be a number)
+                if (!classId || isNaN(classId) || classId <= 0) {
+                    alert("Please enter a valid Class ID.");
+                    return;
+                }
+
+                // Validate class name (cannot be empty)
+                if (!className) {
+                    alert("Class Name is required.");
+                    return;
+                }
+
+                // Validate trainer ID (must be a number)
+                if (!trainerId || isNaN(trainerId) || trainerId <= 0) {
+                    alert("Please enter a valid Trainer ID.");
+                    return;
+                }
+
+                // Validate schedule (cannot be empty)
+                if (!schedule) {
+                    alert("Please enter a valid schedule (Date and Time).");
+                    return;
+                }
+
+                // Validate max capacity (must be a positive number)
+                if (!maxCapacity || isNaN(maxCapacity) || maxCapacity <= 0) {
+                    alert("Please enter a valid Max Capacity.");
+                    return;
+                }
+
+                // Create an object to represent the schedule data
+                const scheduleData = {
+                    classId: classId,
+                    className: className,
+                    trainerId: trainerId,
+                    schedule: schedule,
+                    maxCapacity: maxCapacity
+                };
+
+                // Log the data to the console (or you can send this to a server)
+                console.log("Schedule Data Submitted: ", scheduleData);
+
+                // Optionally, reset the form after successful submission
+                document.querySelector(".Schedule-box").reset();
+
+                // Show success message
+                alert("Schedule successfully created!");
+
+                // Hide the form after submission
+                formSection.style.display = "none";
+            });
+
+            // Cancel button: Hide the form and reset it
+            cancelBtn.addEventListener("click", function () {
+                // Hide the form
+                formSection.style.display = "none";
+
+                // Reset all input fields
+                document.querySelector(".Schedule-box").reset();
+            });
+        });
+    </script>
+</body>
+
+</html>
