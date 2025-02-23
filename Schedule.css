@@ -1,0 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100%;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+    backdrop-filter: blur(5px);
+    background-color: #091919;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.heading {
+    color: #29a396;
+    font-size: 80px;
+    text-align: center;
+}
+
+.container {
+    height: 850px; /* Increased from 700px to 850px */
+    width: 550px;
+    background-color: white;
+    box-shadow: 8px 8px 20px rgb(128, 128, 128);
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.btn {
+    height: 60px;
+    width: 320px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.schedule-btn {
+    height: 50px;
+    width: 200px;
+    border-radius: 30px;
+    background-color: #29a396;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(41, 163, 150, 0.4);
+}
+
+.schedule-btn:hover {
+    background-color: #3be0c4;
+    box-shadow: 0 6px 15px rgba(59, 224, 196, 0.5);
+    transform: scale(1.05);
+}
+
+.schedule-btn:active {
+    transform: scale(0.98);
+    box-shadow: none;
+}
+
+.form-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Schedule-box {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.field {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.field label {
+    font-size: 18px;
+    color: #29a396;
+    margin-bottom: 8px;
+    display: block;
+    text-align: left;
+}
+
+.ele {
+    height: 50px;
+    width: 100%;
+    outline: none;
+    border: none;
+    background-color: rgb(240, 240, 240);
+    border-radius: 50px;
+    padding-left: 20px;
+    font-size: 16px;
+}
+
+.clkbtn {
+    height: 50px;
+    width: 100%;
+    border-radius: 50px;
+    background-color: #29a396;
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clkbtn:hover {
+    background-color: #3be0c4;
+    box-shadow: 0 4px 15px rgba(41, 163, 150, 0.5);
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 650px) {
+    .container {
+        height: 700px;
+        width: 320px;
+    }
+
+    .btn {
+        height: 50px;
+        width: 200px;
+    }
+
+    .schedule-btn {
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .clkbtn {
+        height: 50px;
+        width: 200px;
+        font-size: 16px;
+    }
+}
