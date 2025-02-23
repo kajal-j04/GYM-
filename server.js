@@ -32,7 +32,16 @@ const userSchema = new mongoose.Schema({
     date: String
 });
 
+const scheduleSchema = new mongoose.Schema({
+    classId: { type: Number, unique: false },
+    className: { type: String, unique: false },
+    trainerId: { type: Number },
+    maxCapacity: Number,
+    schedule: String
+});
+
 const User = mongoose.model('User', userSchema);
+const Schedule = mongoose.model('Schedule', scheduleSchema);
 
 // Routes
 app.post('/signup', async (req, res) => {
@@ -82,6 +91,34 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Error logging in!' });
     }
 });
+
+app.post('', async(req,res) => {
+    const {  } = req.body; // take data into varialble from req body
+})
+
+//to be used in html js to call backeng
+// fetch('http://localhost:3000/', {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({jsObject}),
+// })
+
+app.post('/schedule', async(req,res) => {
+
+    const { classId, className, trainerId, schedule, maxCapacity } = req.body; // classId,className etc... the key should be same as what you are passing from html/js
+
+    try {
+        const sc = new Schedule({ classId, className, trainerId, schedule, maxCapacity });
+        await sc.save();
+        res.status(200).json({ message: 'Schedule confirmed!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error logging in!' });
+    }
+})
+
 
 // Start Server
 app.listen(PORT, () => {

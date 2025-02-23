@@ -199,7 +199,7 @@
 
     <div class="container glass">
         <div class="btn">
-            <button id="schedule" class="schedule-btn">Schedule</button>
+            <button id="scheduleBtn" class="schedule-btn">Schedule</button>
         </div>
 
         <div class="form-section" style="display: none;">
@@ -247,7 +247,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Get elements
-            const scheduleBtn = document.getElementById("schedule");
+            const scheduleBtn = document.getElementById("scheduleBtn");
             const submitBtn = document.querySelector(".clkbtn");
             const cancelBtn = document.getElementById("cancelBtn");
             const formSection = document.querySelector(".form-section");
@@ -300,21 +300,27 @@
 
                 // Create an object to represent the schedule data
                 const scheduleData = {
-                    classId: classId,
+                    classId2: classId,
                     className: className,
                     trainerId: trainerId,
                     schedule: schedule,
                     maxCapacity: maxCapacity
                 };
 
-                // Log the data to the console (or you can send this to a server)
-                console.log("Schedule Data Submitted: ", scheduleData);
-
-                // Optionally, reset the form after successful submission
-                document.querySelector(".Schedule-box").reset();
-
-                // Show success message
-                alert("Schedule successfully created!");
+                fetch('http://localhost:3000/schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(scheduleData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Schedule successfully created!");
+                }).catch(err => {
+                    console.error(err);
+                    alert("Error creating schedule !");
+                });
 
                 // Hide the form after submission
                 formSection.style.display = "none";
