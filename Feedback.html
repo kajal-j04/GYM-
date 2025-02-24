@@ -148,7 +148,7 @@
 
         <div class="form-section" id="step4">
             <h2>Additional Comments</h2>
-            <textarea rows="4" cols="30" placeholder="Your feedback..."></textarea>
+            <textarea id="comment" rows="4" cols="30" placeholder="Your feedback..."></textarea>
             <div class="button-container">
                 <button onclick="prevStep(3)">Previous</button>
                 <button onclick="submitForm()">Submit</button>
@@ -175,6 +175,7 @@
         function submitForm() {
             document.querySelector('.active').classList.remove('active');
             document.getElementById('thankYou').classList.add('active');
+            addFeeback();
         }
 
         function rate(star, group) {
@@ -183,6 +184,42 @@
             stars.forEach((s, i) => {
                 s.classList.toggle('filled', i <= index);
             });
+            localStorage.setItem(group,index+1);
+        }
+
+        function addFeeback(){
+            firstName = document.getElementById("first-name").value
+            lastName = document.getElementById("last-name").value
+            email = document.getElementById("email").value
+            cleanlinessRating = localStorage.getItem("rating1");
+            equipmentRating = localStorage.getItem("rating2");
+            trainerRating = localStorage.getItem("rating3");
+            comments = document.getElementById("comment").value;
+
+            var fb = {
+                firstName,
+                lastName,
+                email,
+                cleanlinessRating,
+                equipmentRating,
+                trainerRating,
+                comments
+            }
+
+            fetch('http://localhost:3000/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(fb),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Feedback successfully created!");
+                }).catch(err => {
+                    console.error(err);
+                    alert("Error creating feedback !");
+                });
         }
     </script>
 </body>

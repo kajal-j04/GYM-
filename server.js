@@ -40,8 +40,41 @@ const scheduleSchema = new mongoose.Schema({
     schedule: String
 });
 
+const staffSchema = new mongoose.Schema({ 
+    staffId: { type: String, required: true, unique: true },
+    fullName: { type: String, required: true },
+    dob: { type: Date, required: true },
+    contactNo: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    gender: { type: String, required: true },
+    salary: { type: Number, required: true },
+    workingSkill: { type: String, required: true },
+    fullAddress: { type: String, required: true }
+});
+
+const feedbackSchema = new mongoose.Schema({
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    cleanlinessRating: { type: Number, required: true },
+    equipmentRating: { type: Number, required: true },
+    trainerRating: { type: Number, required: true },
+    comments: { type: String }
+});
+// Define Weight Schema
+const weightSchema = new mongoose.Schema({
+    memberId: { type: String, required: true },
+    weightGain: { type: Number, default: 0 },
+    weightLoss: { type: Number, default: 0 },
+    previousWeight: { type: Number, required: true },
+    createdDate: { type: Date, required: true },
+});
+// Create Model
+const Weight = mongoose.model("Weight", weightSchema);
 const User = mongoose.model('User', userSchema);
 const Schedule = mongoose.model('Schedule', scheduleSchema);
+const Staff = mongoose.model('Staff', staffSchema);
+const Feedback = mongoose.model("Feedback", feedbackSchema);
 
 // Routes
 app.post('/signup', async (req, res) => {
@@ -119,77 +152,75 @@ app.post('/schedule', async(req,res) => {
     }
 })
 
+app.post('/staff', async(req,res) => {
+    try {
+        const existingStaff = await Staff.findOne({ staffId: req.body.staffId });
+        if (existingStaff) return res.status(400).json({ error: "Staff ID already exists!" });
 
+        const existingEmail = await Staff.findOne({ email: req.body.email });
+        if (existingEmail) return res.status(400).json({ error: "Email already exists!" });
+
+        const newStaff = new Staff(req.body);
+        await newStaff.save();
+        res.status(201).json({ message: "Staff registered successfully!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error Adding staff in!' });
+    }
+})
+
+app.post("/feedback", async (req, res) => {
+    try {
+        console.log("📥 Feedback received:", req.body);
+        const feedback = new Feedback(req.body)
+        await feedback.save(); // ✅ Save the feedback
+        console.log("✅ Feedback saved successfully!");
+        res.status(201).json({ message: "Thank you for your feedback!" });
+
+    } catch (err) {
+        console.error("❌ Error submitting feedback:", err);
+        res.status(500).json({ message: "Error submitting feedback!" });
+    }
+});
+// 📌 API Route to Track Weight
+app.post("/track-weight", async (req, res) => {
+    try {
+        const { memberId, weightGain, weightLoss, previousWeight, createdDate } = req.body;
+
+        // Validate required fields
+        if (!memberId || !previousWeight || !createdDate) {
+            return res.status(400).json({ message: "Member ID, Previous Weight, and Created Date are required." });
+        }
+
+        // Create a new weight tracking entry
+        const newWeight = new Weight({
+            memberId,
+            weightGain: weightGain || 0,
+            weightLoss: weightLoss || 0,
+            previousWeight,
+            createdDate,
+        });
+
+        // Save to database
+        await newWeight.save();
+        res.status(201).json({ message: "Weight tracked successfully!", data: newWeight });
+    } catch (error) {
+        console.error("Error saving weight:", error);
+        res.status(500).json({ message: "Server error. Please try again later." });
+    }
+});
+
+// 📌 API Route to Get All Weight Records
+app.get("/weight-records", async (req, res) => {
+    try {
+        const records = await Weight.find();
+        res.status(200).json(records);
+    } catch (error) {
+        console.error("Error fetching records:", error);
+        res.status(500).json({ message: "Failed to fetch weight records." });
+    }
+});
 // Start Server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-
-
-
-// let gfs;
-// const conn = mongoose.connection;
-// conn.once('open', () => {
-//     gfs = new GridFSBucket(conn.db, { bucketName: 'uploads' });
-//     console.log('GridFS Initialized');
-// })
-
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage });
-
-// app.post('/upload', upload.single('image'), (req, res) => {
-//     if (!req.file) {
-//         return res.status(400).json({ message: 'No file uploaded' });
-//     }
-//     const { buffer, originalname, mimetype } = req.file;
-
-//     console.log('Received file:', originalname, mimetype);
-
-//     if (!gfs) {
-//         return res.status(500).json({ message: 'GridFS is not initialized' });
-//     }
-
-//     const writeStream = gfs.openUploadStream(originalname, {
-//         content_type: mimetype,
-//     });
-
-//     writeStream.on('finish', (file) => {
-//         const fileId= writeStream.id;
-//         console.log('File uploaded successfully:', fileId);
-//         res.status(200).json({
-//             message: 'File uploaded successfully!',
-//             fileId: fileId,
-//         });
-//     });
-
-//     writeStream.on('error', (err) => {
-//         res.status(500).json({ message: 'Error uploading file', error: err });
-//     });
-
-//     writeStream.end(buffer);
-// });
-
-// app.get('/file/:id', (req, res) => {
-//     const fileId = req.params.id;
-
-//     if (!gfs) {
-//         return res.status(500).json({ message: 'GridFSBucket is not initialized' });
-//     }
-
-//     const downloadStream = gfs.openDownloadStream(new mongoose.Types.ObjectId(fileId));
-
-//     downloadStream.on('data', (chunk) => {
-//         res.write(chunk);
-//     });
-
-//     downloadStream.on('end', () => {
-//         res.end();
-//     });
-
-//     downloadStream.on('error', (err) => {
-//         console.error('Error fetching file:', err);
-//         res.status(500).json({ message: 'Error fetching file', error: err });
-//     });
-// });

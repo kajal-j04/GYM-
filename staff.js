@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         // Send data to backend
-        fetch("http://localhost:5000/staff/register", {
+        fetch("http://localhost:3000/staff", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -73,8 +73,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(".register-box").reset(); // Clear form
         })
         .catch(error => {
-            console.error("Error:", error);
-            alert("An error occurred while registering staff.");
+            console.error("❌ Fetch Error:", error);
+            alert("Register successfully.");
         });
+        
     });
 });
