@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kalyan's GYM</title>
+    <link rel="stylesheet" href="weight track.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="heading">Minnat Vigour Gym</h1>
+    </header>
+
+    <div class="container glass">
+        <div class="slider"></div>
+        <div class="btn">
+            <button id="Register" class="Register">Track Your Weight</button>
+        </div>
+
+        <div class="form-section">
+            <div class="register-box">
+                <!-- Member ID -->
+                <div class="form-group">
+                    <label for="member-id" class="form-label">Member ID</label>
+                    <input type="text" id="member-id" class="member-id ele" placeholder="Enter Member ID" required>
+                </div>
+
+                <!-- Weight Gain -->
+                <div class="form-group">
+                    <label for="weight-gain" class="form-label">Weight Gain</label>
+                    <input type="number" id="weight-gain" class="weight-gain ele" placeholder="Weight Gain" step="0.01">
+                </div>
+
+                <!-- Weight Loss -->
+                <div class="form-group">
+                    <label for="weight-loss" class="form-label">Weight Loss</label>
+                    <input type="number" id="weight-loss" class="weight-loss ele" placeholder="Weight Loss" step="0.01">
+                </div>
+
+                <!-- Member ID (Again) -->
+                <div class="form-group">
+                    <label for="previous-weight" class="form-label">Previous Weight</label>
+                    <input type="text" id="previous-weight" class="previous-weight ele" placeholder="Enter Previous Weight" required>
+                </div>
+
+                <!-- Created Date -->
+                <div class="form-group">
+                    <label for="created-date" class="form-label">Created Date</label>
+                    <input type="date" id="created-date" class="created-date ele" required>
+                </div>
+
+                <!-- Button -->
+                <button class="clkbtn">Track</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="login_script.js"></script>
+</body>
+
+</html>
