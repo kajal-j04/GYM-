@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minnat Vigour Gym</title>
+    <link rel="stylesheet" href="Register222.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="heading">Minnat Vigour Gym</h1>
+        <!-- Removed the "Register Here" button from header -->
+    </header>
+
+    <div class="container glass">
+        <div class="btn">
+            <button id="registere-here" class="register-btn">Register Yourself</button>
+        </div>
+
+        <div class="form-section">
+            <div class="register-box">
+                <div class="form-group">
+                    <label for="member-id" class="form-label">Member ID</label>
+                    <input type="text" id="member-id" class="member-id ele" placeholder="Member ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select id="gender" class="gender ele" required>
+                        <option value="" disabled selected>Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" class="name ele" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" id="dob" class="dob ele" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-no" class="form-label">Contact Number</label>
+                    <input type="tel" id="contact-no" class="contact-no ele" minlength="10" maxlength="10" placeholder="Contact Number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="email ele" placeholder="Email Address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="full-address" class="form-label">Full Address</label>
+                    <input type="text" id="full-address" class="full-address ele" placeholder="Full Address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="plans" class="form-label">Plans</label>
+                    <input type="text" id="plans" class="plans ele" placeholder="Plans" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="total-amount" class="form-label">Total Amount</label>
+                    <input type="number" id="total-amount" class="total-amount ele" placeholder="Total Amount" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="height" class="form-label">Height (cm)</label>
+                    <input type="number" id="height" class="height ele" placeholder="Height (cm)" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight" class="form-label">Weight (kg)</label>
+                    <input type="number" id="weight" class="weight ele" placeholder="Weight (kg)" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="time-slot" class="form-label">Preferred Time Slot</label>
+                    <input type="text" id="time-slot" class="time-slot ele" placeholder="Preferred Time Slot" required>
+                </div>
+
+                <!-- Register button moved inside the form -->
+                <button class="clkbtn">Register</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="register222.js"></script>
+</body>
+
+</html>

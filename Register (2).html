@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minnat Vigour Gym</title>
+    <link rel="stylesheet" href="Register css.css">
+</head>
+<body>
+    <header>
+        <h1 class="heading">Minnat Vigour Gym</h1>
+    </header>
+
+    <div class="container glass">
+        <div class="form-section">
+            <div class="register-box">
+                <div class="form-group">
+                    <label for="member-id" class="form-label">Member ID</label>
+                    <input type="text" id="member-id" class="ele" placeholder="Member ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select id="gender" class="ele" required>
+                        <option value="" disabled selected>Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" class="ele" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" id="dob" class="ele" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-no" class="form-label">Contact Number</label>
+                    <input type="tel" id="contact-no" class="ele" minlength="10" maxlength="10" placeholder="Contact Number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="ele" placeholder="Email Address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="full-address" class="form-label">Full Address</label>
+                    <input type="text" id="full-address" class="ele" placeholder="Full Address" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="plans" class="form-label">Plans</label>
+                    <input type="text" id="plans" class="ele" placeholder="Plans" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="total-amount" class="form-label">Total Amount</label>
+                    <input type="number" id="total-amount" class="ele" placeholder="Total Amount" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="height" class="form-label">Height (cm)</label>
+                    <input type="number" id="height" class="ele" placeholder="Height (cm)" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight" class="form-label">Weight (kg)</label>
+                    <input type="number" id="weight" class="ele" placeholder="Weight (kg)" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="time-slot" class="form-label">Preferred Time Slot</label>
+                    <input type="text" id="time-slot" class="ele" placeholder="Preferred Time Slot" required>
+                </div>
+
+                <button class="clkbtn">Register Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector(".clkbtn").addEventListener("click", function () {
+            let memberData = {
+                member_id: document.getElementById("member-id").value,
+                gender: document.getElementById("gender").value,
+                name: document.getElementById("name").value,
+                dob: document.getElementById("dob").value,
+                contact_no: document.getElementById("contact-no").value,
+                email: document.getElementById("email").value,
+                full_address: document.getElementById("full-address").value,
+                plans: document.getElementById("plans").value,
+                total_amount: document.getElementById("total-amount").value,
+                height: document.getElementById("height").value,
+                weight: document.getElementById("weight").value,
+                time_slot: document.getElementById("time-slot").value,
+            };
+
+            fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(memberData),
+            })
+            .then(response => response.json())
+                .then(data => {
+                    alert("Register successfully created!");
+                }).catch(err => {
+                    console.error(err);
+                    alert("Error creating schedule !");
+                });
+            
+        });
+    </script>
+
+</body>
+</html>

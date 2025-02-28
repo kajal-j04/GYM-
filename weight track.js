@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             // Send data to backend API
-            const response = await fetch("http://localhost:5000/track-weight", {
+            const response = await fetch("http://localhost:3000/track-weight", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

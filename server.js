@@ -31,7 +31,20 @@ const userSchema = new mongoose.Schema({
     phoneNo: { type: Number, unique: true },
     date: String
 });
-
+const registrationSchema = new mongoose.Schema({
+    memberId: { type: String, required: true },
+    gender: { type: String, required: true },
+    name: { type: String, required: true },
+    dob: { type: String, required: true },
+    contactNo: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    address: { type: String, required: true },
+    plans: { type: String, required: true },
+    totalAmount: { type: Number, required: true },
+    height: { type: Number, required: true },
+    weight: { type: Number, required: true },
+    timeSlot: { type: String, required: true },
+});
 const scheduleSchema = new mongoose.Schema({
     classId: { type: Number, unique: false },
     className: { type: String, unique: false },
@@ -39,7 +52,20 @@ const scheduleSchema = new mongoose.Schema({
     maxCapacity: Number,
     schedule: String
 });
-
+const MemberSchema = new mongoose.Schema({
+    memberId: String,
+    gender: String,
+    name: { type: String, required: true },
+    dob: String,
+    contactNo: { type: String, minlength: 10, maxlength: 10, required: true },
+    email: { type: String, required: true, unique: true },
+    fullAddress: String,
+    plans: String,
+    totalAmount: Number,
+    height: Number,
+    weight: Number,
+    timeSlot: String
+});
 const staffSchema = new mongoose.Schema({ 
     staffId: { type: String, required: true, unique: true },
     fullName: { type: String, required: true },
@@ -69,12 +95,17 @@ const weightSchema = new mongoose.Schema({
     previousWeight: { type: Number, required: true },
     createdDate: { type: Date, required: true },
 });
+
 // Create Model
 const Weight = mongoose.model("Weight", weightSchema);
 const User = mongoose.model('User', userSchema);
 const Schedule = mongoose.model('Schedule', scheduleSchema);
 const Staff = mongoose.model('Staff', staffSchema);
 const Feedback = mongoose.model("Feedback", feedbackSchema);
+const Registration = mongoose.model('Registration', registrationSchema);
+const Member = mongoose.model("Member", MemberSchema);
+// Define Schema & Model
+
 
 // Routes
 app.post('/signup', async (req, res) => {
@@ -220,6 +251,18 @@ app.get("/weight-records", async (req, res) => {
         res.status(500).json({ message: "Failed to fetch weight records." });
     }
 });
+// Register API
+app.post("/register222", async (req, res) => {
+    try {
+        const newRegistration = new Registration(req.body);
+        await newRegistration.save();
+        res.status(201).json({ message: "Registration successful!" });
+    } catch (error) {
+        res.status(500).json({ message: "Error saving registration data", error });
+    }
+});
+
+
 // Start Server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
