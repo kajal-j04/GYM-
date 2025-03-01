@@ -42,7 +42,7 @@ document.getElementById("inquiryForm").addEventListener("submit", function(event
   .then(data => {
     alert(data.message); // Show success message
     if (data.redirect) {
-      window.location.href = data.redirect; // Redirect to dashboard
+      window.location.href = dashboard.html; // Redirect to dashboard
     }
     closeModal();
   })
