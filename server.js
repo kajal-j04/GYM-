@@ -13,6 +13,8 @@ const PORT = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
+// Trainer mai kaunsa kaunsa data chahiye? name profile pic mobile experience shift 
+
 // MongoDB Connection
 mongoose.connect('mongodb://127.0.0.1:27017/minnat_vigour_gym', {
     useNewUrlParser: true,
@@ -103,6 +105,14 @@ const enquirySchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
 });
 
+const trainerSchema = new mongoose.Schema({
+    name: String,
+    mobile: String,
+    experience: String,
+    shift: String,
+    profilePic: String
+});
+
 // Create Model
 const Weight = mongoose.model("Weight", weightSchema);
 const User = mongoose.model('User', userSchema);
@@ -112,6 +122,7 @@ const Feedback = mongoose.model("Feedback", feedbackSchema);
 const Registration = mongoose.model('Registration', registrationSchema);
 const Member = mongoose.model("Member", MemberSchema);
 const Enquiry = mongoose.model("Enquiry", enquirySchema);
+const Trainer = mongoose.model("Trainer",trainerSchema);
 
 // Routes
 app.post('/signup', async (req, res) => {
@@ -288,6 +299,28 @@ app.get("/enquiries", async (req, res) => {
         res.json(enquiries);
     } catch (error) {
         res.status(500).json({ error: "Error fetching enquiries" });
+    }
+});
+
+app.post("/trainer", async (req, res) => {
+    try {
+        const trainer = new Trainer(req.body);
+        await trainer.save();
+        res.status(200).json({ 
+            message: "Trainer submitted successfully!", 
+            redirect: "/dashboard" // URL to redirect
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
+    }
+});
+
+app.get("/trainer", async (req, res) => {
+    try {
+        const trainer = await Trainer.find();
+        res.json(trainer);
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
     }
 });
 
