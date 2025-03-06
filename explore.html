@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Minnat Vigour GYM</title>
+    <link rel="stylesheet" href="explore_style.css">
+</head>
+<body>
+
+    <header>
+        <h1 class="heading">Discover Our Infrastructure</h1>
+    </header>
+
+    <section class="explore-content">
+        <p>Get to know our top-class gym facilities, equipment, and space.</p>
+
+        <button id="getStartedBtn" class="explore-btn">Click to see the infrastructure</button>
+
+        <!-- Gym Images Section (Initially Hidden) -->
+        <div id="gymImages" class="gym-images" style="display: none;">
+            <img src="images/gym1.jpeg" alt="Gym Image 1" width="300">
+            <img src="images/gym2.jpeg" alt="Gym Image 2" width="300">
+            <img src="images/gym3.jpeg" alt="Gym Image 3" width="300">
+            <img src="images/gym4.jpeg" alt="Gym Image 4" width="300">
+        </div>
+    </section>
+
+    <script>
+        document.getElementById("getStartedBtn").addEventListener("click", function () {
+            document.getElementById("gymImages").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>

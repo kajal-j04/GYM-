@@ -34,7 +34,7 @@ header {
 }
 
 .container {
-    height: 900px;
+    height: auto;
     width: 550px;
     background-color: white;
     box-shadow: 8px 8px 20px rgb(128, 128, 128);
@@ -49,7 +49,7 @@ header {
 }
 
 .glass {
-    background: rgba(255, 255, 255); /* semi-transparent background */
+    background: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
     backdrop-filter: blur(10px);
     border-radius: 10px;
 }
@@ -81,17 +81,13 @@ header {
     display: block;
 }
 
-.Register:hover {
-    background-color: #1f7e6d;
-}
-
 .form-section {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px; /* Reduced gap */
 }
 
 .register-box {
@@ -100,7 +96,7 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 10px; /* Reduced space between input fields */
 }
 
 .form-group {
@@ -118,7 +114,7 @@ label {
 }
 
 .ele {
-    height: 50px;
+    height: 45px;
     width: 100%;
     outline: none;
     border: none;
@@ -127,7 +123,15 @@ label {
     border-radius: 50px;
     padding-left: 20px;
     font-size: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Reduced space between fields */
+}
+
+textarea.ele {
+    height: 100px; /* Adjusted for better visibility */
+    border-radius: 10px; /* Different styling for textarea */
+    padding: 10px;
+    resize: vertical;
+    margin-bottom: 5px; /* Reduced space below textarea */
 }
 
 .clkbtn {
@@ -138,7 +142,7 @@ label {
     font-size: 20px;
     border: none;
     cursor: pointer;
-    margin-top: 30px;
+    margin-top: 5px; /* Reduced space above button */
     color: white;
     text-transform: uppercase;
     font-weight: bold;
@@ -149,11 +153,12 @@ label {
     background-color: #1f7e6d;
 }
 
-/* For Responsiveness */
+/* Responsive Design */
 @media screen and (max-width: 650px) {
     .container {
-        height: 700px;
+        height: auto;
         width: 320px;
+        padding: 15px;
     }
 
     .btn {
@@ -166,12 +171,12 @@ label {
     }
 
     .form-section {
-        height: 700px;
-        width: 650px;
+        height: auto;
+        width: 100%;
     }
 
     .register-box {
-        width: 300px;
+        width: 100%;
     }
 
     .ele {
@@ -188,7 +193,7 @@ label {
 
 @media screen and (max-width: 320px) {
     .container {
-        height: 650px;
+        height: auto;
         width: 280px;
     }
 
@@ -206,12 +211,12 @@ label {
     }
 
     .form-section {
-        height: 600px;
-        width: 560px;
+        height: auto;
+        width: 100%;
     }
 
     .register-box {
-        width: 260px;
+        width: 100%;
     }
 
     .ele {
