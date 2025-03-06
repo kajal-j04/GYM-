@@ -1,0 +1,638 @@
+<<<<<<< HEAD:dashboard.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minnat Vigour Gym</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="inquiryModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Enquiry Form</h2>
+        <form id="inquiryForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+          
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+          
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" name="phone" required>
+          
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
+          
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    <!-- Menu -->
+    <div class="menu">
+      <div class="container flex">
+        <!-- Mobile Button -->
+        <div class="mobile-btn">
+          <ion-icon name="grid"></ion-icon>
+        </div>
+        <div class="logo"></div>
+        <ul class="nav">
+          <li class="nav-item"><a href="#">About Us</a></li>
+          <li class="nav-item"><a href="#why-us">Features</a></li>
+          <li class="nav-item"><a href="#explore">Explore</a></li>
+          <li class="nav-item"><a href="#discount">Register</a></li>
+          <li class="nav-item"><a href="#plan-your-workout">Workout Schedule</a></li>
+          <li class="nav-item"><a href="#Track-weight">Track your weight</a></li>
+          <li class="nav-item"><a href="#testimonial">Feedback</a></li>
+        </ul>
+        <a href="login_index.html" class="btn">Login</a>
+      </div>
+    </div>
+    <!-- End Menu -->
+
+    <!-- Header -->
+    <header class="header">
+      <div class="container flex">
+        <div class="text">
+          <h1 class="mb">
+            Welcome to <br />
+            <span>Minnat Vigour Gym</span> and International Martial Arts Academy
+          </h1>
+          <p class="mb">
+            Your fitness journey starts here—commit, conquer, and transform with us!
+          </p>
+        </div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
+        </div>
+      </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- Why Us -->
+    <div class="section" id="why-us">
+      <div class="container flex">
+        <div class="text">
+          <h2 class="primary mb">Why Choose Us?</h2>
+          <h3 class="secondary mb"></h3>
+          <p class="tertiary mb">
+            <b><i></i>All Fitness Level are Welcome!</i></b>
+            Empowering you to achieve your Fitness Goals in a Supportive and Inclusive Environment.
+          </p>
+
+          <h3 class="secondary mb mt">
+            <span></span> Features
+          </h3>
+          <ul class="tertiary mb">
+            <li>Reliable, User-Friendly Equipments</li>
+            <li>Providing unique classes like Zumba, Yoga, Cardio</li>
+            <li>Self Defense Classes comprising Taekwondo, Kickboxing, Mixed Martial Arts, Khandokwan</li>
+            <li>Providing a dedicated women's only area for those who prefer a more private workout experience</li>
+            <li>Our team of Experienced and Certified Trainers</li>
+            <li>Prioritizing your safety with 24/7 security, well-lit facilities, and a focus on creating a comfortable and welcoming atmosphere</li>
+            <li>Ancillary services such as <b>PHYSIOTHERAPY</b></li>
+            <li><b>HOW TO KEEP YOUR THYROID HEALTHY</b></li>
+            <li><b>HOW TO CONTROL PCOD</b></li>
+            <li><b>DIET NUTRITION and more</b></li>
+          </ul>
+        </div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/why-us.png?raw=true"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+    <!-- End Why Us -->
+
+<!-- Explore -->
+<div class="section" id="explore">
+  <div class="container flex">
+    <div class="visual">
+      <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
+    </div>
+    <div class="text">
+      <h2 class="primary mb">
+        Explore Our Fitness <br />
+        Studio
+      </h2>
+      <p class="tertiary mb"></p>
+      Featuring Strength Machines, Weight Lifting Platforms, Group/Personal Training.
+            We also offer a wide range of classes including Yoga, Zumba, Cardio, Aerobics, Animal Flow.
+          </p>
+          
+          <p class="tertiary mb">
+            "We believe in the power of community. Our gym is more than just a place to work out; it's a place to connect with other women, find support, and celebrate your victories."         </p>
+
+      <a href="explore.html" class="btn mt">Explore</a>
+    </div>
+  </div>
+</div>
+<!-- End Explore -->
+
+
+    <!-- Trainer -->
+    <div class="section" id="trainers">
+      <h2 class="primary mb">Our Professional Trainers</h2>
+      <div class="container flex">
+        <div class="trainer">
+          <img src="img/trainer1.jpg" alt="" />
+          <h3 class="secondary mb">Sumaiya Shaikh</h3>
+          <p class="tertiary mb">
+            <span>Founder and Owner</span><br>
+            <span>International Athlete</span><br>
+            <span>Taekwondo-kick boxing and MMA Instructor</span><br>
+            <span>President Of Arm-Wrestling Organization.<span>
+          </p>
+          <a href="#" class="btn-2"
+            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
+          ></a>
+        </div>
+
+        <div class="trainer">
+          <img src="img/trainer2.jpg" alt="" />
+          <h3 class="secondary mb">Huda Shaikh</h3>
+          <p class="tertiary mb">
+            <span>Co-owner</span><br>
+            <span>Certified Fitness Trainer</span><br>
+            <span>Taekwondo-kick boxing Instructor</span><br>
+            <span>International Athlete.<span>
+          </p>
+          <a href="#" class="btn-2"
+            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
+          ></a>
+        </div>
+
+        <div class="trainer">
+          <img src="img/trainer3.jpg" alt="" />
+          <h3 class="secondary mb">Shifa Shaikh</h3>
+          <p class="tertiary mb">
+            <span>Co-owner</span><br>
+            <span>Zumba Trainer</span>
+          </p>
+          <a href="#" class="btn-2"
+            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
+          ></a>
+        </div>
+      </div>
+    </div>
+    <!-- End Trainer -->
+
+    <!-- Discount -->
+<div class="section" id="discount">
+  <div class="container flex">
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/discount.png?raw=true"
+        alt=""
+      />
+    </div>
+    <div class="text">
+      <h2 class="primary mb">
+        Fitness Classes This Summer, Pay Now And Get 25% Discount
+      </h2>
+      <p class="tertiary mb">
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
+        adipisci provident incidunt rerum quos ea aliquam in. In aliquam a
+        non odio recusandae! Dolorem modi facere ducimus ullam?
+      </p>
+      <br> <a href="Register (2).html" class="btn">Register Now</a></br>
+    </div>
+  </div>
+</div>
+<!-- End Discount -->
+
+ <!-- Workout Schedule -->
+ <div class="section" id="plan-your-workout">
+  <div class="container flex">
+    <div class="text">
+      <h2 class="primary mb">Plan Your Workout</h2>
+      <p class="tertiary mb">
+        Take charge of your fitness journey by creating a personalized workout schedule. Our trainers will guide you to achieve your fitness goals effectively and efficiently.
+      </p>
+      <a href="Schedule.html" class="btn mt">Make Your Schedule</a>
+    </div>
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+        alt=""
+      />
+    </div>
+  </div>
+</div>
+<!-- End Workout Schedule -->
+
+<!-- Weight Track Section -->
+<div class="section" id="Track-weight">
+  <div class="container flex">
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/discount.png?raw=true"
+        alt=""
+      />
+    </div>
+    <div class="text">
+      <h2 class="primary mb">
+        Our weight tracking system helps you stay accountable and see how your fitness 
+        journey is progressing over time.
+
+      </h2>
+      <p class="tertiary mb">
+        Keeping track of your weight is essential for monitoring your fitness progress. 
+        Log your weight regularly and analyze trends to achieve your health goals.
+      </p>
+      <br> <a href="weight track.html" class="btn">Track Weight Now</a></br>
+    </div>
+  </div>
+</div>
+<!-- End Weight Track section -->
+
+    <!-- Testimonial -->
+    <div class="section" id="testimonial">
+      <div class="container flex">
+        <div class="text">
+          <h2 class="primary">
+            That's What Our Super <br />
+            Clients Say
+          </h2>
+
+          <div class="client">
+            <img
+              src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/client1.jpg?raw=true"
+              alt=""
+            />
+            <h2 class="secondary">Excellent Training</h2>
+            <p class="tertiary">
+              I’ve been a member of <b>Minnat Vigour Gym</b> for a few months now, and I couldn’t be happier with my experience. The facilities are top-notch, always clean, and well-maintained. The trainers are knowledgeable, supportive, and genuinely care about helping you reach your goals. Whether you’re looking to build strength or learn martial arts, they’ve got it all. I also love the positive, motivating environment. Definitely recommend this gym to anyone looking to level up their fitness journey!"
+            </p>
+          </div>
+          <a href="Feedback.html" class="btn mt">Give your Feedback</a>
+        </div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+    <!-- End kajal Testimonial -->
+
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li>Offers & Discounts</li>
+          <li>Get Coupon</li>
+          <li>Contact Us</li>
+          <li>About</li>
+        </ul>
+      </div>
+      <div class="links">
+        <h3>Fashion in Area</h3>
+        <ul>
+          <li>Gym Accessories</li>
+          <li>Health Tips</li>
+          <li>Choose Your Timings</li>
+          <li>Rules for Gym</li>
+        </ul>
+      </div>
+      <div class="links">
+        <h3>Support</h3>
+        <ul>
+          <li>Frequently Asked Questions</li>
+          <li>Report a Payment Issue</li>
+          <li>Terms & Conditions</li>
+          <li>Privacy Policy</li>
+        </ul>
+      </div>
+    </div>
+    <br /><br />
+    <footer>
+      <div class="container flex">
+        <p class="tertiary">&copy; 2023 Minnat Vigour's GYM. All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <!-- Ion Icons JS -->
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"
+    ></script>
+    <!-- JS -->
+    <script src="script.js"></script>
+  </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minnat Vigour Gym</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+    <!-- Menu -->
+    <div class="menu">
+      <div class="container flex">
+        <!-- Mobile Button -->
+        <div class="mobile-btn">
+          <ion-icon name="grid"></ion-icon>
+        </div>
+        <div class="logo"></div>
+        <ul class="nav">
+          <li class="nav-item"><a href="#">About Us</a></li>
+          <li class="nav-item"><a href="#why-us">Features and Enquiry</a></li>
+          <li class="nav-item"><a href="#explore">Explore</a></li>
+          <li class="nav-item"><a href="#discount">Register</a></li>
+          <li class="nav-item"><a href="#plan-your-workout">Workout Schedule</a></li>
+          <li class="nav-item"><a href="#testimonial">Feedback</a></li>
+          <li class="nav-item"><a href="#">E-Gym</a></li>
+        </ul>
+        <a href="login_index.html" class="btn">Login</a>
+      </div>
+    </div>
+    <!-- End Menu -->
+
+    <!-- Header -->
+    <header class="header">
+      <div class="container flex">
+        <div class="text">
+          <h1 class="mb">
+            Welcome to <br />
+            <span>Minnat Vigour Gym</span> and International Martial Arts Academy
+          </h1>
+          <p class="mb">
+            Your fitness journey starts here—commit, conquer, and transform with us!
+          </p>
+        </div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
+        </div>
+      </div>
+    </header>
+    <!-- End Header -->
+
+    <!-- Why Us -->
+    <div class="section" id="why-us">
+      <div class="container flex">
+        <div class="text">
+          <h2 class="primary mb">Why Choose Us?</h2>
+          <h3 class="secondary mb"></h3>
+          <p class="tertiary mb">
+            <b><i></i>All Fitness Level are Welcome!</i></b>
+            Empowering you to achieve your Fitness Goals in a Supportive and Inclusive Environment.
+          </p>
+
+          <h3 class="secondary mb mt">
+            <span></span> Features
+          </h3>
+          <ul class="tertiary mb">
+            <li>Reliable, User-Friendly Equipments</li>
+            <li>Providing unique classes like Zumba, Yoga, Cardio</li>
+            <li>Self Defense Classes comprising Taekwondo, Kickboxing, Mixed Martial Arts, Khandokwan</li>
+            <li>Providing a dedicated women's only area for those who prefer a more private workout experience</li>
+            <li>Our team of Experienced and Certified Trainers</li>
+            <li>Prioritizing your safety with 24/7 security, well-lit facilities, and a focus on creating a comfortable and welcoming atmosphere</li>
+            <li>Ancillary services such as <i>PHYSIOTHERAPY,</i></li>
+            <li><i>HOW TO KEEP YOUR THYROID HEALTHY</i></li>
+            <li><i>HOW TO CONTROL PCOD</i></li>
+            <li><i>DIET NUTRITION and more</i></li>
+            <br> <a href="enquiry popup.html" class="btn">Enquiry Now</a></br>
+          </ul>
+        </div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/why-us.png?raw=true"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+    <!-- End Why Us -->
+
+<!-- Explore -->
+<div class="section" id="explore">
+  <div class="container flex">
+    <div class="visual">
+      <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
+    </div>
+    <div class="text">
+      <h2 class="primary mb">
+        Explore Our Fitness <br />
+        Studio
+      </h2>
+      <p class="tertiary mb"></p>
+      Featuring Strength Machines, Weight Lifting Platforms, Group/Personal Training.
+            We also offer a wide range of classes including Yoga, Zumba, Cardio, Aerobics, Animal Flow.
+          </p>
+          
+          <p class="tertiary mb">
+            "We believe in the power of community. Our gym is more than just a place to work out; it's a place to connect with other women, find support, and celebrate your victories."         </p>
+
+      <a href="#" class="btn mt">Get Started Now</a>
+    </div>
+  </div>
+</div>
+<!-- End Explore -->
+
+
+    <!-- Trainer -->
+    <div class="section" id="trainers">
+      <h2 class="primary mb">Our Professional Trainers</h2>
+      <div class="container flex">
+        <div class="trainer">
+          <img src="img/trainer1.jpg" alt="" />
+          <h3 class="secondary mb">Sumaiya Shaikh</h3>
+          <p class="tertiary mb">
+            <span>Founder and Owner</span><br>
+            <span>International Athlete</span><br>
+            <span>Taekwondo-kick boxing and MMA Instructor</span><br>
+            <span>President Of Arm-Wrestling Organization.<span>
+          </p>
+          <a href="#" class="btn-2"
+            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
+          ></a>
+        </div>
+
+        <div class="trainer">
+          <img src="img/trainer2.jpg" alt="" />
+          <h3 class="secondary mb">Huda Shaikh</h3>
+          <p class="tertiary mb">
+            <span>Co-owner</span><br>
+            <span>Certified Fitness Trainer</span><br>
+            <span>Taekwondo-kick boxing Instructor</span><br>
+            <span>International Athlete.<span>
+          </p>
+          <a href="#" class="btn-2"
+            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
+          ></a>
+        </div>
+
+        <div class="trainer">
+          <img src="img/trainer3.jpg" alt="" />
+          <h3 class="secondary mb">Shifa Shaikh</h3>
+          <p class="tertiary mb">
+            <span>Co-owner</span><br>
+            <span>Zumba Trainer</span>
+          </p>
+          <a href="#" class="btn-2"
+            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
+          ></a>
+        </div>
+      </div>
+    </div>
+    <!-- End Trainer -->
+
+    <!-- Discount -->
+<div class="section" id="discount">
+  <div class="container flex">
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/discount.png?raw=true"
+        alt=""
+      />
+    </div>
+    <div class="text">
+      <h2 class="primary mb">
+        Fitness Classes This Summer, Pay Now And Get 25% Discount
+      </h2>
+      <p class="tertiary mb">
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
+        adipisci provident incidunt rerum quos ea aliquam in. In aliquam a
+        non odio recusandae! Dolorem modi facere ducimus ullam?
+      </p>
+      <br> <a href="Register (2).html" class="btn">Register Now</a></br>
+    </div>
+  </div>
+</div>
+<!-- End Discount -->
+
+ <!-- Workout Schedule -->
+ <div class="section" id="plan-your-workout">
+  <div class="container flex">
+    <div class="text">
+      <h2 class="primary mb">Plan Your Workout</h2>
+      <p class="tertiary mb">
+        Take charge of your fitness journey by creating a personalized workout schedule. Our trainers will guide you to achieve your fitness goals effectively and efficiently.
+      </p>
+      <a href="Schedule.html" class="btn mt">Make Your Schedule</a>
+    </div>
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+        alt=""
+      />
+    </div>
+  </div>
+</div>
+<!-- End Workout Schedule -->
+
+    <!-- Testimonial -->
+    <div class="section" id="testimonial">
+      <div class="container flex">
+        <div class="text">
+          <h2 class="primary">
+            That's What Our Super <br />
+            Clients Say
+          </h2>
+
+          <div class="client">
+            <img
+              src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/client1.jpg?raw=true"
+              alt=""
+            />
+            <h2 class="secondary">Excellent Training</h2>
+            <p class="tertiary">
+              I’ve been a member of <b>Minnat Vigour Gym</b> for a few months now, and I couldn’t be happier with my experience. The facilities are top-notch, always clean, and well-maintained. The trainers are knowledgeable, supportive, and genuinely care about helping you reach your goals. Whether you’re looking to build strength or learn martial arts, they’ve got it all. I also love the positive, motivating environment. Definitely recommend this gym to anyone looking to level up their fitness journey!"
+            </p>
+          </div>
+          <a href="Feedback.html" class="btn mt">Give your Feedback</a>
+        </div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+    <!-- End kajal Testimonial -->
+
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li>Offers & Discounts</li>
+          <li>Get Coupon</li>
+          <li>Contact Us</li>
+          <li>About</li>
+        </ul>
+      </div>
+      <div class="links">
+        <h3>Fashion in Area</h3>
+        <ul>
+          <li>Gym Accessories</li>
+          <li>Health Tips</li>
+          <li>Choose Your Timings</li>
+          <li>Rules for Gym</li>
+        </ul>
+      </div>
+      <div class="links">
+        <h3>Support</h3>
+        <ul>
+          <li>Frequently Asked Questions</li>
+          <li>Report a Payment Issue</li>
+          <li>Terms & Conditions</li>
+          <li>Privacy Policy</li>
+        </ul>
+      </div>
+    </div>
+    <br /><br />
+    <footer>
+      <div class="container flex">
+        <p class="tertiary">&copy; 2023 Minnat Vigour's GYM. All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <!-- Ion Icons JS -->
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"
+    ></script>
+    <!-- JS -->
+    <script src="script.js"></script>
+  </body>
+>>>>>>> 15410cda09c5271f587b08b9836a0975cbd684a0:html all/dashboard.html
+</html>
