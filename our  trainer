@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Trainers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #6a11cb, #00c9a7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h2 {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .trainers-section {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .trainer-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .trainer-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .trainer-card:hover {
+            transform: scale(1.05);
+        }
+
+        .trainer-card img {
+            width: 100%;
+            height: 220px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .trainer-card h3 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .trainer-card p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .trainer-card button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .trainer-card button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Our Trainers</h2>
+    <div class="trainers-section">
+        <div class="trainer-container">
+            <div class="trainer-card">
+                <img src="trainer1.jpg" alt="John">
+                <h3>John</h3>
+                <p>Age: 48</p>
+                <button>View Profile</button>
+            </div>
+            <div class="trainer-card">
+                <img src="trainer2.jpg" alt="Alish">
+                <h3>Alish</h3>
+                <p>Age: 40</p>
+                <button>View Profile</button>
+            </div>
+            <div class="trainer-card">
+                <img src="trainer3.jpg" alt="Rey">
+                <h3>Rey</h3>
+                <p>Age: 33</p>
+                <button>View Profile</button>
+            </div>
+            <div class="trainer-card">
+                <img src="trainer4.jpg" alt="Akon">
+                <h3>Akon</h3>
+                <p>Age: 35</p>
+                <button>View Profile</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

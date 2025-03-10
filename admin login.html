@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login & Signup</title>
+    <title>Admin Login</title>
     <style>
         * {
             margin: 0;
@@ -20,44 +20,23 @@
         }
         .container {
             background: white;
-            width: 550px;
+            width: 400px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        .tabs {
-            display: flex;
-            justify-content: space-between;
-            background: #29a396;
-        }
-        .tab {
-            flex: 1;
             text-align: center;
-            padding: 15px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .tab.active {
-            background: #217f72;
-        }
-        .form-container {
-            padding: 20px;
         }
         .form-group {
-            display: flex;
-            align-items: center;
             margin-bottom: 15px;
+            text-align: left;
         }
         .form-group label {
-            width: 120px;
+            display: block;
             font-size: 14px;
             font-weight: bold;
         }
         .form-group input {
-            flex: 1;
+            width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -67,10 +46,9 @@
         .error {
             color: red;
             font-size: 12px;
-            margin-left: 120px;
         }
         .btn {
-            width: 120px;
+            width: 100%;
             background: #29a396;
             color: white;
             border: none;
@@ -78,113 +56,61 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            display: block;
-            margin: 10px auto;
         }
-        .hidden {
-            display: none;
+        .forgot-password {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #29a396;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="tabs">
-            <div class="tab active" id="loginTab" onclick="showForm('login')">Login</div>
-            <div class="tab" id="signupTab" onclick="showForm('signup')">Signup</div>
-        </div>
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUsername" placeholder="Enter Username">
+            </div>
+            <p class="error" id="loginUserError"></p>
 
-        <div class="form-container" id="loginForm">
-            <form id="loginFormContent">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="loginUsername" placeholder="Enter Username">
-                </div>
-                <p class="error" id="loginUserError"></p>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter Password">
+            </div>
+            <p class="error" id="loginPassError"></p>
 
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter Password">
-                </div>
-                <p class="error" id="loginPassError"></p>
-
-                <button type="submit" class="btn">LOGIN</button>
-            </form>
-        </div>
-
-        <div class="form-container hidden" id="signupForm">
-            <form id="signupFormContent">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="signupUsername" placeholder="Enter Username">
-                </div>
-                <p class="error" id="signupUserError"></p>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="signupEmail" placeholder="Enter Email">
-                </div>
-                <p class="error" id="signupEmailError"></p>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="signupPassword" placeholder="Enter Password">
-                </div>
-                <p class="error" id="signupPassError"></p>
-
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
-                </div>
-                <p class="error" id="signupConfirmPassError"></p>
-
-                <button type="submit" class="btn">SIGN UP</button>
-            </form>
-        </div>
+            <button type="submit" class="btn">LOGIN</button>
+        </form>
+        <span class="forgot-password" onclick="forgotPassword()">Forgot Password?</span>
     </div>
 
     <script>
-       document.getElementById("loginFormContent").addEventListener("submit", function(event) {
-    event.preventDefault();
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
 
-    let username = document.getElementById("loginUsername").value.trim();
-    let password = document.getElementById("loginPassword").value.trim();
-    let userError = document.getElementById("loginUserError");
-    let passError = document.getElementById("loginPassError");
+            let username = document.getElementById("loginUsername").value.trim();
+            let password = document.getElementById("loginPassword").value.trim();
+            let userError = document.getElementById("loginUserError");
+            let passError = document.getElementById("loginPassError");
 
-    userError.textContent = username === "" ? "Username is required!" : "";
-    passError.textContent = password === "" ? "Password is required!" : "";
+            userError.textContent = username === "" ? "Username is required!" : "";
+            passError.textContent = password === "" ? "Password is required!" : "";
 
-    if (username !== "" && password !== "") {
-        alert("Login Successful!");
-        window.location.href = "dashboard.html"; // Redirect after login
-    }
-});
+            if (username !== "" && password !== "") {
+                alert("Login Successful!");
+                setTimeout(() => {
+                    window.location.assign("admin panel.html");
+                }, 1000);
+            }
+        });
 
-document.getElementById("signupFormContent").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    let username = document.getElementById("signupUsername").value.trim();
-    let email = document.getElementById("signupEmail").value.trim();
-    let password = document.getElementById("signupPassword").value.trim();
-    let confirmPassword = document.getElementById("signupConfirmPassword").value.trim();
-
-    let userError = document.getElementById("signupUserError");
-    let emailError = document.getElementById("signupEmailError");
-    let passError = document.getElementById("signupPassError");
-    let confirmPassError = document.getElementById("signupConfirmPassError");
-
-    userError.textContent = username === "" ? "Username is required!" : "";
-    emailError.textContent = email === "" ? "Email is required!" : !validateEmail(email) ? "Enter a valid email!" : "";
-    passError.textContent = password === "" ? "Password is required!" : !validatePassword(password) ? "Password must be at least 6 characters & contain a number!" : "";
-    confirmPassError.textContent = confirmPassword !== password ? "Passwords do not match!" : "";
-
-    if (username && validateEmail(email) && validatePassword(password) && confirmPassword === password) {
-        alert("Signup Successful!");
-        window.location.href = "admin panel.html"; // Redirect after signup
-    }
-});
+        function forgotPassword() {
+            alert("Password reset instructions have been sent to your email.");
+        }
     </script>
-
 </body>
 </html>
