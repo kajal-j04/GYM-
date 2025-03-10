@@ -112,6 +112,12 @@ const trainerSchema = new mongoose.Schema({
     shift: String,
     profilePic: String
 });
+const packageSchema = new mongoose.Schema({
+    packagename: String,
+    description: String,
+    amount: String,
+    duration: String,
+});
 
 // Create Model
 const Weight = mongoose.model("Weight", weightSchema);
@@ -123,6 +129,7 @@ const Registration = mongoose.model('Registration', registrationSchema);
 const Member = mongoose.model("Member", MemberSchema);
 const Enquiry = mongoose.model("Enquiry", enquirySchema);
 const Trainer = mongoose.model("Trainer",trainerSchema);
+const Package = mongoose.model("Package",trainerSchema);
 
 // Routes
 app.post('/signup', async (req, res) => {
@@ -319,6 +326,27 @@ app.get("/trainer", async (req, res) => {
     try {
         const trainer = await Trainer.find();
         res.json(trainer);
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
+    }
+});
+app.post("/package", async (req, res) => {
+    try {
+        const package = new package(req.body);
+        await package.save();
+        res.status(200).json({ 
+            message: "submitted successfully!", 
+            redirect: "/dashboard" // URL to redirect
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
+    }
+});
+
+app.get("/package", async (req, res) => {
+    try {
+        const package = await package.find();
+        res.json(package);
     } catch (error) {
         res.status(500).json({ error: "Error submitting enquiry" });
     }

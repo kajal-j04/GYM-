@@ -63,20 +63,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function collectFormData() {
         return {
-            memberId: document.getElementById("member-id").value,
-            gender: document.getElementById("gender").value,
-            name: document.getElementById("name").value,
-            dob: document.getElementById("dob").value,
-            contactNo: document.getElementById("contact-no").value,
-            email: document.getElementById("email").value,
-            address: document.getElementById("full-address").value,
-            plans: document.getElementById("plans").value,
-            totalAmount: parseFloat(document.getElementById("total-amount").value) || 0,
-            height: parseFloat(document.getElementById("height").value) || 0,
-            weight: parseFloat(document.getElementById("weight").value) || 0,
-            timeSlot: document.getElementById("time-slot").value,
+            memberId: document.getElementById("member-id")?.value || "",
+            gender: document.getElementById("gender")?.value || "",
+            name: document.getElementById("name")?.value || "",
+            dob: document.getElementById("dob")?.value || "",
+            contactNo: document.getElementById("contact-no")?.value || "",
+            email: document.getElementById("email")?.value || "",
+            plans: document.getElementById("plans")?.value || "",
+            totalAmount: parseFloat(document.getElementById("total-amount")?.value) || 0,
+            height: parseFloat(document.getElementById("height")?.value) || 0,
+            weight: parseFloat(document.getElementById("weight")?.value) || 0,
+            timeSlot: document.getElementById("time-slot")?.value || "",
         };
     }
+    
 
     function resetForm() {
         formInputs.forEach(input => {

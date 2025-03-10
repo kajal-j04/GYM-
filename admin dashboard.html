@@ -1,17 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </head>
-
-
 <style>
     .black {
         background-color: black;
@@ -94,16 +92,47 @@
         border-radius: 50%;
         margin-top: 10px;
     }
-
-    .mdl-card{
-        background: transparent;
-    }
 </style>
 
 <body>
-    <!-- All pages -->
-    <div class="mdl-layout__content">
-        <div id="trainer">
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+    mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <div class="mdl-layout-spacer"></div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+          mdl-textfield--floating-label mdl-textfield--align-right">
+                    <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
+                        <i class="material-icons">search</i>
+                    </label>
+                    <div class="mdl-textfield__expandable-holder">
+
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer black">
+            <span class="mdl-layout-title">Admin Dashboard</span>
+            <nav class="mdl-navigation">
+                <a href="#" class="mdl-navigation__link" onclick="loadContent('togle')">🏠 Dashboard</a>
+                <a href="#" class="mdl-navigation__link" onclick="loadContent('trainer')">🏋️ Trainer</a>
+                <a href="#" class="mdl-navigation__link" onclick="loadContent('schedule')">📦 Package</a>
+                <a href="#" class="mdl-navigation__link" onclick="loadContent('togle')">👥 Member</a>
+                <a href="#" class="mdl-navigation__link" onclick="loadContent('togle')">🛠 Equipment</a>
+                <a href="#" class="mdl-navigation__link" onclick="loadContent('togle')">❓ Enquiry</a>
+
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div class="page-content" id="content-area">
+
+            </div>
+        </main>
+
+        <!-- All pages -->
+
+        <div id="trainer" class="hidden">
             <div class="mdl-grid">
                 <!-- First Column (Left) with an image that spans 2 rows -->
                 <div class="mdl-cell mdl-cell--2-col mdl-cell--12-col-phone">
@@ -122,7 +151,7 @@
                         <div class="mdl-card__supporting-text">
                             <!-- First Row: Hello -->
                             <h4><strong>Hello Admin</strong></h4>
-                            <p>Manage your gym Member</p>
+                            <p>Manage Trainers for your gym.</p>
                         </div>
                     </div>
                 </div>
@@ -130,23 +159,23 @@
                 <!-- Button 1 -->
                 <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--3-col-phone">
                     <div class="big-button">
-                        <div class="button-content" onclick="loadDivContent('addTrainer')">
+                        <div class="button-content" onclick="loadContent('addTrainer')">
                             <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
                                 <i class="material-icons" style="color: red;">add</i>
                             </label>
-                            <span class="button-text">Add Member</span>
+                            <span class="button-text">Add Trainer</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Button 2 -->
                 <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--3-col-phone">
-                    <div class="big-button" onclick="loadDivContent('getTrainer')">
+                    <div class="big-button" onclick="loadContent('getTrainer')">
                         <div class="button-content">
                             <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
                                 <i class="material-icons" style="color: blue;">visibility</i>
                             </label>
-                            <span class="button-text">View Member</span>
+                            <span class="button-text">View Trainer</span>
                         </div>
                     </div>
                 </div>
@@ -158,7 +187,7 @@
                             <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
                                 <i class="material-icons" style="color: green;">check</i>
                             </label>
-                            <span class="button-text">Approve Member</span>
+                            <span class="button-text">Approve Trainer</span>
                         </div>
                     </div>
                 </div>
@@ -170,12 +199,12 @@
                             <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
                                 <i class="material-icons" style="color: purple;">schedule</i>
                             </label>
-                            <span class="button-text">Member packages</span>
+                            <span class="button-text">Trainer Shift</span>
                         </div>
                     </div>
                 </div>
-            </div> 
-        </div>                    
+            </div>
+        </div>
 
         <div id="addTrainer" class="hidden">
             <div class="mdl-card mdl-shadow--2dp" style="width: 400px; margin: 50px auto; padding: 20px;">
@@ -183,7 +212,7 @@
                 <form id="traienrform">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" id="name" name="name">
-                        <label class="mdl-textfield__label" for="name"> Member Name</label>
+                        <label class="mdl-textfield__label" for="name">Name</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input type="file" id="profilePic" name="profilePic" accept="image/*"
@@ -196,18 +225,13 @@
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" id="experience" name="experience">
-                        <label class="mdl-textfield__label" for="experience">Package Taken</label>
+                        <label class="mdl-textfield__label" for="experience">Experience</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" id="shift" name="shift">
-                        <label class="mdl-textfield__label" for="shift">Package Amount</label>
+                        <label class="mdl-textfield__label" for="shift">Shift</label>
                     </div>
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" id="shift" name="shift">
-                        <label class="mdl-textfield__label" for="shift">Trainer Name</label>
-                    </div>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit"
-                        onclick="addTrainer()">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" onclick="addTrainer()">
                         Submit
                     </button>
                 </form>
@@ -216,17 +240,15 @@
 
         <div id="getTrainer" class="hidden">
             <div class="mdl-card mdl-shadow--2dp" style="width: 80%; margin: 50px auto; padding: 20px;">
-                <h4 class="mdl-typography--headline"><b>Member - Trainer List</b></h4>
+                <h4 class="mdl-typography--headline">Trainer Data</h4>
                 <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th class="mdl-data-table__cell--non-numeric">Member Name</th>
-                            <th class="mdl-data-table__cell--non-numeric">Member Pic</th>
-                            <th>Member Mobile</th>
-                            <th>Package Taken</th> member name member mobile Package Taken Package Amount Trainer Name 
-                            <th>Package Amount</th>
-                            <th>Trainer Name</th>
-                            <th>Edit</th>
+                            <th class="mdl-data-table__cell--non-numeric">Profile</th>
+                            <th class="mdl-data-table__cell--non-numeric">Name</th>
+                            <th>Mobile</th>
+                            <th>Experience</th>
+                            <th>Shift</th>
                         </tr>
                     </thead>
                     <tbody id="trainerTableBody">
@@ -234,19 +256,28 @@
                 </table>
             </div>
         </div>
+
+        <div id="schedule" class="hidden">
+            <h3>Schedule Content</h3>
+            <p>This is the content for the Schedule page</p>
+        </div>
+
+        <div id="togle" class="hidden">
+            <h3>Toggle Content</h3>
+            <p>This is the content for the Toggle page</p>
+        </div>
     </div>
-
-
 </body>
-
 <script>
+    let currentContent = null; // Track the currently shown content
+
     function loadContent(page) {
 
         // Show the selected content
         const contentDiv = document.getElementById(page);
         if (contentDiv) {
-            document.getElementById('main-content').innerHTML = contentDiv.innerHTML;
-            if (page == 'getTrainer') {
+            document.getElementById('content-area').innerHTML = contentDiv.innerHTML;
+            if(page=='getTrainer'){
                 fetchTrainers()
             }
         } else {
@@ -268,62 +299,66 @@
     }
 
     async function fetchTrainers() {
-        try {
-            const response = await fetch('http://localhost:3000/trainer'); // Replace with actual API endpoint
-            const trainers = await response.json();
-            const tableBody = document.getElementById('trainerTableBody');
-            tableBody.innerHTML = '';
-            trainers.forEach(trainer => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+            try {
+                const response = await fetch('http://localhost:3000/trainer'); // Replace with actual API endpoint
+                const trainers = await response.json();
+                const tableBody = document.getElementById('trainerTableBody');
+                tableBody.innerHTML = '';
+                trainers.forEach(trainer => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
                         <td class="mdl-data-table__cell--non-numeric"><img src="${trainer.profilePic}" width="50" height="50" style="border-radius: 50%;"></td>
                         <td class="mdl-data-table__cell--non-numeric">${trainer.name}</td>
                         <td>${trainer.mobile}</td>
                         <td>${trainer.experience}</td>
                         <td>${trainer.shift}</td>
                     `;
-                tableBody.appendChild(row);
-            });
-        } catch (error) {
-            console.error('Error fetching trainer data:', error);
-        }
-    }
-
-    async function addTrainer() {
-        event.preventDefault()
-        const name = document.getElementById('name').value;
-        const mobile = document.getElementById('mobile').value;
-        const experience = document.getElementById('experience').value;
-        const shift = document.getElementById('shift').value;
-        const profilePic = document.getElementById('profilePicPreview').src;
-
-        if (!name || !mobile || !experience || !shift || profilePic === '') {
-            alert('Please fill all fields and upload an image.');
-            return;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching trainer data:', error);
+            }
         }
 
-        const trainerData = { name, mobile, experience, shift, profilePic };
+        async function addTrainer() {
+            event.preventDefault()
+            const name = document.getElementById('name').value;
+            const mobile = document.getElementById('mobile').value;
+            const experience = document.getElementById('experience').value;
+            const shift = document.getElementById('shift').value;
+            const profilePic = document.getElementById('profilePicPreview').src;
 
-        try {
-            await fetch('http://localhost:3000/trainer', { // Replace with actual API endpoint
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(trainerData)
-            }).then(res => {
-                if (res.status == 200) {
-                    alert("Added successfully")
-                    loadContent('trainer')
-                } else {
-                    alert("Error occured while adding trainer")
-                }
-            });
-        } catch (error) {
-            console.error('Error saving trainer data:', error);
+            if (!name || !mobile || !experience || !shift || profilePic === '') {
+                alert('Please fill all fields and upload an image.');
+                return;
+            }
+
+            const trainerData = { name, mobile, experience, shift, profilePic };
+
+            try {
+                await fetch('http://localhost:3000/trainer', { // Replace with actual API endpoint
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(trainerData)
+                }).then(res=>{
+                    if(res.status ==200) {
+                        alert("Added successfully")
+                        loadContent('trainer')
+                    } else {
+                        alert("Error occured while adding trainer")
+                    }
+                });
+            } catch (error) {
+                console.error('Error saving trainer data:', error);
+            }
+
+            document.getElementById('trainerForm').reset();
+            document.getElementById('profilePicPreview').style.display = 'none';
         }
 
-        document.getElementById('trainerForm').reset();
-        document.getElementById('profilePicPreview').style.display = 'none';
-    }
+        
+
+    loadContent("trainer");
 </script>
 
 </html>
