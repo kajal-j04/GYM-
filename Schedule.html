@@ -6,190 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalyan's Gym</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
-        }
-
-        body {
-            height: 100%;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 30px;
-            backdrop-filter: blur(5px);
-            background-color: #091919;
-        }
-
-        header {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .heading {
-            color: #29a396;
-            font-size: 80px;
-            text-align: center;
-        }
-
-        .container {
-            height: 850px;
-            width: 550px;
-            background-color: white;
-            box-shadow: 8px 8px 20px rgb(128, 128, 128);
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        .btn {
-            height: 60px;
-            width: 320px;
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .schedule-btn {
-            height: 50px;
-            width: 200px;
-            border-radius: 30px;
-            background-color: #29a396;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 10px rgba(41, 163, 150, 0.4);
-        }
-
-        .schedule-btn:hover {
-            background-color: #3be0c4;
-            box-shadow: 0 6px 15px rgba(59, 224, 196, 0.5);
-            transform: scale(1.05);
-        }
-
-        .schedule-btn:active {
-            transform: scale(0.98);
-            box-shadow: none;
-        }
-
-        .form-section {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .Schedule-box {
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .field {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .field label {
-            font-size: 18px;
-            color: #29a396;
-            margin-bottom: 8px;
-            display: block;
-            text-align: left;
-        }
-
-        .ele {
-            height: 50px;
-            width: 100%;
-            outline: none;
-            border: none;
-            background-color: rgb(240, 240, 240);
-            border-radius: 50px;
-            padding-left: 20px;
-            font-size: 16px;
-        }
-
-        .clkbtn {
-            height: 50px;
-            width: 100%;
-            border-radius: 50px;
-            background-color: #29a396;
-            font-size: 18px;
-            color: white;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .clkbtn:hover {
-            background-color: #3be0c4; 
-            box-shadow: 0 4px 15px rgba(41, 163, 150, 0.5);
-            transform: scale(1.05);
-        }
-
-        /* Cancel Button Styling */
-        .cancelbtn {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 16px;
-            border-radius: 50px;
-        }
-
-        .cancelbtn:hover {
-            background-color: #d32f2f;
-        }
-
-        /* Responsive Design */
-        @media screen and (max-width: 650px) {
-            .container {
-                height: 700px;
-                width: 320px;
-            }
-
-            .btn {
-                height: 50px;
-                width: 200px;
-            }
-
-            .schedule-btn {
-                height: 45px;
-                font-size: 16px;
-            }
-
-            .clkbtn {
-                height: 50px;
-                width: 200px;
-                font-size: 16px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="Schedule.css">
 </head>
 
 <body>
@@ -197,45 +14,99 @@
         <h1 class="heading">Minnat Vigour Gym</h1>
     </header>
 
-    <div class="container glass">
+    <div class="container">
         <div class="btn">
             <button id="scheduleBtn" class="schedule-btn">Schedule</button>
         </div>
 
-       
-            <!-- Cancel Button -->
+        <div class="form-section" id="formSection">
             
-
             <div class="Schedule-box">
-
-                <!-- Class ID Field -->
+                <!-- Full Name -->
                 <div class="field">
-                    <label for="class_id">Class ID:</label>
-                    <input type="number" id="class_id" class="class-id ele" placeholder="Enter class ID (e.g., 101)" required>
+                    <label for="full_name">Full Name:</label>
+                    <input type="text" id="full_name" class="ele" placeholder="Enter your full name" required>
                 </div>
 
-                <!-- Class Name Field -->
+                <!-- Email Address -->
                 <div class="field">
-                    <label for="class_name">Class Name:</label>
-                    <input type="text" id="class_name" class="class-name ele" placeholder="Enter class name" required>
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" class="ele" placeholder="Enter your email" required>
                 </div>
 
-                <!-- Trainer ID Field -->
+                <!-- Phone Number -->
                 <div class="field">
-                    <label for="trainer_id">Trainer ID:</label>
-                    <input type="number" id="trainer_id" class="trainer-id ele" placeholder="Enter trainer ID" required>
+                    <label for="phone">Phone Number:</label>
+                    <input type="number" id="phone" class="ele" placeholder="Enter your phone number" required>
                 </div>
 
-                <!-- Schedule Field -->
+                <!-- Preferred Workout Days -->
                 <div class="field">
-                    <label for="schedule">Schedule (Date and Time):</label>
-                    <input type="datetime-local" id="schedule" class="schedule ele" required>
+                    <label>Preferred Workout Days:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="monday" value="Monday"><label for="monday">Monday</label>
+                        <input type="checkbox" id="tuesday" value="Tuesday"><label for="tuesday">Tuesday</label>
+                        <input type="checkbox" id="wednesday" value="Wednesday"><label for="wednesday">Wednesday</label>
+                        <input type="checkbox" id="thursday" value="Thursday"><label for="thursday">Thursday</label>
+                        <input type="checkbox" id="friday" value="Friday"><label for="friday">Friday</label>
+                        <input type="checkbox" id="saturday" value="Saturday"><label for="saturday">Saturday</label>
+                        <input type="checkbox" id="sunday" value="Sunday"><label for="sunday">Sunday</label>
+                    </div>
                 </div>
 
-                <!-- Max Capacity Field -->
+                <!-- Preferred Time Slot -->
                 <div class="field">
-                    <label for="max_capacity">Max Capacity:</label>
-                    <input type="number" id="max_capacity" class="max-capacity ele" placeholder="Enter max capacity" required>
+                    <label for="time_slot">Preferred Time Slot:</label>
+                    <select id="time_slot" class="ele">
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                        <option value="Evening">Evening</option>
+                        <option value="Night">Night</option>
+                    </select>
+                </div>
+
+                <!-- Workout Type -->
+                <div class="field">
+                    <label>Workout Type:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="strength" value="Strength Training"><label for="strength">Strength Training</label>
+                        <input type="checkbox" id="cardio" value="Cardio"><label for="cardio">Cardio</label>
+                        <input type="checkbox" id="yoga" value="Yoga"><label for="yoga">Yoga</label>
+                        <input type="checkbox" id="hiit" value="HIIT"><label for="hiit">HIIT</label>
+                        <input type="checkbox" id="crossfit" value="CrossFit"><label for="crossfit">CrossFit</label>
+                    </div>
+                </div>
+
+                <!-- Duration per Session -->
+                <div class="field">
+                    <label for="duration">Duration per Session:</label>
+                    <select id="duration" class="ele">
+                        <option value="30 min">30 min</option>
+                        <option value="45 min">45 min</option>
+                        <option value="1 hour">1 hour</option>
+                        <option value="1.5 hours">1.5 hours</option>
+                    </select>
+                </div>
+
+                <!-- Primary Goal -->
+                <div class="field">
+                    <label for="goal">Primary Goal:</label>
+                    <select id="goal" class="ele">
+                        <option value="Weight Loss">Weight Loss</option>
+                        <option value="Muscle Gain">Muscle Gain</option>
+                        <option value="Endurance">Endurance</option>
+                        <option value="Flexibility">Flexibility</option>
+                        <option value="General Fitness">General Fitness</option>
+                    </select>
+                </div>
+
+                <!-- Group or Individual Sessions -->
+                <div class="field">
+                    <label>Group or Individual Sessions?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="group" name="session_type" value="Group"><label for="group">Group</label>
+                        <input type="radio" id="individual" name="session_type" value="Individual"><label for="individual">Individual</label>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->
@@ -244,96 +115,7 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Get elements
-            const scheduleBtn = document.getElementById("scheduleBtn");
-            const submitBtn = document.querySelector(".clkbtn");
-            const cancelBtn = document.getElementById("cancelBtn");
-            const formSection = document.querySelector(".form-section");
-
-            // Show the form when the "Schedule" button is clicked
-            scheduleBtn.addEventListener("click", function () {
-                formSection.style.display = "block"; // Show the form
-            });
-
-            // Form submission handling
-            submitBtn.addEventListener("click", function (event) {
-                event.preventDefault(); // Prevent form submission to handle validation manually
-
-                // Get input values
-                const classId = document.getElementById("class_id").value;
-                const className = document.getElementById("class_name").value;
-                const trainerId = document.getElementById("trainer_id").value;
-                const schedule = document.getElementById("schedule").value;
-                const maxCapacity = document.getElementById("max_capacity").value;
-
-                // Validate class ID (must be a number)
-                if (!classId || isNaN(classId) || classId <= 0) {
-                    alert("Please enter a valid Class ID.");
-                    return;
-                }
-
-                // Validate class name (cannot be empty)
-                if (!className) {
-                    alert("Class Name is required.");
-                    return;
-                }
-
-                // Validate trainer ID (must be a number)
-                if (!trainerId || isNaN(trainerId) || trainerId <= 0) {
-                    alert("Please enter a valid Trainer ID.");
-                    return;
-                }
-
-                // Validate schedule (cannot be empty)
-                if (!schedule) {
-                    alert("Please enter a valid schedule (Date and Time).");
-                    return;
-                }
-
-                // Validate max capacity (must be a positive number)
-                if (!maxCapacity || isNaN(maxCapacity) || maxCapacity <= 0) {
-                    alert("Please enter a valid Max Capacity.");
-                    return;
-                }
-
-                // Create an object to represent the schedule data
-                const scheduleData = {
-                    classId2: classId,
-                    className: className,
-                    trainerId: trainerId,
-                    schedule: schedule,
-                    maxCapacity: maxCapacity
-                };
-
-                fetch('http://localhost:3000/schedule', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(scheduleData),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert("Schedule successfully created!");
-                }).catch(err => {
-                    console.error(err);
-                    alert("Error creating schedule !");
-                });
-
-                // Hide the form after submission
-                formSection.style.display = "none";
-            });
-
-            // Cancel button: Hide the form and reset it
-            cancelBtn.addEventListener("click", function () {
-                
-                // Reset all input fields
-                document.querySelector(".Schedule-box").reset();
-            });
-        });
-    </script>
+    <script src="Schedule.js"></script>
 </body>
 
 </html>

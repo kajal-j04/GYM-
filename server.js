@@ -309,6 +309,49 @@ app.get("/enquiries", async (req, res) => {
     }
 });
 
+app.post("/trainer", async (req, res) => {
+    try {
+        const trainer = new Trainer(req.body);
+        await trainer.save();
+        res.status(200).json({ 
+            message: "Trainer submitted successfully!", 
+            redirect: "/dashboard" // URL to redirect
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
+    }
+});
+
+app.get("/trainer", async (req, res) => {
+    try {
+        const trainer = await Trainer.find();
+        res.json(trainer);
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
+    }
+});
+app.post("/package", async (req, res) => {
+    try {
+        const package = new package(req.body);
+        await package.save();
+        res.status(200).json({ 
+            message: "submitted successfully!", 
+            redirect: "/dashboard" // URL to redirect
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
+    }
+});
+
+app.get("/package", async (req, res) => {
+    try {
+        const package = await package.find();
+        res.json(package);
+    } catch (error) {
+        res.status(500).json({ error: "Error submitting enquiry" });
+    }
+});
+
 
 // Start Server
 app.listen(PORT, () => {

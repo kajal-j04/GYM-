@@ -1,74 +1,98 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Get elements
-    const scheduleBtn = document.getElementById("schedule");
+    const scheduleBtn = document.getElementById("scheduleBtn");
     const submitBtn = document.querySelector(".clkbtn");
     const formSection = document.querySelector(".form-section");
+    const form = document.querySelector(".Schedule-box");
 
     // Show the form when the "Schedule" button is clicked
     scheduleBtn.addEventListener("click", function () {
-        formSection.style.display = "block"; // Show the form
+        formSection.style.display = "block";
     });
 
     // Form submission handling
-    submitBtn.addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent form submission to handle validation manually
+    submitBtn.addEventListener("click", async function (event) {
+        event.preventDefault(); // Prevent default form submission
 
         // Get input values
-        const classId = document.getElementById("class_id").value;
-        const className = document.getElementById("class_name").value;
-        const trainerId = document.getElementById("trainer_id").value;
-        const schedule = document.getElementById("schedule").value;
-        const maxCapacity = document.getElementById("max_capacity").value;
+        const fullName = document.getElementById("full_name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const timeSlot = document.getElementById("time_slot").value;
+        const duration = document.getElementById("duration").value;
+        const goal = document.getElementById("goal").value;
+        const sessionType = document.querySelector("input[name='session_type']:checked");
 
-        // Validate class ID (must be a number)
-        if (!classId || isNaN(classId) || classId <= 0) {
-            alert("Please enter a valid Class ID.");
+        // Get selected workout types
+        const workoutTypes = document.querySelectorAll("input[type='checkbox']:checked");
+        const selectedWorkoutTypes = Array.from(workoutTypes).map(cb => cb.value);
+
+        // Get selected workout days
+        const workoutDays = document.querySelectorAll(".checkbox-group input[type='checkbox']:checked");
+        const selectedWorkoutDays = Array.from(workoutDays).map(cb => cb.value);
+
+        // Validation checks
+        if (fullName.length < 3) {
+            alert("Please enter a valid full name (at least 3 characters).");
             return;
         }
 
-        // Validate class name (cannot be empty)
-        if (!className) {
-            alert("Class Name is required.");
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            alert("Please enter a valid email address.");
             return;
         }
 
-        // Validate trainer ID (must be a number)
-        if (!trainerId || isNaN(trainerId) || trainerId <= 0) {
-            alert("Please enter a valid Trainer ID.");
+        if (!phone.match(/^\d{10}$/)) {
+            alert("Please enter a valid 10-digit phone number.");
             return;
         }
 
-        // Validate schedule (cannot be empty)
-        if (!schedule) {
-            alert("Please enter a valid schedule (Date and Time).");
+        if (selectedWorkoutTypes.length === 0) {
+            alert("Please select at least one workout type.");
             return;
         }
 
-        // Validate max capacity (must be a positive number)
-        if (!maxCapacity || isNaN(maxCapacity) || maxCapacity <= 0) {
-            alert("Please enter a valid Max Capacity.");
+        if (!sessionType) {
+            alert("Please select a session type (Group or Individual).");
             return;
         }
 
-        // Create an object to represent the schedule data
+        if (selectedWorkoutDays.length === 0) {
+            alert("Please select at least one preferred workout day.");
+            return;
+        }
+
+        // Create an object to store the form data
         const scheduleData = {
-            classId: classId,
-            className: className,
-            trainerId: trainerId,
-            schedule: schedule,
-            maxCapacity: maxCapacity
+            name: fullName,
+            email: email,
+            phone: phone,
+            timeSlot: timeSlot,
+            duration: duration,
+            goal: goal,
+            sessionType: sessionType.value,
+            workoutType: selectedWorkoutTypes,
+            workoutDays: selectedWorkoutDays,
         };
 
-        // Log the data to the console (or you can send this to a server)
-        console.log("Schedule Data Submitted: ", scheduleData);
+        try {
+            // Send data to backend using fetch
+            const response = await fetch("http://localhost:3000/schedule", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(scheduleData),
+            });
 
-        // Optionally, reset the form after successful submission
-        document.querySelector(".Schedule-box").reset();
-
-        // Show success message
-        alert("Schedule successfully created!");
-
-        // Hide the form after submission
-        formSection.style.display = "none";
+            if (response.ok) {
+                alert("Schedule successfully created!");
+                window.location.href = "dashboard.html"; // ✅ Redirect to dashboard.html
+            } else {
+                alert("Failed to submit schedule. Try again!");
+            }
+        } catch (error) {
+            console.error("Error submitting schedule:", error);
+            alert("Server error. Try again later!");
+        }
     });
 });

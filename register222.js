@@ -1,83 +1,88 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const registerButton = document.querySelector(".clkbtn");
+    // Select the registration button and all form input elements (with class "ele")
+    const submitBtn = document.querySelector(".clkbtn");
     const formInputs = document.querySelectorAll(".ele");
 
-    registerButton.addEventListener("click", async function (event) {
-        event.preventDefault();
-        
-        if (validateForm()) {
-            const formData = collectFormData();
-            try {
-                const response = await fetch("http://localhost:3000/register222", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                });
-                
+    // Registration form submission handling
+    submitBtn.addEventListener("click", async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get input values from the registration form
+        const memberId = document.getElementById("member-id").value.trim();
+        const gender = document.getElementById("gender").value;
+        const name = document.getElementById("name").value.trim();
+        const dob = document.getElementById("dob").value;
+        const contactNo = document.getElementById("contact-no").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const plans = document.getElementById("Plans").value;
+        const totalAmount = document.getElementById("total-amount").value.trim();
+        const height = document.getElementById("height").value.trim();
+        const weight = document.getElementById("weight").value.trim();
+        const timeSlot = document.getElementById("time-slot").value;
+
+        // Basic validation checks
+        if (memberId === "") {
+            alert("Please enter your Member ID.");
+            return;
+        }
+        if (name.length < 3) {
+            alert("Please enter a valid name (at least 3 characters).");
+            return;
+        }
+        if (!/^\d{10}$/.test(contactNo)) {
+            alert("Please enter a valid 10-digit contact number.");
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+        if (plans === "") {
+            alert("Please select a plan.");
+            return;
+        }
+
+        // Create an object to store the registration data
+        const registrationData = {
+            memberId: memberId,
+            gender: gender,
+            name: name,
+            dob: dob,
+            contactNo: contactNo,
+            email: email,
+            plans: plans,
+            totalAmount: parseFloat(totalAmount) || 0,
+            height: parseFloat(height) || 0,
+            weight: parseFloat(weight) || 0,
+            timeSlot: timeSlot,
+        };
+
+        try {
+            // Send registration data to backend using fetch
+            const response = await fetch("http://localhost:3000/Register222", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(registrationData),
+            });
+
+            if (response.ok) {
+                alert("Registration successful!");
+                resetForm();
+                // Optionally, redirect the user after successful registration:
+                // window.location.href = "dashboard.html";
+            } else {
                 const result = await response.json();
-                if (response.ok) {
-                    alert("Registration successful!");
-                    resetForm();
-                } else {
-                    alert("Error: " + result.message);
-                }
-            } catch (error) {
-                console.error("Error submitting form:", error);
-                alert("Failed to connect to server. Please try again later.");
+                alert("Error: " + result.message);
             }
+        } catch (error) {
+            console.error("Error submitting registration:", error);
+            alert("Failed to connect to server. Please try again later.");
         }
     });
 
-    function validateForm() {
-        let isValid = true;
-        
-        formInputs.forEach(input => {
-            if (input.value.trim() === "") {
-                isValid = false;
-                input.style.borderColor = "red";
-            } else {
-                input.style.borderColor = "#ccc";
-            }
-        });
-
-        // Validate contact number
-        const contactNo = document.getElementById("contact-no");
-        if (!/^[0-9]{10}$/.test(contactNo.value)) {
-            isValid = false;
-            contactNo.style.borderColor = "red";
-            alert("Please enter a valid 10-digit contact number.");
-        }
-
-        // Validate email
-        const email = document.getElementById("email");
-        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value)) {
-            isValid = false;
-            email.style.borderColor = "red";
-            alert("Please enter a valid email address.");
-        }
-
-        return isValid;
-    }
-
-    function collectFormData() {
-        return {
-            memberId: document.getElementById("member-id")?.value || "",
-            gender: document.getElementById("gender")?.value || "",
-            name: document.getElementById("name")?.value || "",
-            dob: document.getElementById("dob")?.value || "",
-            contactNo: document.getElementById("contact-no")?.value || "",
-            email: document.getElementById("email")?.value || "",
-            plans: document.getElementById("plans")?.value || "",
-            totalAmount: parseFloat(document.getElementById("total-amount")?.value) || 0,
-            height: parseFloat(document.getElementById("height")?.value) || 0,
-            weight: parseFloat(document.getElementById("weight")?.value) || 0,
-            timeSlot: document.getElementById("time-slot")?.value || "",
-        };
-    }
-    
-
+    // Function to reset the form inputs after successful registration
     function resetForm() {
         formInputs.forEach(input => {
             input.value = "";

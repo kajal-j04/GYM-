@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kalyan's GYM</title>
+    <title>Kalyan's GYM</title>
     <link rel="stylesheet" href="weight track.css">
 </head>
 
@@ -16,44 +16,55 @@
     <div class="container glass">
         <div class="slider"></div>
         <div class="btn">
-            <button id="Register" class="Register">Track Your Weight</button>
+            <button id="toggleFormBtn" class="Register">Track Your Weight</button>
         </div>
 
-        <div class="form-section">
-            <div class="register-box">
-                <!-- Member ID -->
+        <div class="form-section" id="formSection">
+            <form id="weightForm" class="register-box">
+                <!-- Full Name -->
                 <div class="form-group">
-                    <label for="member-id" class="form-label">Member ID</label>
-                    <input type="text" id="member-id" class="member-id ele" placeholder="Enter Member ID" required>
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" id="fullName" class="ele" placeholder="Enter Full Name" required>
                 </div>
 
-                <!-- Weight Gain -->
+                <!-- Email ID -->
                 <div class="form-group">
-                    <label for="weight-gain" class="form-label">Weight Gain</label>
-                    <input type="number" id="weight-gain" class="weight-gain ele" placeholder="Weight Gain" step="0.01">
+                    <label for="emailID" class="form-label">Email ID</label>
+                    <input type="email" id="emailID" class="ele" placeholder="Enter Email ID" required>
                 </div>
 
-                <!-- Weight Loss -->
+                <!-- Current Weight -->
                 <div class="form-group">
-                    <label for="weight-loss" class="form-label">Weight Loss</label>
-                    <input type="number" id="weight-loss" class="weight-loss ele" placeholder="Weight Loss" step="0.01">
+                    <label for="currentWeight" class="form-label">Current Weight (kg)</label>
+                    <input type="number" id="currentWeight" class="ele" placeholder="Enter Current Weight" step="0.01" required>
                 </div>
 
-                <!-- Member ID (Again) -->
+                <!-- Target Weight -->
                 <div class="form-group">
-                    <label for="previous-weight" class="form-label">Previous Weight</label>
-                    <input type="text" id="previous-weight" class="previous-weight ele" placeholder="Enter Previous Weight" required>
+                    <label for="targetWeight" class="form-label">Target Weight (kg)</label>
+                    <input type="number" id="targetWeight" class="ele" placeholder="Enter Target Weight" step="0.01" required>
                 </div>
 
-                <!-- Created Date -->
+                <!-- Time Period of Every Measurement -->
                 <div class="form-group">
-                    <label for="created-date" class="form-label">Created Date</label>
-                    <input type="date" id="created-date" class="created-date ele" required>
+                    <label for="timePeriod" class="form-label">Time Period of Every Measurement</label>
+                    <select id="timePeriod" class="ele" required>
+                        <option value="" disabled selected>Select Time Period</option>
+                        <option value="One Week">One Week</option>
+                        <option value="15 Days">15 Days</option>
+                        <option value="One Month">One Month</option>
+                    </select>
+                </div>
+
+                <!-- Previous Weight Entries -->
+                <div class="form-group">
+                    <label for="previousWeightEntries" class="form-label">Previous Weight Entries</label>
+                    <textarea id="previousWeightEntries" class="ele" placeholder="Enter Previous Weight Entries" required></textarea>
                 </div>
 
                 <!-- Button -->
-                <button class="clkbtn">Track</button>
-            </div>
+                <button type="submit" class="clkbtn">Track</button>
+            </form>
         </div>
     </div>
 

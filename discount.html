@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gym Discounts - Session Offer Included</title>
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    /* Fixed Header */
+    header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    /* Registration Banner */
+    .registration-banner {
+      background: #29a396;
+      color: #000;
+      padding: 15px;
+      margin-top: 80px; /* for header space */
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    .registration-banner button {
+      background: #000;
+      color: #29a396;
+      border: 2px solid #29a396;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .registration-banner button:hover {
+      background: #29a396;
+      color: #000;
+    }
+    /* Card Container */
+    .card-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    /* Discount Card Styles */
+    .discount-card {
+      background: #1a1a1a;
+      border: 2px solid #29a396;
+      border-radius: 10px;
+      margin: 20px 0;
+      padding: 20px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateX(-50px);
+      animation: slideIn 0.6s forwards;
+    }
+    /* Staggered animation delays */
+    .discount-card:nth-child(1) { animation-delay: 0.2s; }
+    .discount-card:nth-child(2) { animation-delay: 0.4s; }
+    .discount-card:nth-child(3) { animation-delay: 0.6s; }
+    .discount-card:nth-child(4) { animation-delay: 0.8s; }
+    
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .discount-card h2 {
+      margin-top: 0;
+      color: #29a396;
+    }
+    
+    .discount-card p {
+      margin: 10px 0;
+    }
+    
+    .discount-card button {
+      background: #29a396;
+      color: #000;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.3s;
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+    }
+    
+    .discount-card button:hover {
+      background: #29a396;
+      transform: scale(1.1);
+    }
+    
+    /* Specific styles for session offer image */
+    .discount-card img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    .modal-content {
+      background: #1a1a1a;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      color: #fff;
+      position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      text-align: left;
+    }
+    .modal-content h2 {
+      color: #29a396;
+      margin-top: 0;
+    }
+    .modal-content input[type="text"],
+    .modal-content input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background: #000;
+      color: #fff;
+    }
+    .modal-content button[type="submit"] {
+      background: #39FF14;
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .modal-content button[type="submit"]:hover {
+      background: #2ecc71;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #39FF14;
+    }
+    .close:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>Get Discounts</header>
+  
+  <div class="registration-banner">
+    <p><strong>Offer claim karne ke liye, pehle register karein!</strong></p>
+    <button id="openModal" onclick="window.location.href='Register222.html';">Register Now</button>
+  </div>
+  
+  
+  <div class="card-container">
+    <div class="discount-card">
+      <h2>New Year Offer</h2>
+      <p>Get 30% off on annual membership when you sign up today.</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+    <div class="discount-card">
+      <h2>Student Special</h2>
+      <p>Show your student ID and enjoy a 20% discount.</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+    <div class="discount-card">
+      <h2>Refer a Friend</h2>
+      <p>Refer a friend and get 1 month free membership.</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+    <div class="discount-card">
+      <h2>Session Offer</h2>
+      <!-- Image for the session offer -->
+      <img src="https://via.placeholder.com/550x300?text=Training+Session+Offer" alt="Session Offer">
+      <p>Get 50% off on your first personal training session!</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+  </div>
+  
+  <!-- Registration Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="modalClose">&times;</span>
+      <h2>Register</h2>
+      <form id="regForm">
+        <input type="text" id="regName" placeholder="Your Name" required>
+        <input type="email" id="regEmail" placeholder="Your Email" required>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    let isRegistered = false;
+    const openModalBtn = document.getElementById('openModal');
+    const modal = document.getElementById('modal');
+    const modalClose = document.getElementById('modalClose');
+    const regForm = document.getElementById('regForm');
+    const claimButtons = document.querySelectorAll('.claimBtn');
+    
+    openModalBtn.addEventListener('click', () => {
+      modal.style.display = 'block';
+    });
+    
+    modalClose.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+    
+    regForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      isRegistered = true;
+      alert('Registration successful! Ab aap offer claim kar sakte hain.');
+      modal.style.display = 'none';
+    });
+    
+    claimButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!isRegistered) {
+          alert('Please register first to claim the offer!');
+        } else {
+          alert('Offer claimed! Enjoy your discount.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
