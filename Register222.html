@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minnat Vigour Gym</title>
     <link rel="stylesheet" href="Register222.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 
 <body>
     <header>
         <h1 class="heading">Minnat Vigour Gym</h1>
-        <!-- Removed the "Register Here" button from header -->
     </header>
 
     <div class="container glass">
@@ -21,11 +21,6 @@
 
         <div class="form-section">
             <div class="register-box">
-                <div class="form-group">
-                    <label for="member-id" class="form-label">Member ID</label>
-                    <input type="text" id="member-id" class="member-id ele" placeholder="Member ID" required>
-                </div>
-
                 <div class="form-group">
                     <label for="gender" class="form-label">Gender</label>
                     <select id="gender" class="gender ele" required>
@@ -58,17 +53,17 @@
 
                 <div class="form-group">
                     <label for="plans" class="form-label">Plans</label>
-                    <select id="Plans" class="ele" required>
+                    <select id="plans" class="ele" required>
                         <option value="" disabled selected>Plans</option>
-                        <option value="Male">Basic(1 Month- 1000 Rs)</option>
-                        <option value="Female">Standard(3 Months- 2400 Rs)</option>
-                        <option value="Other">Premium(6 Months- 5500 Rs)</option>
-                        </select>
+                        <option value="1000">Basic (1 Month - 1000 Rs)</option>
+                        <option value="2400">Standard (3 Months - 2400 Rs)</option>
+                        <option value="5500">Premium (6 Months - 5500 Rs)</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="total-amount" class="form-label">Total Amount</label>
-                    <input type="number" id="total-amount" class="total-amount ele" placeholder="Total Amount" required>
+                    <label for="qr-code" class="form-label">Scan to Pay</label>
+                    <canvas id="qr-code"></canvas>
                 </div>
 
                 <div class="form-group">
@@ -88,15 +83,14 @@
                         <option value="Morning">Morning</option>
                         <option value="Evening">Evening</option>
                         <option value="Night">Night</option>
-                        </select>
+                    </select>
                 </div>
 
-                <!-- Register button moved inside the form -->
-                <button class="clkbtn">Register</button>
+                <button id="registerBtn" class="clkbtn">Register</button>
             </div>
         </div>
     </div>
-    
+
     <script src="register222.js"></script>
 </body>
 
