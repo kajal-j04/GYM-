@@ -88,29 +88,7 @@
         <span class="forgot-password" onclick="forgotPassword()">Forgot Password?</span>
     </div>
 
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-
-            let username = document.getElementById("loginUsername").value.trim();
-            let password = document.getElementById("loginPassword").value.trim();
-            let userError = document.getElementById("loginUserError");
-            let passError = document.getElementById("loginPassError");
-
-            userError.textContent = username === "" ? "Username is required!" : "";
-            passError.textContent = password === "" ? "Password is required!" : "";
-
-            if (username !== "" && password !== "") {
-                alert("Login Successful!");
-                setTimeout(() => {
-                    window.location.assign("admin panel.html");
-                }, 1000);
-            }
-        });
-
-        function forgotPassword() {
-            alert("Password reset instructions have been sent to your email.");
-        }
-    </script>
+    <!-- Linking the external JavaScript file -->
+    <script src="admin_login.js"></script>
 </body>
 </html>
