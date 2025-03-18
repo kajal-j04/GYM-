@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Gym Management System</title>
+  <title>Minnat Vigour Gym </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Material Icons and MDL CSS -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -80,6 +80,12 @@
     .login-box h3 {
       margin-bottom: 20px;
       color: #333;
+    }
+    .login-box label {
+      display: block;
+      text-align: left;
+      margin-bottom: 5px;
+      font-weight: bold;
     }
     .login-box input {
       width: 100%;
@@ -186,6 +192,11 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
     }
+    form label {
+      display: block;
+      text-align: left;
+      font-weight: bold;
+    }
     input, button {
       padding: 10px;
       border: 1px solid #ccc;
@@ -237,7 +248,9 @@
     <div class="login-box">
       <h3>Admin login here</h3>
       <form id="loginForm" onsubmit="handleLogin(event)">
+        <label for="username">Username</label>
         <input type="text" id="username" placeholder="Username" required>
+        <label for="password">Password</label>
         <input type="password" id="password" placeholder="Password" required>
         <button type="submit">Login</button>
       </form>
@@ -249,7 +262,7 @@
     <!-- HEADER -->
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title">Gym Management System</span>
+        <span class="mdl-layout-title">Minnat Vigour Gym </span>
         <div class="mdl-layout-spacer"></div>
         <!-- LOGOUT BUTTON -->
         <button class="mdl-button mdl-js-button mdl-button--raised logout-button" onclick="logoutUser()">
@@ -293,7 +306,7 @@
     <div class="dashboard-container">
       <!-- Greeting / Intro -->
       <div class="dashboard-header">
-        <h3>Hello Gymnast</h3>
+        <h3>Hello Admin</h3>
         <p>Welcome to your admin dashboard!</p>
       </div>
 
@@ -331,15 +344,28 @@
     </div>
   </div>
 
-  <!-- ================== TRAINER SECTION ================== -->
+  <!-- ================== TRAINER SECTION (Updated with Image Field) ================== -->
   <div id="trainer" class="hidden">
     <h4 class="section-heading">Add Trainer</h4>
     <form id="trainerForm" onsubmit="addTrainer(event)">
+      <label for="trainerName">Trainer Name</label>
       <input type="text" id="trainerName" placeholder="Trainer Name" required>
+      
+      <label for="trainerEmail">Email</label>
       <input type="email" id="trainerEmail" placeholder="Email" required>
+      
+      <label for="trainerSpecialization">Specialization</label>
       <input type="text" id="trainerSpecialization" placeholder="Specialization" required>
+      
+      <label for="trainerPhone">Phone Number</label>
       <input type="text" id="trainerPhone" placeholder="Phone Number" required>
+      
+      <label for="trainerExperience">Years of Experience</label>
       <input type="text" id="trainerExperience" placeholder="Years of Experience" required>
+      
+      <label for="trainerImage">Upload Image</label>
+      <input type="file" id="trainerImage" accept="image/*" required>
+      
       <button type="submit">Submit</button>
     </form>
     <h4 class="section-heading">Trainer List</h4>
@@ -352,25 +378,41 @@
             <th>Specialization</th>
             <th>Phone</th>
             <th>Experience</th>
+            <th>Image</th>
           </tr>
         </thead>
         <tbody id="trainerTableBody">
-          <tr><td colspan="5">No trainers added yet.</td></tr>
+          <tr><td colspan="6">No trainers added yet.</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ================== MEMBER SECTION ================== -->
+  <!-- ================== MEMBER SECTION (Added Image Field) ================== -->
   <div id="member" class="hidden">
     <h4 class="section-heading">Add Member</h4>
     <form id="memberForm" onsubmit="addMember(event)">
+      <label for="memberName">Full Name</label>
       <input type="text" id="memberName" placeholder="Full Name" required>
+      
+      <label for="memberEmail">Email Address</label>
       <input type="email" id="memberEmail" placeholder="Email Address" required>
+      
+      <label for="memberPhone">Phone Number</label>
       <input type="text" id="memberPhone" placeholder="Phone Number" required>
+      
+      <label for="memberGender">Gender</label>
       <input type="text" id="memberGender" placeholder="Gender" required>
+      
+      <label for="memberDOB">Date of Birth</label>
       <input type="date" id="memberDOB" placeholder="Date of Birth" required>
+      
+      <label for="memberAddress">Address</label>
       <input type="text" id="memberAddress" placeholder="Address">
+      
+      <label for="memberImage">Upload Image</label>
+      <input type="file" id="memberImage" accept="image/*">
+      
       <button type="submit">Submit</button>
     </form>
     <h4 class="section-heading">Member List</h4>
@@ -384,23 +426,35 @@
             <th>Gender</th>
             <th>Date of Birth</th>
             <th>Address</th>
+            <th>Image</th>
           </tr>
         </thead>
         <tbody id="memberTableBody">
-          <tr><td colspan="6">No members added yet.</td></tr>
+          <tr><td colspan="7">No members added yet.</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ================== PACKAGE SECTION ================== -->
+  <!-- ================== PACKAGE SECTION (Added Image Field) ================== -->
   <div id="package" class="hidden">
     <h4 class="section-heading">Add Package</h4>
     <form id="packageForm" onsubmit="addPackage(event)">
+      <label for="packageName">Package Name</label>
       <input type="text" id="packageName" placeholder="Package Name" required>
+      
+      <label for="packageDuration">Duration (in months)</label>
       <input type="text" id="packageDuration" placeholder="Duration (in months)" required>
+      
+      <label for="packagePrice">Price</label>
       <input type="number" id="packagePrice" placeholder="Price" required>
+      
+      <label for="packageFeatures">Features</label>
       <input type="text" id="packageFeatures" placeholder="Features">
+      
+      <label for="packageImage">Upload Image</label>
+      <input type="file" id="packageImage" accept="image/*">
+      
       <button type="submit">Submit</button>
     </form>
     <h4 class="section-heading">Package List</h4>
@@ -412,23 +466,35 @@
             <th>Duration</th>
             <th>Price</th>
             <th>Features</th>
+            <th>Image</th>
           </tr>
         </thead>
         <tbody id="packageTableBody">
-          <tr><td colspan="4">No packages added yet.</td></tr>
+          <tr><td colspan="5">No packages added yet.</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ================== EQUIPMENT SECTION ================== -->
+  <!-- ================== EQUIPMENT SECTION (Added Image Field) ================== -->
   <div id="equipment" class="hidden">
     <h4 class="section-heading">Add Equipment</h4>
     <form id="equipmentForm" onsubmit="addEquipment(event)">
+      <label for="equipmentName">Equipment Name</label>
       <input type="text" id="equipmentName" placeholder="Equipment Name" required>
+      
+      <label for="equipmentBrand">Brand</label>
       <input type="text" id="equipmentBrand" placeholder="Brand" required>
+      
+      <label for="equipmentType">Type</label>
       <input type="text" id="equipmentType" placeholder="Type" required>
+      
+      <label for="equipmentCount">Number of Items</label>
       <input type="number" id="equipmentCount" placeholder="Number of Items" required>
+      
+      <label for="equipmentImage">Upload Image</label>
+      <input type="file" id="equipmentImage" accept="image/*">
+      
       <button type="submit">Submit</button>
     </form>
     <h4 class="section-heading">Equipment List</h4>
@@ -440,10 +506,11 @@
             <th>Brand</th>
             <th>Type</th>
             <th>Count</th>
+            <th>Image</th>
           </tr>
         </thead>
         <tbody id="equipmentTableBody">
-          <tr><td colspan="4">No equipment added yet.</td></tr>
+          <tr><td colspan="5">No equipment added yet.</td></tr>
         </tbody>
       </table>
     </div>
@@ -552,7 +619,7 @@
       return !isNaN(value) && Number(value) > 0;
     }
 
-    // TRAINER FORM SUBMISSION
+    //================= TRAINER FORM SUBMISSION (Updated) =================
     function addTrainer(e) {
       e.preventDefault();
       const name = document.getElementById('trainerName').value.trim();
@@ -560,6 +627,7 @@
       const spec = document.getElementById('trainerSpecialization').value.trim();
       const phone = document.getElementById('trainerPhone').value.trim();
       const exp = document.getElementById('trainerExperience').value.trim();
+      const imageFile = document.getElementById('trainerImage').files[0];
       
       if (!validateEmail(email)) {
         alert("Please enter a valid email address for Trainer.");
@@ -573,6 +641,13 @@
         alert("Please enter a valid number for years of experience.");
         return;
       }
+      if (!imageFile) {
+        alert("Please select an image file for the trainer.");
+        return;
+      }
+      
+      // Log the image file details (or process the file as needed)
+      console.log("Selected trainer image:", imageFile);
       
       const tbody = document.getElementById('trainerTableBody');
       if (tbody.rows.length === 1 && tbody.rows[0].cells[0].textContent.includes('No trainers')) {
@@ -584,13 +659,15 @@
       row.insertCell(2).textContent = spec;
       row.insertCell(3).textContent = phone;
       row.insertCell(4).textContent = exp;
+      // Display the image file name (or add image preview if desired)
+      row.insertCell(5).textContent = imageFile.name;
       
       alert('Trainer added successfully!');
       clearForm('trainerForm');
       updateDashCounts();
     }
 
-    // MEMBER FORM SUBMISSION
+    //================= MEMBER FORM SUBMISSION =================
     function addMember(e) {
       e.preventDefault();
       const name = document.getElementById('memberName').value.trim();
@@ -599,6 +676,7 @@
       const gender = document.getElementById('memberGender').value.trim();
       const dob = document.getElementById('memberDOB').value;
       const addr = document.getElementById('memberAddress').value.trim();
+      const imageFile = document.getElementById('memberImage').files[0];
       
       if (!validateEmail(email)) {
         alert("Please enter a valid email address for Member.");
@@ -620,19 +698,22 @@
       row.insertCell(3).textContent = gender;
       row.insertCell(4).textContent = dob;
       row.insertCell(5).textContent = addr;
+      // Show image file name if selected
+      row.insertCell(6).textContent = imageFile ? imageFile.name : "No image";
       
       alert('Member added successfully!');
       clearForm('memberForm');
       updateDashCounts();
     }
 
-    // PACKAGE FORM SUBMISSION
+    //================= PACKAGE FORM SUBMISSION =================
     function addPackage(e) {
       e.preventDefault();
       const name = document.getElementById('packageName').value.trim();
       const dur = document.getElementById('packageDuration').value.trim();
       const price = document.getElementById('packagePrice').value.trim();
       const feat = document.getElementById('packageFeatures').value.trim();
+      const imageFile = document.getElementById('packageImage').files[0];
       
       if (isNaN(dur) || Number(dur) <= 0) {
         alert("Please enter a valid duration (in months) for Package.");
@@ -652,19 +733,22 @@
       row.insertCell(1).textContent = dur;
       row.insertCell(2).textContent = price;
       row.insertCell(3).textContent = feat;
+      // Show image file name if selected
+      row.insertCell(4).textContent = imageFile ? imageFile.name : "No image";
       
       alert('Package added successfully!');
       clearForm('packageForm');
       updateDashCounts();
     }
 
-    // EQUIPMENT FORM SUBMISSION
+    //================= EQUIPMENT FORM SUBMISSION =================
     function addEquipment(e) {
       e.preventDefault();
       const name = document.getElementById('equipmentName').value.trim();
       const brand = document.getElementById('equipmentBrand').value.trim();
       const type = document.getElementById('equipmentType').value.trim();
       const count = document.getElementById('equipmentCount').value.trim();
+      const imageFile = document.getElementById('equipmentImage').files[0];
       
       if (!isPositiveNumber(count)) {
         alert("Please enter a valid number of items (must be a positive number).");
@@ -680,6 +764,8 @@
       row.insertCell(1).textContent = brand;
       row.insertCell(2).textContent = type;
       row.insertCell(3).textContent = count;
+      // Show image file name if selected
+      row.insertCell(4).textContent = imageFile ? imageFile.name : "No image";
       
       alert('Equipment added successfully!');
       clearForm('equipmentForm');

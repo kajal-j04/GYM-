@@ -1,192 +1,128 @@
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, 
-
-                         initial-scale=1.0">
-
-    <title></title>
-
-    <link rel="stylesheet" href="login_style.css">
-
-</head>
-
-
-<body>
-
-    <header>
-
-        <h1 class="heading">Minnat Vigour GYM</h1>
-
-    </header>
-
-    <div id="alertModal" class="modal">
-
-    </div>
-
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <span id="themeIcon" class="icon">🌙</span> <!-- Initial icon (Moon) -->
-    </button>
-
-
-    <!-- container div -->
-
-    <div class="container glass">
-
-
-        <!-- upper button section to select
-
-             the login or signup form -->
-
-        <div class="slider"></div>
-
-        <div class="btn">
-
-            <button id="login" class="login">Login</button>
-
-            <button id="signup" class="signup">Signup</button>
-
-        </div>
-
-
-        <!-- Form section that contains the
-
-             login and the signup form -->
-
-        <div class="form-section">
-
-
-            <!-- login form -->
-
-            <div class="login-box">
-                <label>Enter your Email Address</label>
-                <input type="email" class="email ele" placeholder="youremail@email.com">
-                <lable>Enter the password</lable>
-                <input type="password" class="password ele" placeholder="password">
-
-                <button class="clkbtn">Login</button>
-
-            </div>
-
-
-            <!-- signup form -->
-
-            <div class="signup-box">
-
-                <input type="text" class="name ele" placeholder="Enter your name">
-
-                <input type="email" class="email ele" placeholder="youremail@email.com">
-
-                <input id="phone-no" class="phone-no ele" minlength="10" maxlength="10"
-                    onkeydown="validateNumber(event)" placeholder="9876543210">
-
-                <input type="date" id="date" class="date ele" placeholder="2000-01-01">
-
-                <input type="password" class="password ele" placeholder="password">
-
-                <input type="password" class="confirm-password ele" placeholder="Confirm password">
-
-                <button class="clkbtn">Signup</button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <script src="login_script.js"></script>
-
-</body>
-
-
-</html>
-=======
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minnat Vigour GYM</title>
-    <link rel="stylesheet" href="login_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minnat Vigour GYM - Login/Signup</title>
+  <!-- You can comment out your external CSS for debugging -->
+  <!-- <link rel="stylesheet" href="login_style.css"> -->
+  <style>
+    /* Minimal CSS to ensure the form is visible */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .container {
+      background: #fff;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .btn {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .btn button {
+      padding: 10px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    .form-section {
+      display: block;
+    }
+    .login-box, .signup-box {
+      margin-bottom: 20px;
+    }
+    .login-box label,
+    .signup-box label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .login-box input,
+    .signup-box input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    .clkbtn {
+      width: 100%;
+      padding: 10px;
+      background: #3f51b5;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
-
 <body>
 
-    <header>
-        <h1 class="heading">Minnat Vigour GYM</h1>
-    </header>
+  <header>
+    <h1 class="heading">Minnat Vigour GYM</h1>
+  </header>
 
-    <!-- Get Started Button -->
-    <button id="getStartedBtn" class="get-started-btn">Get Started Now</button>
-
-    <!-- Gym Images Section (Initially Hidden) -->
-    <div id="gymImagesContainer" class="gym-images" style="display: none;">
-        <img src="images/gym1.jpeg" alt="Gym Image 1" width="300">
-        <img src="images/gym2.jpeg" alt="Gym Image 2" width="300">
-        <img src="images/gym3.jpeg" alt="Gym Image 3" width="300">
-        <img src="images/gym4.jpeg" alt="Gym Image 4" width="300">
+  <!-- container div -->
+  <div class="container">
+    <!-- Button Section -->
+    <div class="btn">
+      <button id="loginBtn">Login</button>
+      <button id="signupBtn">Signup</button>
     </div>
 
-    <div id="alertModal" class="modal"></div>
+    <!-- Form Section -->
+    <div class="form-section">
+      <!-- Login Form -->
+      <div class="login-box" id="loginBox">
+        <label for="loginEmail">Enter your Email Address</label>
+        <input type="email" id="loginEmail" placeholder="youremail@example.com">
+        <label for="loginPassword">Enter the Password</label>
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button class="clkbtn">Login</button>
+      </div>
 
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <span id="themeIcon" class="icon">🌙</span> <!-- Initial icon (Moon) -->
-    </button>
-
-    <!-- container div -->
-    <div class="container glass">
-        <!-- upper button section to select login or signup form -->
-        <div class="slider"></div>
-        <div class="btn">
-            <button id="login" class="login">Login</button>
-            <button id="signup" class="signup">Signup</button>
-        </div>
-
-        <!-- Form section that contains the login and the signup form -->
-        <div class="form-section">
-            <!-- login form -->
-            <div class="login-box">
-                <input type="email" class="email ele" placeholder="youremail@email.com">
-                <input type="password" class="password ele" placeholder="password">
-                <button class="clkbtn">Login</button>
-            </div>
-
-            <!-- signup form -->
-            <div class="signup-box">
-                <input type="text" class="name ele" placeholder="Enter your name">
-                <input type="email" class="email ele" placeholder="youremail@email.com">
-                <input id="phone-no" class="phone-no ele" minlength="10" maxlength="10"
-                    onkeydown="validateNumber(event)" placeholder="9876543210">
-                <input type="date" id="date" class="date ele" placeholder="2000-01-01">
-                <input type="password" class="password ele" placeholder="password">
-                <input type="password" class="confirm-password ele" placeholder="Confirm password">
-                <button class="clkbtn">Signup</button>
-            </div>
-        </div>
+      <!-- Signup Form -->
+      <div class="signup-box" id="signupBox">
+        <label for="signupName">Enter your Name</label>
+        <input type="text" id="signupName" placeholder="Your Name">
+        <label for="signupEmail">Email Address</label>
+        <input type="email" id="signupEmail" placeholder="youremail@example.com">
+        <label for="phone-no">Phone Number</label>
+        <input type="text" id="phone-no" minlength="10" maxlength="10" placeholder="9876543210">
+        <label for="date">Date of Birth</label>
+        <input type="date" id="date">
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" placeholder="Password">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password">
+        <button class="clkbtn">Signup</button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        document.getElementById("getStartedBtn").addEventListener("click", function () {
-            var imgContainer = document.getElementById("gymImagesContainer");
-            imgContainer.style.display = "block"; // Show images when button is clicked
-        });
-    </script>
+  <!-- Optional JavaScript to toggle between login and signup forms -->
+  <script>
+    // For example, show only the login form by default:
+    document.getElementById("signupBox").style.display = "none";
 
-    <script src="login_script.js"></script>
-
-</body>
-</html>
-<script>
-    document.getElementById("getStartedBtn").addEventListener("click", function(event) {
-        event.preventDefault(); // Stops the button from redirecting
-        document.getElementById("gymImagesContainer").style.display = "block"; // Show images
+    document.getElementById("loginBtn").addEventListener("click", function() {
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("signupBox").style.display = "none";
     });
-</script>
+
+    document.getElementById("signupBtn").addEventListener("click", function() {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("signupBox").style.display = "block";
+    });
+  </script>
+
+</body>
+</html>

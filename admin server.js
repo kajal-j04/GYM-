@@ -1,277 +1,170 @@
 // server.js
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
+const express = require('express');
+const mongoose = require('mongoose');
 
 const app = express();
-const PORT = 3000;
+const port = process.env.PORT || 3000;
 
-// Enable CORS for all requests
-app.use(cors());
-
-// Parse JSON request bodies
+// Middleware to parse JSON requests
 app.use(express.json());
 
-// Connect to MongoDB
-const mongoURI = "mongodb://localhost:27017/gymDB"; // Replace with your connection string if needed
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Connect to MongoDB (update the connection string as needed)
+mongoose.connect('mongodb://localhost:27017/gymDB', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB.'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
-// Define Mongoose Schemas and Models
+// ------------------
+// SCHEMA DEFINITIONS
+// ------------------
 
-// Member Schema & Model
-const memberSchema = new mongoose.Schema({
-  name: String,
-  membershipType: String,
-  image: String
+// User Schema for admin login
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true } // In production, store hashed passwords.
 });
-const Member = mongoose.model("Member", memberSchema);
+const User = mongoose.model('User', userSchema);
 
-// Trainer Schema & Model
+// Trainer Schema
 const trainerSchema = new mongoose.Schema({
-  name: String,
-  specialty: String,
-  image: String
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  specialization: { type: String, required: true },
+  phone: { type: String, required: true },
+  experience: { type: Number, required: true }
 });
-const Trainer = mongoose.model("Trainer", trainerSchema);
+const Trainer = mongoose.model('Trainer', trainerSchema);
 
-// Staff Schema & Model
-const staffSchema = new mongoose.Schema({
-  name: String,
-  position: String,
-  image: String
+// Member Schema
+const memberSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
+  gender: { type: String, required: true },
+  dob: { type: Date, required: true },
+  address: { type: String }
 });
-const Staff = mongoose.model("Staff", staffSchema);
+const Member = mongoose.model('Member', memberSchema);
 
-// Equipment Schema & Model
+// Package Schema
+const packageSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  duration: { type: Number, required: true }, // in months
+  price: { type: Number, required: true },
+  features: { type: String }
+});
+const Package = mongoose.model('Package', packageSchema);
+
+// Equipment Schema
 const equipmentSchema = new mongoose.Schema({
-  name: String,
-  quantity: Number,
-  image: String
+  name: { type: String, required: true },
+  brand: { type: String, required: true },
+  type: { type: String, required: true },
+  count: { type: Number, required: true }
 });
-const Equipment = mongoose.model("Equipment", equipmentSchema);
+const Equipment = mongoose.model('Equipment', equipmentSchema);
 
-// Dashboard endpoint (provides counts from MongoDB)
-app.get("/dashboard", async (req, res) => {
-  try {
-    const totalMembers = await Member.countDocuments();
-    const totalTrainers = await Trainer.countDocuments();
-    const totalStaff = await Staff.countDocuments();
-    const totalEquipment = await Equipment.countDocuments();
+// ------------------
+// API ENDPOINTS
+// ------------------
 
-    res.json({ totalMembers, totalTrainers, totalStaff, totalEquipment });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error fetching dashboard data" });
-  }
-});
-
-// --- Member Endpoints ---
-// Get all members
-app.get("/members", async (req, res) => {
+// Login endpoint (dummy authentication for demo)
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const members = await Member.find();
-    res.json(members);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error fetching members" });
-  }
-});
-// Add a new member
-app.post("/members", async (req, res) => {
-  try {
-    const newMember = new Member(req.body);
-    await newMember.save();
-    res.json({ success: true, message: "Member added successfully", member: newMember });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error adding member" });
-  }
-});
-// Update a member
-app.put("/members/:id", async (req, res) => {
-  try {
-    const updatedMember = await Member.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (updatedMember) {
-      res.json({ success: true, message: "Member updated successfully", member: updatedMember });
+    const user = await User.findOne({ username, password });
+    if (user) {
+      res.json({ success: true, token: 'dummy-token', message: 'Login successful.' });
     } else {
-      res.status(404).json({ success: false, message: "Member not found" });
+      res.status(401).json({ success: false, message: 'Invalid credentials.' });
     }
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error updating member" });
-  }
-});
-// Delete a member
-app.delete("/members/:id", async (req, res) => {
-  try {
-    const deletedMember = await Member.findByIdAndDelete(req.params.id);
-    if (deletedMember) {
-      res.json({ success: true, message: "Member deleted successfully" });
-    } else {
-      res.status(404).json({ success: false, message: "Member not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error deleting member" });
+    res.status(500).json({ success: false, message: 'Server error.' });
   }
 });
 
-// --- Trainer Endpoints ---
-// Get all trainers
-app.get("/trainers", async (req, res) => {
+// ---------- Trainer Endpoints ----------
+app.get('/api/trainers', async (req, res) => {
   try {
     const trainers = await Trainer.find();
     res.json(trainers);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error fetching trainers" });
-  }
-});
-// Add a new trainer
-app.post("/trainers", async (req, res) => {
-  try {
-    const newTrainer = new Trainer(req.body);
-    await newTrainer.save();
-    res.json({ success: true, message: "Trainer added successfully", trainer: newTrainer });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error adding trainer" });
-  }
-});
-// Update a trainer
-app.put("/trainers/:id", async (req, res) => {
-  try {
-    const updatedTrainer = await Trainer.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (updatedTrainer) {
-      res.json({ success: true, message: "Trainer updated successfully", trainer: updatedTrainer });
-    } else {
-      res.status(404).json({ success: false, message: "Trainer not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error updating trainer" });
-  }
-});
-// Delete a trainer
-app.delete("/trainers/:id", async (req, res) => {
-  try {
-    const deletedTrainer = await Trainer.findByIdAndDelete(req.params.id);
-    if (deletedTrainer) {
-      res.json({ success: true, message: "Trainer deleted successfully" });
-    } else {
-      res.status(404).json({ success: false, message: "Trainer not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error deleting trainer" });
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 
-// --- Staff Endpoints ---
-// Get all staff
-app.get("/staff", async (req, res) => {
+app.post('/api/trainers', async (req, res) => {
   try {
-    const staffMembers = await Staff.find();
-    res.json(staffMembers);
+    const trainer = new Trainer(req.body);
+    await trainer.save();
+    res.json({ success: true, trainer, message: 'Trainer added successfully.' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error fetching staff" });
-  }
-});
-// Add new staff
-app.post("/staff", async (req, res) => {
-  try {
-    const newStaff = new Staff(req.body);
-    await newStaff.save();
-    res.json({ success: true, message: "Staff added successfully", staff: newStaff });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error adding staff" });
-  }
-});
-// Update a staff member
-app.put("/staff/:id", async (req, res) => {
-  try {
-    const updatedStaff = await Staff.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (updatedStaff) {
-      res.json({ success: true, message: "Staff updated successfully", staff: updatedStaff });
-    } else {
-      res.status(404).json({ success: false, message: "Staff not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error updating staff" });
-  }
-});
-// Delete a staff member
-app.delete("/staff/:id", async (req, res) => {
-  try {
-    const deletedStaff = await Staff.findByIdAndDelete(req.params.id);
-    if (deletedStaff) {
-      res.json({ success: true, message: "Staff deleted successfully" });
-    } else {
-      res.status(404).json({ success: false, message: "Staff not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error deleting staff" });
+    res.status(500).json({ success: false, message: 'Error adding trainer.', error: err });
   }
 });
 
-// --- Equipment Endpoints ---
-// Get all equipment
-app.get("/equipment", async (req, res) => {
+// ---------- Member Endpoints ----------
+app.get('/api/members', async (req, res) => {
   try {
-    const equipmentItems = await Equipment.find();
-    res.json(equipmentItems);
+    const members = await Member.find();
+    res.json(members);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error fetching equipment" });
-  }
-});
-// Add new equipment
-app.post("/equipment", async (req, res) => {
-  try {
-    const newEquipment = new Equipment(req.body);
-    await newEquipment.save();
-    res.json({ success: true, message: "Equipment added successfully", equipment: newEquipment });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error adding equipment" });
-  }
-});
-// Update equipment
-app.put("/equipment/:id", async (req, res) => {
-  try {
-    const updatedEquipment = await Equipment.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (updatedEquipment) {
-      res.json({ success: true, message: "Equipment updated successfully", equipment: updatedEquipment });
-    } else {
-      res.status(404).json({ success: false, message: "Equipment not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error updating equipment" });
-  }
-});
-// Delete equipment
-app.delete("/equipment/:id", async (req, res) => {
-  try {
-    const deletedEquipment = await Equipment.findByIdAndDelete(req.params.id);
-    if (deletedEquipment) {
-      res.json({ success: true, message: "Equipment deleted successfully" });
-    } else {
-      res.status(404).json({ success: false, message: "Equipment not found" });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Error deleting equipment" });
+    res.status(500).json({ message: 'Server error.' });
   }
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.post('/api/members', async (req, res) => {
+  try {
+    const member = new Member(req.body);
+    await member.save();
+    res.json({ success: true, member, message: 'Member added successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error adding member.', error: err });
+  }
+});
+
+// ---------- Package Endpoints ----------
+app.get('/api/packages', async (req, res) => {
+  try {
+    const pkgs = await Package.find();
+    res.json(pkgs);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error.' });
+  }
+});
+
+app.post('/api/packages', async (req, res) => {
+  try {
+    const pkg = new Package(req.body);
+    await pkg.save();
+    res.json({ success: true, pkg, message: 'Package added successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error adding package.', error: err });
+  }
+});
+
+// ---------- Equipment Endpoints ----------
+app.get('/api/equipment', async (req, res) => {
+  try {
+    const equipments = await Equipment.find();
+    res.json(equipments);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error.' });
+  }
+});
+
+app.post('/api/equipment', async (req, res) => {
+  try {
+    const equipment = new Equipment(req.body);
+    await equipment.save();
+    res.json({ success: true, equipment, message: 'Equipment added successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error adding equipment.', error: err });
+  }
+});
+
+// ------------------~
+// START THE SERVER
+// ------------------
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
