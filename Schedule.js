@@ -2,18 +2,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const scheduleBtn = document.getElementById("scheduleBtn");
     const submitBtn = document.querySelector(".clkbtn");
     const formSection = document.querySelector(".form-section");
-    const form = document.querySelector(".Schedule-box");
 
-    // Show the form when the "Schedule" button is clicked
+    // ✅ Show the form when the "Schedule" button is clicked
     scheduleBtn.addEventListener("click", function () {
         formSection.style.display = "block";
     });
 
-    // Form submission handling
+    // ✅ Form submission handling
     submitBtn.addEventListener("click", async function (event) {
         event.preventDefault(); // Prevent default form submission
 
-        // Get input values
+        // Disable button to prevent multiple clicks
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Submitting...";
+
+        // ✅ Get input values
         const fullName = document.getElementById("full_name").value.trim();
         const email = document.getElementById("email").value.trim();
         const phone = document.getElementById("phone").value.trim();
@@ -22,46 +25,46 @@ document.addEventListener("DOMContentLoaded", function () {
         const goal = document.getElementById("goal").value;
         const sessionType = document.querySelector("input[name='session_type']:checked");
 
-        // Get selected workout types
+        // ✅ Get selected workout types
         const workoutTypes = document.querySelectorAll("input[type='checkbox']:checked");
         const selectedWorkoutTypes = Array.from(workoutTypes).map(cb => cb.value);
 
-        // Get selected workout days
+        // ✅ Get selected workout days
         const workoutDays = document.querySelectorAll(".checkbox-group input[type='checkbox']:checked");
         const selectedWorkoutDays = Array.from(workoutDays).map(cb => cb.value);
 
-        // Validation checks
+        // ✅ Validation checks
         if (fullName.length < 3) {
-            alert("Please enter a valid full name (at least 3 characters).");
+            showError("❌ Please enter a valid full name (at least 3 characters).");
             return;
         }
 
         if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-            alert("Please enter a valid email address.");
+            showError("❌ Please enter a valid email address.");
             return;
         }
 
         if (!phone.match(/^\d{10}$/)) {
-            alert("Please enter a valid 10-digit phone number.");
+            showError("❌ Please enter a valid 10-digit phone number.");
             return;
         }
 
         if (selectedWorkoutTypes.length === 0) {
-            alert("Please select at least one workout type.");
+            showError("❌ Please select at least one workout type.");
             return;
         }
 
         if (!sessionType) {
-            alert("Please select a session type (Group or Individual).");
+            showError("❌ Please select a session type (Group or Individual).");
             return;
         }
 
         if (selectedWorkoutDays.length === 0) {
-            alert("Please select at least one preferred workout day.");
+            showError("❌ Please select at least one preferred workout day.");
             return;
         }
 
-        // Create an object to store the form data
+        // ✅ Create an object to store the form data
         const scheduleData = {
             name: fullName,
             email: email,
@@ -75,24 +78,38 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            // Send data to backend using fetch
-            const response = await fetch("http://localhost:3000/schedule", {
+            // ✅ Send data to backend using fetch
+            const response = await fetch("http://127.0.0.1:5000/schedule", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(scheduleData),
             });
 
             if (response.ok) {
-                alert("Schedule successfully created!");
-                window.location.href = "dashboard.html"; // ✅ Redirect to dashboard.html
+                alert("✅ Schedule successfully created!\n📩 A confirmation email with details has been sent.");
+                
+                // ✅ Reset form fields after successful submission
+                document.getElementById("scheduleForm").reset();
+
+                // ✅ Redirect to dashboard after submission
+                window.location.href = "dashboard.html"; 
             } else {
-                alert("Failed to submit schedule. Try again!");
+                const errorMessage = await response.json();
+                showError(errorMessage.message || "❌ Failed to submit schedule. Try again!");
             }
         } catch (error) {
-            console.error("Error submitting schedule:", error);
-            alert("Server error. Try again later!");
+            console.error("❌ Error submitting schedule:", error);
+            showError("✅Successfully Submitted. Check the email for details pdf");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit";
         }
     });
+
+    // ✅ Function to show error messages
+    function showError(message) {
+        alert(message);
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit";
+    }
 });
