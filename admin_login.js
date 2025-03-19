@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     if (result.success) {
                         alert("Login Successful!");
-                        window.location.assign("admin_panel.html");
+                        window.location.assign("admin_dashboard.html");
                     } else {
                         alert(result.message || "Invalid credentials!");
                     }
