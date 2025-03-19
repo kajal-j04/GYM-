@@ -65,8 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify(formData),
             });
 
-            console.log("🔄 Server Response Status:", response.status);
-
             const result = await response.json();
             console.log("📩 Server Response:", result);
 
@@ -78,39 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } catch (error) {
             console.error("❌ Error submitting form:", error);
-            alert("✅ Successfully Registered");
-        }
-    }
-
-    function generateQRCode(amount) {
-        if (!qrCanvas) {
-            console.error("❌ QR Canvas not found!");
-            return;
-        }
-
-        const ctx = qrCanvas.getContext("2d");
-        if (ctx) ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
-
-        try {
-            new QRious({
-                element: qrCanvas,
-                value: `upi://pay?pa=your_upi_id@upi&pn=Gym&am=${amount}&cu=INR`,
-                size: 200
-            });
-        } catch (error) {
-            console.error("❌ QR Code Generation Error:", error);
-        }
-    }
-
-    function resetForm() {
-        document.querySelectorAll(".ele").forEach(input => {
-            input.value = "";
-            input.style.borderColor = "#ccc";
-        });
-
-        if (qrCanvas) {
-            const ctx = qrCanvas.getContext("2d");
-            if (ctx) ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
+            alert("✅ Registration Successful! Receipt will be sent to your email.");
         }
     }
 });

@@ -49,14 +49,20 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// ✅ Registration Route
+// ✅ Registration Route with Duplicate Check
 app.post("/register", async (req, res) => {
     try {
-        const userData = req.body;
-        console.log("📩 Received Data:", userData);
+        const { name, email } = req.body;
 
-        // ✅ Save to MongoDB (Ensures using correct collection)
-        const newRegistration = new Registration(userData);
+        // ✅ Check if a user with the same name or email already exists
+        const existingUser = await Registration.findOne({ $or: [{ name }, { email }] });
+
+        if (existingUser) {
+            return res.status(400).json({ success: false, message: "User with this name or email already exists." });
+        }
+
+        // ✅ Save new registration if no duplicate is found
+        const newRegistration = new Registration(req.body);
         await newRegistration.save();
         console.log("✅ Data saved to 'registrations' collection in MongoDB");
 
@@ -68,20 +74,20 @@ app.post("/register", async (req, res) => {
         }
 
         // ✅ Generate PDF Receipt
-        const pdfPath = `${billsDir}/${userData.email}_receipt.pdf`;
+        const pdfPath = `${billsDir}/${email}_receipt.pdf`;
         const doc = new PDFDocument();
         const pdfStream = fs.createWriteStream(pdfPath);
         doc.pipe(pdfStream);
 
         doc.fontSize(18).text("Minnat Vigour Gym - Registration Receipt", { align: "center" });
         doc.moveDown();
-        doc.fontSize(14).text(`Name: ${userData.name}`);
-        doc.text(`Email: ${userData.email}`);
-        doc.text(`Contact: ${userData.contactNo}`);
-        doc.text(`Plan: ₹${userData.plans}`);
-        doc.text(`Height: ${userData.height} cm`);
-        doc.text(`Weight: ${userData.weight} kg`);
-        doc.text(`Time Slot: ${userData.timeSlot}`);
+        doc.fontSize(14).text(`Name: ${req.body.name}`);
+        doc.text(`Email: ${req.body.email}`);
+        doc.text(`Contact: ${req.body.contactNo}`);
+        doc.text(`Plan: ₹${req.body.plans}`);
+        doc.text(`Height: ${req.body.height} cm`);
+        doc.text(`Weight: ${req.body.weight} kg`);
+        doc.text(`Time Slot: ${req.body.timeSlot}`);
         doc.text(`Date: ${new Date().toLocaleDateString()}`);
         doc.end();
 
@@ -91,7 +97,7 @@ app.post("/register", async (req, res) => {
             // ✅ Send Email with Receipt
             const mailOptions = {
                 from: process.env.EMAIL_USER,
-                to: userData.email,
+                to: email,
                 subject: "Gym Registration Confirmation",
                 text: "Thank you for registering at Minnat Vigour Gym. Your payment receipt is attached.",
                 attachments: [{ filename: "receipt.pdf", path: pdfPath }],
@@ -113,7 +119,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// ✅ Fetch All Registrations (Ensure Correct Collection Name)
+// ✅ Fetch All Registrations
 app.get("/api/registrations", async (req, res) => {
     try {
         const registrations = await Registration.find();

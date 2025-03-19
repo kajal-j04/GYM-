@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Correct Database Connection
+// ✅ Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/minnat_vigour_gym", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -19,7 +19,16 @@ mongoose.connect("mongodb://127.0.0.1:27017/minnat_vigour_gym", {
 .then(() => console.log("✅ Connected to MongoDB: minnat_vigour_gym"))
 .catch(err => console.error("❌ MongoDB connection error:", err));
 
-// ✅ Explicitly Define Collection Name
+// ✅ Registration Schema (Users who have registered)
+const registrationSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    contactNo: String,
+}, { collection: "registrations" });
+
+const Registration = mongoose.model("Registration", registrationSchema);
+
+// ✅ Schedule Schema (For Booking Sessions)
 const scheduleSchema = new mongoose.Schema({
     name: String,
     email: String,
@@ -30,7 +39,7 @@ const scheduleSchema = new mongoose.Schema({
     sessionType: String,
     workoutType: [String],
     workoutDays: [String],
-}, { collection: "schedules" }); // 👈 Ensures it maps to `schedules`
+}, { collection: "schedules" });
 
 const Schedule = mongoose.model("Schedule", scheduleSchema);
 
@@ -69,7 +78,7 @@ const createPDF = (scheduleData) => {
     });
 };
 
-// ✅ Route to Handle Schedule Submission
+// ✅ Route to Handle Schedule Submission (Only for Registered Users)
 app.post("/schedule", async (req, res) => {
     try {
         console.log("📩 Received schedule request:", req.body);
@@ -80,13 +89,20 @@ app.post("/schedule", async (req, res) => {
             return res.status(400).json({ message: "❌ Missing required fields" });
         }
 
-        // ✅ Save to MongoDB `schedules` Collection
+        // ✅ Check if user exists in the registrations collection
+        const registeredUser = await Registration.findOne({ email: email });
+
+        if (!registeredUser) {
+            return res.status(403).json({ message: "❌ You are not a member. Please register first." });
+        }
+
+        // ✅ Save schedule only if user is registered
         const newSchedule = new Schedule({ name, email, phone, timeSlot, duration, goal, sessionType, workoutType, workoutDays });
         await newSchedule.save();
 
         const pdfPath = await createPDF(newSchedule);
 
-        // ✅ Updated MailOptions
+        // ✅ Send Email with PDF
         const mailOptions = {
             from: `"Minnat Vigour Gym" <${process.env.EMAIL_USER}>`,
             to: email,
@@ -101,7 +117,6 @@ app.post("/schedule", async (req, res) => {
             ],
         };
 
-        // ✅ Send Email with PDF
         transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
                 console.error("❌ Email sending failed:", err);
