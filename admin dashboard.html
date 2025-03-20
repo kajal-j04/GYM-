@@ -301,7 +301,7 @@
     </main>
   </div>
 
-  <!-- ================== DASHBOARD SECTION ================== -->
+  <!-- ================== DASHBOARD SECTION  kajalj ================== -->
   <div id="Dashboard" class="hidden page-content">
     <div class="dashboard-container">
       <!-- Greeting / Intro -->
@@ -771,6 +771,33 @@
       clearForm('equipmentForm');
       updateDashCounts();
     }
+    function handleLogin(e) {
+  e.preventDefault();
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
+  
+  fetch('http://localhost:3000/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: user, password: pass })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.token) { // login success
+      document.getElementById('login').classList.add('hidden');
+      document.getElementById('appLayout').classList.remove('hidden');
+      loadContent('Dashboard');
+      alert('Logged in successfully!');
+    } else {
+      alert(data.message || 'Login failed');
+    }
+  })
+  .catch(error => {
+    console.error('Error during login:', error);
+    alert('Error during login. Please try again later.');
+  });
+}
+
 
     // By default, show login on page load
     window.onload = function() {
