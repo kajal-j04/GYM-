@@ -183,6 +183,19 @@ app.get('/api/trainers', (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 });
 
+app.get('/api/counts', async (req, res) => {
+  const tc = await Trainer.countDocuments()
+  const mc = await Member.countDocuments()
+  const pc = await Package.countDocuments()
+  const ec = await Equipment.countDocuments()
+  res.json({
+    tc,
+    ec,
+    mc,
+    pc
+  })
+});
+
 app.get('/api/members', (req, res) => {
   Member.find()
     .then(members => res.json(members))

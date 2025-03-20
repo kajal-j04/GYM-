@@ -387,7 +387,7 @@
     // CHARTS
     // --------------------
     let attendanceChart, totalReportsChart;
-    function initCharts() {
+    async function initCharts() {
       const attCtx = document.getElementById('attendanceChart');
       if (!attCtx) return;
       if (attendanceChart) attendanceChart.destroy();
@@ -407,13 +407,14 @@
       const totalCtx = document.getElementById('totalReportsChart');
       if (!totalCtx) return;
       if (totalReportsChart) totalReportsChart.destroy();
+      const counts = await fetchCount()
       totalReportsChart = new Chart(totalCtx, {
         type: 'pie',
         data: {
-          labels: ['Packages', 'Members', 'Equipments'],
+          labels: ['Packages', 'Members', 'Equipments', 'Trainers'],
           datasets: [{
-            data: [3, 6, 2],
-            backgroundColor: ['#4caf50', '#ff9800', '#9c27b0']
+            data: [counts.pc, counts.mc, counts.ec, counts.tc],
+            backgroundColor: ['#4caf50', '#ff9800', '#9c27b0', '#2685d9']
           }]
         },
         options: { responsive: true }
@@ -653,6 +654,20 @@
         document.getElementById('appLayout').classList.add('hidden');
       }
     }
+    
+    async function fetchCount() {
+    try {
+          const response = await fetch('http://localhost:3000/api/counts');
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data;  // Return the JSON response
+      } catch (err) {
+          console.error("Error fetching counts:", err.message);
+          return { error: err.message };  // Return an error object instead of throwing
+      }
+  }
   </script>
 </body>
 </html>
