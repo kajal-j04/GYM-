@@ -8,7 +8,32 @@
     <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
   </head>
+<!-- Inquiry Form Popup -->
+<div id="inquiryModal" class="modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Enquiry Form</h2>
+      <form id="inquiryForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+          <small id="nameError" class="error"></small>
 
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+          <small id="emailError" class="error"></small>
+
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" name="phone" required>
+          <small id="phoneError" class="error"></small>
+
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
+          <small id="messageError" class="error"></small>
+
+          <button type="submit">Submit</button>
+      </form>
+  </div>
+</div>
     <!-- Menu -->
     <div class="menu">
       <div class="container flex">
@@ -18,7 +43,7 @@
                   </div>
         <div class="logo"></div>
         <ul class="nav">
-          <li class="nav-item"><a href="#">About Us</a></li>
+          <li class="nav-item"><a href="About us.html">About Us</a></li>
           <li class="nav-item"><a href="#why-us">Features and Enquiry</a></li>
           <li class="nav-item"><a href="#explore">Explore</a></li>
           <li class="nav-item"><a href="#discount">Register</a></li>

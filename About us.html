@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About Us - Innovative Template</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts: Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+    body.dark-mode {
+      background: #1e1e1e;
+      color: #ddd;
+    }
+    /* Theme Toggle Button */
+    #theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #29a396;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      z-index: 2000;
+      transition: background 0.3s ease;
+    }
+    #theme-toggle:hover {
+      background: #1e8c75;
+    }
+    /* Back-to-Top Button */
+    #back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #29a396;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      display: none;
+      z-index: 2000;
+      transition: opacity 0.3s ease;
+    }
+    #back-to-top:hover {
+      background: #1e8c75;
+    }
+    /* Scroll Progress Bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 5px;
+      background: #29a396;
+      width: 0%;
+      z-index: 3000;
+    }
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 50vh;
+      background: url('https://via.placeholder.com/1200x800?text=Elite+Gym+Banner') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      color: #fff;
+      padding: 1rem;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    .hero-content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hero-content h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    /* Main Container */
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    .container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .container.dark-mode {
+      background: #333;
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    }
+    .section-title {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 1.5rem;
+      color: #29a396;
+    }
+    /* About Section */
+    .about-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
+    }
+    .about-text, .about-image {
+      flex: 1;
+      min-width: 300px;
+      padding: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    .about-text.visible, .about-image.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .about-text p {
+      margin-bottom: 1.2rem;
+      text-align: justify;
+      font-size: 1rem;
+    }
+    .about-image img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    /* Mission & Vision Section */
+    .mission-vision {
+      background: #29a396;
+      color: black;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-top: 2rem;
+      transition: background 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    .mission-vision.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .mission-vision.dark-mode {
+      background: #29a396;
+    }
+    .mission-vision h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .mission-vision p {
+      text-align: justify;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-content h1 { font-size: 2.5rem; }
+      .about-content { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div id="scroll-progress"></div>
+  
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle">Dark Mode</button>
+  
+  <!-- Back-to-Top Button -->
+  <button id="back-to-top">Top</button>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>About Minnat Vigour Gym</h1>
+      <p>Where your fitness journey transforms into a lifestyle.</p>
+    </div>
+  </section>
+  
+  <!-- Main Container -->
+  <div class="container">
+    <!-- About Us Section -->
+    <section id="about">
+      <h2 class="section-title">Our Story</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            Elite Gym was founded with the mission to empower individuals through personalized training
+            and innovative fitness programs. Since 2010, our community has grown into a family that believes
+            in the transformative power of health and fitness.
+          </p>
+          <p>
+            We are committed to providing a state-of-the-art facility with expert guidance, ensuring every
+            member is supported on their journey toward fitness excellence.
+          </p>
+        </div>
+        <div class="about-image">
+          <img src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true" alt="Gym Interior">
+        </div>
+      </div>
+    </section>
+    <!-- Mission & Vision Section -->
+    <section id="mission-vision" class="mission-vision">
+      <h2>Our Mission & Vision</h2>
+      <p><strong>Our Mission:</strong> To inspire and empower our community with cutting-edge fitness solutions, ensuring a healthier, happier lifestyle for every member.</p>
+      <p><strong>Our Vision:</strong> To become the leading fitness destination that transforms lives and sets new benchmarks in health, strength, and wellness.</p>
+    </section>
+  </div>
+
+  <script>
+    // Theme Toggle Functionality
+    const toggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.querySelector('.container');
+    const missionVision = document.querySelector('.mission-vision');
+    
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        body.classList.add('dark-mode');
+        container.classList.add('dark-mode');
+        missionVision.classList.add('dark-mode');
+        toggleBtn.textContent = "Light Mode";
+      } else {
+        body.classList.remove('dark-mode');
+        container.classList.remove('dark-mode');
+        missionVision.classList.remove('dark-mode');
+        toggleBtn.textContent = "Dark Mode";
+      }
+      localStorage.setItem('theme', theme);
+    }
+    
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      if (body.classList.contains('dark-mode')) {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+    });
+    
+    // Intersection Observer for smooth animations on scroll
+    const observerOptions = { threshold: 0.2 };
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.hero-content, .container, .about-text, .about-image, .mission-vision')
+      .forEach(el => observer.observe(el));
+    
+    // Back-to-Top Button & Scroll Progress Bar
+    const backToTop = document.getElementById('back-to-top');
+    const scrollProgress = document.getElementById('scroll-progress');
+    
+    window.addEventListener('scroll', () => {
+      // Show or hide the Back-to-Top button
+      if (window.scrollY > 300) {
+        backToTop.style.display = 'block';
+      } else {
+        backToTop.style.display = 'none';
+      }
+      // Update scroll progress bar width
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      scrollProgress.style.width = scrollPercent + '%';
+    });
+    
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
