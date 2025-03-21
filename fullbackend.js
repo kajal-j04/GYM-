@@ -32,20 +32,40 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // For file uploads (used by admin endpoints)
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + '-' + file.originalname);
-    }
-  })
-});
+// const uploadDir = path.join(__dirname, 'uploads');
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir);
+// }
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       const uploadFolder = path.join(__dirname, 'uploads', folder);
+//       fs.mkdirSync(uploadFolder, { recursive: true }); // Ensure directory exists
+//       cb(null, uploadFolder);
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, Date.now() + '-' + file.originalname);
+//     }
+//   })
+// });
+const getMulterStorage = (folder) => {
+  return multer.diskStorage({
+      destination: (req, file, cb) => {
+          const uploadFolder = path.join(__dirname, 'uploads', folder);
+          fs.mkdirSync(uploadFolder, { recursive: true }); // Ensure directory exists
+          cb(null, uploadFolder);
+      },
+      filename: (req, file, cb) => {
+          cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+      }
+  });
+};
+// Create separate upload instances for each directory
+const uploadEquip = multer({ storage: getMulterStorage('equipment') });
+const uploadTrainer = multer({ storage: getMulterStorage('trainer') });
+const uploadMember = multer({ storage: getMulterStorage('member') });
+const uploadPackage = multer({ storage: getMulterStorage('package') });
+
 
 // Connect to MongoDB (all parts use the same DB)
 mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/minnat_vigour_gym", {
@@ -252,7 +272,7 @@ app.post('/api/login', (req, res) => {
 });
 
 // Create Trainer
-app.post('/api/trainers', upload.single('trainerImage'), (req, res) => {
+app.post('/api/trainers', uploadTrainer.single('trainerImage'), (req, res) => {
   const { trainerName, trainerEmail, trainerSpecialization, trainerPhone, trainerExperience } = req.body;
   const imageName = req.file ? req.file.filename : '';
   const trainer = new Trainer({
@@ -269,7 +289,7 @@ app.post('/api/trainers', upload.single('trainerImage'), (req, res) => {
 });
 
 // Create Member
-app.post('/api/members', upload.single('memberImage'), (req, res) => {
+app.post('/api/members', uploadMember.single('memberImage'), (req, res) => {
   const { memberName, memberEmail, memberPhone, memberGender, memberDOB, memberAddress } = req.body;
   const imageName = req.file ? req.file.filename : '';
   const member = new Member({
@@ -287,7 +307,7 @@ app.post('/api/members', upload.single('memberImage'), (req, res) => {
 });
 
 // Create Package
-app.post('/api/packages', upload.single('packageImage'), (req, res) => {
+app.post('/api/packages', uploadPackage.single('packageImage'), (req, res) => {
   const { packageName, packageDuration, packagePrice, packageFeatures } = req.body;
   const imageName = req.file ? req.file.filename : '';
   const pack = new Package({
@@ -303,7 +323,7 @@ app.post('/api/packages', upload.single('packageImage'), (req, res) => {
 });
 
 // Create Equipment
-app.post('/api/equipments', upload.single('equipmentImage'), (req, res) => {
+app.post('/api/equipments', uploadEquip.single('equipmentImage'), (req, res) => {
   const { equipmentName, equipmentBrand, equipmentType, equipmentCount } = req.body;
   const imageName = req.file ? req.file.filename : '';
   const equipment = new Equipment({
@@ -437,7 +457,7 @@ app.get('/api/attendance/last-week', async (req, res) => {
 });
 
 /* ========= UPDATE & DELETE ENDPOINTS ========= */
-app.put('/api/trainers/:id', upload.single('trainerImage'), (req, res) => {
+app.put('/api/trainers/:id', uploadTrainer.single('trainerImage'), (req, res) => {
   const { trainerName, trainerEmail, trainerSpecialization, trainerPhone, trainerExperience } = req.body;
   let updateData = {
     name: trainerName,
@@ -452,7 +472,7 @@ app.put('/api/trainers/:id', upload.single('trainerImage'), (req, res) => {
     .catch(err => res.status(500).json({ success: false, error: err.message }));
 });
 
-app.put('/api/members/:id', upload.single('memberImage'), (req, res) => {
+app.put('/api/members/:id', uploadMember.single('memberImage'), (req, res) => {
   const { memberName, memberEmail, memberPhone, memberGender, memberDOB, memberAddress } = req.body;
   let updateData = {
     name: memberName,
@@ -468,7 +488,7 @@ app.put('/api/members/:id', upload.single('memberImage'), (req, res) => {
     .catch(err => res.status(500).json({ success: false, error: err.message }));
 });
 
-app.put('/api/packages/:id', upload.single('packageImage'), (req, res) => {
+app.put('/api/packages/:id', uploadPackage.single('packageImage'), (req, res) => {
   const { packageName, packageDuration, packagePrice, packageFeatures } = req.body;
   let updateData = {
     name: packageName,
@@ -482,7 +502,7 @@ app.put('/api/packages/:id', upload.single('packageImage'), (req, res) => {
     .catch(err => res.status(500).json({ success: false, error: err.message }));
 });
 
-app.put('/api/equipments/:id', upload.single('equipmentImage'), (req, res) => {
+app.put('/api/equipments/:id', uploadEquip.single('equipmentImage'), (req, res) => {
   const { equipmentName, equipmentBrand, equipmentType, equipmentCount } = req.body;
   let updateData = {
     name: equipmentName,
@@ -517,6 +537,11 @@ app.delete('/api/equipments/:id', (req, res) => {
     .then(() => res.json({ success: true }))
     .catch(err => res.status(500).json({ success: false, error: err.message }));
 });
+app.delete('/api/enquirys/:id', (req, res) => {
+  Enquiry.findByIdAndDelete(req.params.id)
+    .then(() => res.json({ success: true }))
+    .catch(err => res.status(500).json({ success: false, error: err.message }));
+});
 
 /* ========= GET LISTS ========= */
 app.get('/api/trainers', (req, res) => {
@@ -539,6 +564,11 @@ app.get('/api/equipments', (req, res) => {
     .then(equipments => res.json(equipments))
     .catch(err => res.status(500).json({ error: err.message }));
 });
+app.get('/api/enquiry', async (req,res) => {
+  Enquiry.find()
+    .then(enq => res.json(enq))
+    .catch(err => res.status(500).json({ error: err.message }));
+})
 app.get('/api/counts', async (req, res) => {
   try {
     const tc = await Trainer.countDocuments();

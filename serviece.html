@@ -178,6 +178,13 @@
       .hero h2 { font-size: 2rem; }
       header h1 { font-size: 1.8rem; }
     }
+    .gallery-item img {
+            width: 50%; /* ✅ Make images fill the grid cell */
+            height: 250px; /* ✅ Set fixed height */
+            object-fit: cover; /* ✅ Crop images properly */
+            border-radius: 8px;
+            display: block;
+        }
   </style>
 </head>
 <body>
@@ -244,12 +251,30 @@
   </footer>
 
   <script>
+      async function fetchEquipmentImages() {
+        try {
+          const response = await fetch('http://localhost:5000/api/equipments');
+          const equipments = await response.json();
+          const gallery = document.getElementsByClassName('gallery')[0];
+          // gallery.innerHTML = ''; // ✅ Clear gallery before appending new images
+          equipments.forEach(equip => {
+            const div = document.createElement('div');
+            div.classList.add('gallery-item');
+            div.setAttribute('data-category', 'equipment'); // Set data-category dynamically
+            div.innerHTML = `<img src="/uploads/equipment/${equip.imageName}" alt="Uploaded Image">`;
+            gallery.appendChild(div);
+          });
+        } catch (error) {
+          console.error('Error loading images:', error);
+        }
+      }
     // Filtering Functionality
     const filterButtons = document.querySelectorAll('.filter-nav button');
     const galleryItems = document.querySelectorAll('.gallery-item');
 
     filterButtons.forEach(button => {
       button.addEventListener('click', () => {
+        fetchEquipmentImages();
         filterButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
         const filterValue = button.getAttribute('data-filter');

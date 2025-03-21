@@ -14,6 +14,8 @@
     /* RESET SOME DEFAULTS */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
     body { background: #f5f5f5; }
+    .clickable:hover{ cursor: pointer;}
+    .clickable{ color: blue; font-weight: 100;}
     /* SIDEBAR & HEADER */
     .mdl-layout__drawer { width: 240px; background: #1f1f1f; }
     .mdl-layout__drawer .mdl-layout-title { color: #fff; margin-left: 16px; font-size: 18px; line-height: 48px; }
@@ -55,7 +57,7 @@
     input, button { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
     button { background-color: #3f51b5; color: white; border: none; cursor: pointer; transition: background 0.3s; }
     button:hover { background-color: #303f9f; }
-    .list-container { margin: 20px auto; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 100%; max-width: 700px; overflow-x: auto; }
+    .list-container { margin: 20px auto; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 100%; max-width: 100%; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
     table, th, td { border: 1px solid #ccc; }
     th, td { padding: 10px; text-align: center; }
@@ -111,6 +113,15 @@
         </a>
         <a href="#" class="mdl-navigation__link" onclick="loadContent('equipment')">
           <i class="material-icons">build</i> Equipment
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('enquiry')">
+          <i class="material-icons">contact_support</i> Enquiry
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('attendance')">
+          <i class="material-icons">how_to_reg</i> Attendance
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('registration')">
+          <i class="material-icons">face</i> Registrations
         </a>
       </nav>
     </div>
@@ -345,6 +356,58 @@
         </thead>
         <tbody id="equipmentTableBody">
           <tr><td colspan="6">No equipments added yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT SECTION -->
+  <div id="enquiry" class="hidden">
+    <h4 class="section-heading">Enquiries</h4>
+    <!-- Clickable list heading -->
+    <h4 id="enquiryListHeading" class="section-heading clickable">Enquiries List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="enquiryTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone No.</th>
+            <th>Message</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="enquiryTableBody">
+          <tr><td colspan="6">No Enquiries.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT SECTION -->
+  <div id="registration" class="hidden">
+    <h4 class="section-heading">Registrations</h4>
+    <!-- Clickable list heading -->
+    <h4 id="registrationListHeading" class="section-heading clickable">Registrations List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="registrationTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact No.</th>
+            <th>Height</th>
+            <th>Weight</th>
+            <th>TimeSlot</th>
+            <th>Date</th>
+            <th>Gender</th>
+            <th>DOB</th>
+            <th>Plans</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="registrationTableBody">
+          <tr><td colspan="11">No Registrations.</td></tr>
         </tbody>
       </table>
     </div>
@@ -603,6 +666,10 @@
       if(packageListHeading) { packageListHeading.addEventListener('click', fetchPackages); }
       const equipmentListHeading = document.getElementById('equipmentListHeading');
       if(equipmentListHeading) { equipmentListHeading.addEventListener('click', fetchEquipment); }
+      const enquiryListHeading = document.getElementById('enquiryListHeading');
+      if(enquiryListHeading) { enquiryListHeading.addEventListener('click', fetchEnquiry); }
+      const registrationListHeading = document.getElementById('registrationListHeading');
+      if(registrationListHeading) { registrationListHeading.addEventListener('click', fetchRegistration); }
     }
 
     // --------------------
@@ -624,7 +691,7 @@
                              <td>${item.specialization}</td>
                              <td>${item.phone}</td>
                              <td>${item.experience}</td>
-                             <td>${item.imageName || ''}</td>
+                             <td><img src="./uploads/trainer/${item.imageName}" alt="${item.imageName}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></td>
                              <td>
                                <button class="action-btn update-btn" onclick="updateEntity('trainer', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
                                <button class="action-btn delete-btn" onclick="deleteEntity('trainer', '${item._id}')">Delete</button>
@@ -633,6 +700,63 @@
           });
         }
         updateDashboardCounts();
+      })
+      .catch(err => alert(err.message));
+    }
+
+    function fetchEnquiry() {
+      fetch('http://localhost:5000/api/enquiry')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('enquiryTableBody');
+        tbody.innerHTML = '';
+        if(data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7">No Enquiry added yet.</td></tr>';
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.name}</td>
+                             <td>${item.email}</td>
+                             <td>${item.phone}</td>
+                             <td>${item.message}</td>
+                             <td>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('enquiry', '${item._id}')">Delete</button>
+                             </td>`;
+            tbody.appendChild(row);
+          });
+        }
+      })
+      .catch(err => alert(err.message));
+    }
+
+    function fetchRegistration() {
+      fetch('http://localhost:5000/api/registrations')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('registrationTableBody');
+        tbody.innerHTML = '';
+        if(data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7">No registrations added yet.</td></tr>';
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.name}</td>
+                             <td>${item.email}</td>
+                             <td>${item.contactNo}</td>
+                             <td>${item.height}</td>
+                             <td>${item.weight}</td>
+                             <td>${item.timeSlot}</td>
+                             <td>${item.date}</td>
+                             <td>${item.gender}</td>
+                             <td>${item.dob}</td>
+                             <td>${item.plans}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('registration', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('registration', '${item._id}')">Delete</button>
+                             </td>`;
+            tbody.appendChild(row);
+          });
+        }
       })
       .catch(err => alert(err.message));
     }
@@ -788,6 +912,7 @@
             else if(entity === 'member') fetchMembers();
             else if(entity === 'package') fetchPackages();
             else if(entity === 'equipment') fetchEquipment();
+            else if(entity === 'enquiry') fetchEnquiry();
           } else {
             alert(`Error deleting ${entity}.`);
           }
