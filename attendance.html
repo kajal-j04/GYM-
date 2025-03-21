@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Tracking</title>
-    <link rel="stylesheet" href="attendance.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance Tracking</title>
+  <link rel="stylesheet" href="attendance.css" />
 </head>
 <body>
-    <div class="attendance-container">
-        <h2>Attendance Tracking</h2>
+  <!-- Member Attendance Section -->
+  <div class="attendance-container">
+    <h2>Member Attendance Tracking</h2>
+    <input type="email" id="emailInput" placeholder="Enter your email" required />
+    <p id="emailStatus"></p>
+    <p id="status" class="attendance-status">Status: Not Clocked In</p>
+    <button id="clockInBtn" disabled style="margin-top: 10px;">Clock In</button>
+    <button id="clockOutBtn" disabled style="margin-top: 10px;">Clock Out</button>
+  </div>
 
-        <!-- Email Input -->
-        <input type="email" id="emailInput" placeholder="Enter your email" required>
-        <p id="emailStatus"></p>
+  <!-- Trainer Attendance Section -->
+  <div class="attendance-container" style="margin-top: 40px;">
+    <h2>Trainer Attendance Tracking</h2>
+    <input type="email" id="trainerEmailInput" placeholder="Enter your trainer email" required />
+    <p id="trainerEmailStatus"></p>
+    <p id="trainerStatus" class="attendance-status">Status: Not Clocked In</p>
+    <button id="trainerClockInBtn" disabled style="margin-top: 10px;">Clock In</button>
+    <button id="trainerClockOutBtn" disabled style="margin-top: 10px;">Clock Out</button>
+  </div>
 
-        <p id="status" class="attendance-status">Status: Not Clocked In</p>
-
-        <!-- Buttons -->
-        <button id="clockInBtn" disabled style="margin-top: 10px;">Clock In</button>
-        <button id="clockOutBtn" disabled style="margin-top: 10px;">Clock Out</button>
-    </div>
-
-    <!-- Ensure script loads properly -->
-    <script>
-        console.log("JavaScript Loaded!");
-    </script>
-
-    <script src="attendance.js"></script>
+  <!-- Scripts -->
+  <script src="attendance.js"></script>
 </body>
 </html>

@@ -9,16 +9,16 @@
 
 /* --- Body Styling --- */
 body {
-    height: 100vh;
+    min-height: 100vh;  /* Allow content to grow beyond viewport height */
     width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 30px;
     background-color: #0b1215;
     color: white;
     transition: background-color 0.3s, color 0.3s;
+    /* Remove vertical centering so that content starts at the top */
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* horizontally center */
+    overflow-y: auto;  /* enable vertical scrolling */
 }
 
 /* --- Header Styling --- */
@@ -41,6 +41,7 @@ header {
     backdrop-filter: blur(10px);
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.18);
+    margin-bottom: 30px; /* spacing between containers */
 }
 
 /* --- Input Fields --- */

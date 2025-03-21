@@ -21,7 +21,7 @@
     .mdl-navigation__link:hover { background: #333; color: #fff !important; }
     .mdl-layout__header { background: #1f1f1f; color: #fff; }
     .mdl-layout-title { font-size: 20px; }
-    /* LOGOUT BUTTON IN HEADER */
+    /* LOGOUT BUTTON */
     .logout-button { background-color: #ff5722; color: #fff; margin-right: 20px; }
     /* MAIN CONTENT AREA */
     .page-content { padding: 20px; width: 100%; }
@@ -50,7 +50,7 @@
     canvas { width: 100% !important; max-height: 300px; }
     /* FORMS & TABLES SECTION */
     .form-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 64px); text-align: center; padding: 20px; }
-    form { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 500px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
+    form { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 500px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
     form label { display: block; text-align: left; font-weight: bold; }
     input, button { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
     button { background-color: #3f51b5; color: white; border: none; cursor: pointer; transition: background 0.3s; }
@@ -59,8 +59,13 @@
     table { width: 100%; border-collapse: collapse; }
     table, th, td { border: 1px solid #ccc; }
     th, td { padding: 10px; text-align: center; }
-    /* Make the list headings clickable */
-    h4.section-heading.clickable { cursor: pointer; text-decoration: underline; }
+    /* Attendance Report Section */
+    .report-section { margin-top: 30px; }
+    .report-section h4 { margin-bottom: 10px; }
+    /* Action Buttons */
+    .action-btn { padding: 5px 10px; margin: 0 2px; border: none; border-radius: 3px; cursor: pointer; }
+    .update-btn { background-color: #4caf50; color: #fff; }
+    .delete-btn { background-color: #f44336; color: #fff; }
   </style>
 </head>
 <body>
@@ -137,15 +142,52 @@
           <h4>Number of Packages</h4>
           <p id="dashPackages">0</p>
         </div>
+        <div class="stats-box">
+          <h4>Number of Trainers</h4>
+          <p id="dashTrainers">0</p>
+        </div>
       </div>
       <div class="charts-container">
         <div class="chart-box">
-          <h4>Attendance Reports</h4>
+          <h4>Attendance Reports (Last Week)</h4>
           <canvas id="attendanceChart"></canvas>
         </div>
         <div class="chart-box">
           <h4>Total Reports</h4>
           <canvas id="totalReportsChart"></canvas>
+        </div>
+      </div>
+      <!-- Attendance Report Section -->
+      <div class="report-section">
+        <h4>Today's Member Attendance</h4>
+        <div class="list-container">
+          <table id="memberAttendanceTable">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Clock In</th>
+                <th>Clock Out</th>
+              </tr>
+            </thead>
+            <tbody id="memberAttendanceBody">
+              <tr><td colspan="3">No attendance records for today.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Today's Trainer Attendance</h4>
+        <div class="list-container">
+          <table id="trainerAttendanceTable">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Clock In</th>
+                <th>Clock Out</th>
+              </tr>
+            </thead>
+            <tbody id="trainerAttendanceBody">
+              <tr><td colspan="3">No attendance records for today.</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -181,10 +223,11 @@
             <th>Phone</th>
             <th>Experience</th>
             <th>Image</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="trainerTableBody">
-          <tr><td colspan="6">No trainers added yet.</td></tr>
+          <tr><td colspan="7">No trainers added yet.</td></tr>
         </tbody>
       </table>
     </div>
@@ -223,10 +266,11 @@
             <th>Date of Birth</th>
             <th>Address</th>
             <th>Image</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="memberTableBody">
-          <tr><td colspan="7">No members added yet.</td></tr>
+          <tr><td colspan="8">No members added yet.</td></tr>
         </tbody>
       </table>
     </div>
@@ -259,10 +303,11 @@
             <th>Price</th>
             <th>Features</th>
             <th>Image</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="packageTableBody">
-          <tr><td colspan="5">No packages added yet.</td></tr>
+          <tr><td colspan="6">No packages added yet.</td></tr>
         </tbody>
       </table>
     </div>
@@ -295,15 +340,17 @@
             <th>Type</th>
             <th>Count</th>
             <th>Image</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="equipmentTableBody">
-          <tr><td colspan="5">No equipments added yet.</td></tr>
+          <tr><td colspan="6">No equipments added yet.</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
+  <!-- FRONTEND SCRIPT -->
   <script>
     // --------------------
     // LOGIN HANDLER
@@ -312,7 +359,7 @@
       e.preventDefault();
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
-      fetch('http://localhost:3000/api/login', {
+      fetch('http://localhost:5000/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -323,7 +370,6 @@
       })
       .then(data => {
         if(data.success) {
-          // Remember login state in localStorage
           localStorage.setItem('loggedIn', 'true');
           document.getElementById('login').classList.add('hidden');
           document.getElementById('appLayout').classList.remove('hidden');
@@ -355,32 +401,32 @@
       if(page === 'Dashboard') {
         initCharts();
         updateDashboardCounts();
+        fetchAttendanceReport();
       }
-      attachFormHandlers(); // Attach handlers to dynamically loaded forms and clickable headings
+      attachFormHandlers();
     }
 
     // Update dashboard counts by fetching actual data
     function updateDashboardCounts() {
-      fetch('http://localhost:3000/api/members')
+      fetch('http://localhost:5000/api/members')
         .then(res => res.json())
-        .then(data => {
-          document.getElementById('dashMembers').textContent = data.length;
-        })
+        .then(data => { document.getElementById('dashMembers').textContent = data.length; })
         .catch(() => document.getElementById('dashMembers').textContent = 0);
 
-      fetch('http://localhost:3000/api/equipments')
+      fetch('http://localhost:5000/api/equipments')
         .then(res => res.json())
-        .then(data => {
-          document.getElementById('dashEquipment').textContent = data.length;
-        })
+        .then(data => { document.getElementById('dashEquipment').textContent = data.length; })
         .catch(() => document.getElementById('dashEquipment').textContent = 0);
 
-      fetch('http://localhost:3000/api/packages')
+      fetch('http://localhost:5000/api/packages')
         .then(res => res.json())
-        .then(data => {
-          document.getElementById('dashPackages').textContent = data.length;
-        })
+        .then(data => { document.getElementById('dashPackages').textContent = data.length; })
         .catch(() => document.getElementById('dashPackages').textContent = 0);
+
+      fetch('http://localhost:5000/api/trainers')
+        .then(res => res.json())
+        .then(data => { document.getElementById('dashTrainers').textContent = data.length; })
+        .catch(() => document.getElementById('dashTrainers').textContent = 0);
     }
 
     // --------------------
@@ -391,23 +437,48 @@
       const attCtx = document.getElementById('attendanceChart');
       if (!attCtx) return;
       if (attendanceChart) attendanceChart.destroy();
+
+      // Fetch last week attendance data from the new endpoint
+      const response = await fetch('http://localhost:5000/api/attendance/last-week');
+      const attendanceData = await response.json();
+
+      // Convert date strings to weekday names (e.g., Mon, Tue, etc.)
+      const labels = attendanceData.dates.map(dateStr => {
+        const dateObj = new Date(dateStr);
+        return dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+      });
+
+      // Create a grouped bar chart with two datasets
       attendanceChart = new Chart(attCtx, {
         type: 'bar',
         data: {
-          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-          datasets: [{
-            label: 'Last Week Report',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: '#2196f3'
-          }]
+          labels: labels,
+          datasets: [
+            {
+              label: 'Members',
+              data: attendanceData.memberCounts,
+              backgroundColor: '#2196f3'
+            },
+            {
+              label: 'Trainers',
+              data: attendanceData.trainerCounts,
+              backgroundColor: '#4caf50'
+            }
+          ]
         },
-        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
       });
 
+      // Continue with the totalReportsChart initialization
       const totalCtx = document.getElementById('totalReportsChart');
       if (!totalCtx) return;
       if (totalReportsChart) totalReportsChart.destroy();
-      const counts = await fetchCount()
+      const counts = await fetchCount();
       totalReportsChart = new Chart(totalCtx, {
         type: 'pie',
         data: {
@@ -422,16 +493,20 @@
     }
 
     // --------------------
-    // FORM HANDLERS AND CLICKABLE List Headings
+    // FORM HANDLERS AND CLICKABLE HEADINGS
     // --------------------
+    let originalTrainerHandler, originalMemberHandler, originalPackageHandler, originalEquipmentHandler;
+
     function attachFormHandlers() {
       // Trainer Form Submission
       const trainerForm = document.getElementById('trainerForm');
       if (trainerForm) {
+        originalTrainerHandler = trainerForm.onsubmit;
         trainerForm.addEventListener('submit', function(e) {
           e.preventDefault();
+          if(document.getElementById('trainerId') && document.getElementById('trainerId').value) return;
           const formData = new FormData(trainerForm);
-          fetch('http://localhost:3000/api/trainers', {
+          fetch('http://localhost:5000/api/trainers', {
             method: 'POST',
             body: formData
           })
@@ -441,9 +516,7 @@
               alert('Trainer added successfully!');
               trainerForm.reset();
               fetchTrainers();
-            } else {
-              alert('Error adding trainer.');
-            }
+            } else { alert('Error adding trainer.'); }
           })
           .catch(err => alert(err.message));
         });
@@ -452,10 +525,12 @@
       // Member Form Submission
       const memberForm = document.getElementById('memberForm');
       if (memberForm) {
+        originalMemberHandler = memberForm.onsubmit;
         memberForm.addEventListener('submit', function(e) {
           e.preventDefault();
+          if(document.getElementById('memberId') && document.getElementById('memberId').value) return;
           const formData = new FormData(memberForm);
-          fetch('http://localhost:3000/api/members', {
+          fetch('http://localhost:5000/api/members', {
             method: 'POST',
             body: formData
           })
@@ -465,9 +540,7 @@
               alert('Member added successfully!');
               memberForm.reset();
               fetchMembers();
-            } else {
-              alert('Error adding member.');
-            }
+            } else { alert('Error adding member.'); }
           })
           .catch(err => alert(err.message));
         });
@@ -476,10 +549,12 @@
       // Package Form Submission
       const packageForm = document.getElementById('packageForm');
       if (packageForm) {
+        originalPackageHandler = packageForm.onsubmit;
         packageForm.addEventListener('submit', function(e) {
           e.preventDefault();
+          if(document.getElementById('packageId') && document.getElementById('packageId').value) return;
           const formData = new FormData(packageForm);
-          fetch('http://localhost:3000/api/packages', {
+          fetch('http://localhost:5000/api/packages', {
             method: 'POST',
             body: formData
           })
@@ -489,9 +564,7 @@
               alert('Package added successfully!');
               packageForm.reset();
               fetchPackages();
-            } else {
-              alert('Error adding package.');
-            }
+            } else { alert('Error adding package.'); }
           })
           .catch(err => alert(err.message));
         });
@@ -500,10 +573,12 @@
       // Equipment Form Submission
       const equipmentForm = document.getElementById('equipmentForm');
       if (equipmentForm) {
+        originalEquipmentHandler = equipmentForm.onsubmit;
         equipmentForm.addEventListener('submit', function(e) {
           e.preventDefault();
+          if(document.getElementById('equipmentId') && document.getElementById('equipmentId').value) return;
           const formData = new FormData(equipmentForm);
-          fetch('http://localhost:3000/api/equipments', {
+          fetch('http://localhost:5000/api/equipments', {
             method: 'POST',
             body: formData
           })
@@ -513,9 +588,7 @@
               alert('Equipment added successfully!');
               equipmentForm.reset();
               fetchEquipment();
-            } else {
-              alert('Error adding equipment.');
-            }
+            } else { alert('Error adding equipment.'); }
           })
           .catch(err => alert(err.message));
         });
@@ -523,35 +596,26 @@
 
       // Clickable headings to load lists
       const trainerListHeading = document.getElementById('trainerListHeading');
-      if(trainerListHeading) {
-        trainerListHeading.addEventListener('click', fetchTrainers);
-      }
-
+      if(trainerListHeading) { trainerListHeading.addEventListener('click', fetchTrainers); }
       const memberListHeading = document.getElementById('memberListHeading');
-      if(memberListHeading) {
-        memberListHeading.addEventListener('click', fetchMembers);
-      }
-
+      if(memberListHeading) { memberListHeading.addEventListener('click', fetchMembers); }
       const packageListHeading = document.getElementById('packageListHeading');
-      if(packageListHeading) {
-        packageListHeading.addEventListener('click', fetchPackages);
-      }
-
+      if(packageListHeading) { packageListHeading.addEventListener('click', fetchPackages); }
       const equipmentListHeading = document.getElementById('equipmentListHeading');
-      if(equipmentListHeading) {
-        equipmentListHeading.addEventListener('click', fetchEquipment);
-      }
+      if(equipmentListHeading) { equipmentListHeading.addEventListener('click', fetchEquipment); }
     }
 
-    // Functions to fetch lists from server and populate tables
+    // --------------------
+    // Functions to fetch lists with Update/Delete buttons
+    // --------------------
     function fetchTrainers() {
-      fetch('http://localhost:3000/api/trainers')
+      fetch('http://localhost:5000/api/trainers')
       .then(res => res.json())
       .then(data => {
         const tbody = document.getElementById('trainerTableBody');
         tbody.innerHTML = '';
         if(data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6">No trainers added yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="7">No trainers added yet.</td></tr>';
         } else {
           data.forEach(item => {
             const row = document.createElement('tr');
@@ -560,7 +624,11 @@
                              <td>${item.specialization}</td>
                              <td>${item.phone}</td>
                              <td>${item.experience}</td>
-                             <td>${item.imageName}</td>`;
+                             <td>${item.imageName || ''}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('trainer', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('trainer', '${item._id}')">Delete</button>
+                             </td>`;
             tbody.appendChild(row);
           });
         }
@@ -570,13 +638,13 @@
     }
 
     function fetchMembers() {
-      fetch('http://localhost:3000/api/members')
+      fetch('http://localhost:5000/api/members')
       .then(res => res.json())
       .then(data => {
         const tbody = document.getElementById('memberTableBody');
         tbody.innerHTML = '';
         if(data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="7">No members added yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8">No members added yet.</td></tr>';
         } else {
           data.forEach(item => {
             const row = document.createElement('tr');
@@ -586,7 +654,11 @@
                              <td>${item.gender}</td>
                              <td>${new Date(item.dob).toLocaleDateString()}</td>
                              <td>${item.address}</td>
-                             <td>${item.imageName || 'No image'}</td>`;
+                             <td>${item.imageName || 'No image'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('member', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('member', '${item._id}')">Delete</button>
+                             </td>`;
             tbody.appendChild(row);
           });
         }
@@ -596,13 +668,13 @@
     }
 
     function fetchPackages() {
-      fetch('http://localhost:3000/api/packages')
+      fetch('http://localhost:5000/api/packages')
       .then(res => res.json())
       .then(data => {
         const tbody = document.getElementById('packageTableBody');
         tbody.innerHTML = '';
         if(data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5">No packages added yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6">No packages added yet.</td></tr>';
         } else {
           data.forEach(item => {
             const row = document.createElement('tr');
@@ -610,7 +682,11 @@
                              <td>${item.duration}</td>
                              <td>${item.price}</td>
                              <td>${item.features}</td>
-                             <td>${item.imageName || 'No image'}</td>`;
+                             <td>${item.imageName || 'No image'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('package', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('package', '${item._id}')">Delete</button>
+                             </td>`;
             tbody.appendChild(row);
           });
         }
@@ -620,13 +696,13 @@
     }
 
     function fetchEquipment() {
-      fetch('http://localhost:3000/api/equipments')
+      fetch('http://localhost:5000/api/equipments')
       .then(res => res.json())
       .then(data => {
         const tbody = document.getElementById('equipmentTableBody');
         tbody.innerHTML = '';
         if(data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5">No equipments added yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6">No equipments added yet.</td></tr>';
         } else {
           data.forEach(item => {
             const row = document.createElement('tr');
@@ -634,13 +710,245 @@
                              <td>${item.brand}</td>
                              <td>${item.type}</td>
                              <td>${item.count}</td>
-                             <td>${item.imageName || 'No image'}</td>`;
+                             <td>${item.imageName || 'No image'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('equipment', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('equipment', '${item._id}')">Delete</button>
+                             </td>`;
             tbody.appendChild(row);
           });
         }
         updateDashboardCounts();
       })
       .catch(err => alert(err.message));
+    }
+
+    // --------------------
+    // Attendance Report Fetcher (for today's attendance)
+    // --------------------
+    function fetchAttendanceReport() {
+      fetch('http://localhost:5000/api/attendance/report')
+      .then(res => res.json())
+      .then(data => {
+        // Populate member attendance table
+        const mBody = document.getElementById('memberAttendanceBody');
+        mBody.innerHTML = '';
+        if(data.members.length === 0) {
+          mBody.innerHTML = '<tr><td colspan="3">No attendance records for today.</td></tr>';
+        } else {
+          data.members.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.email}</td>
+                             <td>${new Date(item.clockIn).toLocaleTimeString()}</td>
+                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>`;
+            mBody.appendChild(row);
+          });
+        }
+        // Populate trainer attendance table
+        const tBody = document.getElementById('trainerAttendanceBody');
+        tBody.innerHTML = '';
+        if(data.trainers.length === 0) {
+          tBody.innerHTML = '<tr><td colspan="3">No attendance records for today.</td></tr>';
+        } else {
+          data.trainers.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.email}</td>
+                             <td>${new Date(item.clockIn).toLocaleTimeString()}</td>
+                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>`;
+            tBody.appendChild(row);
+          });
+        }
+      })
+      .catch(err => alert("Error fetching attendance report: " + err.message));
+    }
+
+    async function fetchCount() {
+      try {
+        const response = await fetch('http://localhost:5000/api/counts');
+        if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
+        const data = await response.json();
+        return data;
+      } catch (err) {
+        console.error("Error fetching counts:", err.message);
+        return { error: err.message };
+      }
+    }
+
+    // --------------------
+    // DELETE and UPDATE FUNCTIONS
+    // --------------------
+    function deleteEntity(entity, id) {
+      if (confirm("Do you really want to delete?")) {
+        fetch(`http://localhost:5000/api/${entity}s/${id}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(data => {
+          if(data.success) {
+            alert(`${entity} deleted successfully!`);
+            if(entity === 'trainer') fetchTrainers();
+            else if(entity === 'member') fetchMembers();
+            else if(entity === 'package') fetchPackages();
+            else if(entity === 'equipment') fetchEquipment();
+          } else {
+            alert(`Error deleting ${entity}.`);
+          }
+        })
+        .catch(err => alert(err.message));
+      }
+    }
+
+    function updateEntity(entity, id, itemEncoded) {
+      const item = JSON.parse(decodeURIComponent(itemEncoded));
+      if(entity === 'trainer') {
+        const trainerForm = document.getElementById('trainerForm');
+        trainerForm.trainerName.value = item.name;
+        trainerForm.trainerEmail.value = item.email;
+        trainerForm.trainerSpecialization.value = item.specialization;
+        trainerForm.trainerPhone.value = item.phone;
+        trainerForm.trainerExperience.value = item.experience;
+        let trainerIdInput = document.getElementById('trainerId');
+        if(!trainerIdInput) {
+          trainerIdInput = document.createElement('input');
+          trainerIdInput.type = 'hidden';
+          trainerIdInput.id = 'trainerId';
+          trainerIdInput.name = 'trainerId';
+          trainerForm.appendChild(trainerIdInput);
+        }
+        trainerIdInput.value = id;
+        trainerForm.querySelector('button[type="submit"]').textContent = "Update";
+        trainerForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(trainerForm);
+          fetch(`http://localhost:5000/api/trainers/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Trainer updated successfully!');
+              trainerForm.reset();
+              trainerForm.querySelector('button[type="submit"]').textContent = "Submit";
+              trainerIdInput.value = '';
+              trainerForm.onsubmit = originalTrainerHandler;
+              fetchTrainers();
+            } else { alert('Error updating trainer.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
+      else if(entity === 'member') {
+        const memberForm = document.getElementById('memberForm');
+        memberForm.memberName.value = item.name;
+        memberForm.memberEmail.value = item.email;
+        memberForm.memberPhone.value = item.phone;
+        memberForm.memberGender.value = item.gender;
+        memberForm.memberDOB.value = item.dob ? new Date(item.dob).toISOString().split('T')[0] : '';
+        memberForm.memberAddress.value = item.address;
+        let memberIdInput = document.getElementById('memberId');
+        if(!memberIdInput) {
+          memberIdInput = document.createElement('input');
+          memberIdInput.type = 'hidden';
+          memberIdInput.id = 'memberId';
+          memberIdInput.name = 'memberId';
+          memberForm.appendChild(memberIdInput);
+        }
+        memberIdInput.value = id;
+        memberForm.querySelector('button[type="submit"]').textContent = "Update";
+        memberForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(memberForm);
+          fetch(`http://localhost:5000/api/members/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Member updated successfully!');
+              memberForm.reset();
+              memberForm.querySelector('button[type="submit"]').textContent = "Submit";
+              memberIdInput.value = '';
+              memberForm.onsubmit = originalMemberHandler;
+              fetchMembers();
+            } else { alert('Error updating member.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
+      else if(entity === 'package') {
+        const packageForm = document.getElementById('packageForm');
+        packageForm.packageName.value = item.name;
+        packageForm.packageDuration.value = item.duration;
+        packageForm.packagePrice.value = item.price;
+        packageForm.packageFeatures.value = item.features;
+        let packageIdInput = document.getElementById('packageId');
+        if(!packageIdInput) {
+          packageIdInput = document.createElement('input');
+          packageIdInput.type = 'hidden';
+          packageIdInput.id = 'packageId';
+          packageIdInput.name = 'packageId';
+          packageForm.appendChild(packageIdInput);
+        }
+        packageIdInput.value = id;
+        packageForm.querySelector('button[type="submit"]').textContent = "Update";
+        packageForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(packageForm);
+          fetch(`http://localhost:5000/api/packages/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Package updated successfully!');
+              packageForm.reset();
+              packageForm.querySelector('button[type="submit"]').textContent = "Submit";
+              packageIdInput.value = '';
+              packageForm.onsubmit = originalPackageHandler;
+              fetchPackages();
+            } else { alert('Error updating package.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
+      else if(entity === 'equipment') {
+        const equipmentForm = document.getElementById('equipmentForm');
+        equipmentForm.equipmentName.value = item.name;
+        equipmentForm.equipmentBrand.value = item.brand;
+        equipmentForm.equipmentType.value = item.type;
+        equipmentForm.equipmentCount.value = item.count;
+        let equipmentIdInput = document.getElementById('equipmentId');
+        if(!equipmentIdInput) {
+          equipmentIdInput = document.createElement('input');
+          equipmentIdInput.type = 'hidden';
+          equipmentIdInput.id = 'equipmentId';
+          equipmentIdInput.name = 'equipmentId';
+          equipmentForm.appendChild(equipmentIdInput);
+        }
+        equipmentIdInput.value = id;
+        equipmentForm.querySelector('button[type="submit"]').textContent = "Update";
+        equipmentForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(equipmentForm);
+          fetch(`http://localhost:5000/api/equipments/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Equipment updated successfully!');
+              equipmentForm.reset();
+              equipmentForm.querySelector('button[type="submit"]').textContent = "Submit";
+              equipmentIdInput.value = '';
+              equipmentForm.onsubmit = originalEquipmentHandler;
+              fetchEquipment();
+            } else { alert('Error updating equipment.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
     }
 
     // On page load, check login state and show appropriate layout
@@ -654,20 +962,6 @@
         document.getElementById('appLayout').classList.add('hidden');
       }
     }
-    
-    async function fetchCount() {
-    try {
-          const response = await fetch('http://localhost:3000/api/counts');
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          const data = await response.json();
-          return data;  // Return the JSON response
-      } catch (err) {
-          console.error("Error fetching counts:", err.message);
-          return { error: err.message };  // Return an error object instead of throwing
-      }
-  }
   </script>
 </body>
 </html>

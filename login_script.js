@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.querySelector('.login-box .email').value;
         const password = document.querySelector('.login-box .password').value;
 
-        fetch('http://localhost:3000/login', {
+        fetch('http://localhost:5000/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return; // Exit the function if passwords don't match
         }
 
-        fetch('http://localhost:3000/signup', {
+        fetch('http://localhost:5000/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

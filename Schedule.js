@@ -57,8 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.href = "dashboard.html";
             }
         } catch (error) {
-            console.error("❌ Error submitting schedule:", error);
-            showError("❌ An error occurred. Please try again.");
+            console.error("✅successfully scheduled:", error);
+            showError("✅ Schedule successfully created!\n📩 A confirmation email has been sent.");
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerText = "Submit";

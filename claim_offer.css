@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0b1215;
+    color: white;
+    flex-direction: column;
+}
+
+header {
+    font-size: 28px;
+    font-weight: bold;
+    color: #29a396;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 16px;
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    outline: none;
+}
+
+button {
+    background: linear-gradient(135deg, #29a396, #1e7d6f);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 100%;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #1e7d6f, #186b5c);
+}
