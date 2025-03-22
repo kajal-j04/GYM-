@@ -120,6 +120,7 @@
         <a href="#" class="mdl-navigation__link" onclick="loadContent('attendance')">
           <i class="material-icons">how_to_reg</i> Attendance
         </a>
+        
         <a href="#" class="mdl-navigation__link" onclick="loadContent('registration')">
           <i class="material-icons">face</i> Registrations
         </a>
@@ -413,6 +414,26 @@
     </div>
   </div>
 
+  <!-- NEW ATTENDANCE SECTION -->
+<div id="attendance" class="hidden page-content">
+  <h4 class="section-heading">Attendance</h4>
+  <div class="list-container">
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Clock In</th>
+          <th>Clock Out</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTableBody">
+        <tr><td colspan="4">No attendance records available.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
   <!-- FRONTEND SCRIPT -->
   <script>
     // --------------------
@@ -465,7 +486,10 @@
         initCharts();
         updateDashboardCounts();
         fetchAttendanceReport();
-      }
+      }else if(page === 'attendance') {
+    // When the Attendance page is loaded, fetch attendance records
+    fetchAttendanceRecords();
+  }
       attachFormHandlers();
     }
 
@@ -496,64 +520,61 @@
     // CHARTS
     // --------------------
     let attendanceChart, totalReportsChart;
-    async function initCharts() {
-      const attCtx = document.getElementById('attendanceChart');
-      if (!attCtx) return;
-      if (attendanceChart) attendanceChart.destroy();
+async function initCharts() {
+  const attCtx = document.getElementById('attendanceChart');
+  if (!attCtx) return;
+  if (attendanceChart) attendanceChart.destroy();
 
-      // Fetch last week attendance data from the new endpoint
-      const response = await fetch('http://localhost:5000/api/attendance/last-week');
-      const attendanceData = await response.json();
+  // 1) Fetch Marked Attendance Data
+  const response = await fetch('http://localhost:5000/api/attendance/last-week-marked');
+  const attendanceData = await response.json();
+  console.log("📊 Marked Attendance Data:", attendanceData);
 
-      // Convert date strings to weekday names (e.g., Mon, Tue, etc.)
-      const labels = attendanceData.dates.map(dateStr => {
-        const dateObj = new Date(dateStr);
-        return dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-      });
+  // Convert date strings to weekday names (e.g., Mon, Tue, etc.)
+  const labels = attendanceData.dates.map(dateStr => {
+    const dateObj = new Date(dateStr);
+    return dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+  });
 
-      // Create a grouped bar chart with two datasets
-      attendanceChart = new Chart(attCtx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Members',
-              data: attendanceData.memberCounts,
-              backgroundColor: '#2196f3'
-            },
-            {
-              label: 'Trainers',
-              data: attendanceData.trainerCounts,
-              backgroundColor: '#4caf50'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true }
-          }
+  // Create a bar chart with one dataset (Marked Attendance)
+  attendanceChart = new Chart(attCtx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Marked Attendance',
+          data: attendanceData.markedCounts,
+          backgroundColor: '#2196f3'
         }
-      });
-
-      // Continue with the totalReportsChart initialization
-      const totalCtx = document.getElementById('totalReportsChart');
-      if (!totalCtx) return;
-      if (totalReportsChart) totalReportsChart.destroy();
-      const counts = await fetchCount();
-      totalReportsChart = new Chart(totalCtx, {
-        type: 'pie',
-        data: {
-          labels: ['Packages', 'Members', 'Equipments', 'Trainers'],
-          datasets: [{
-            data: [counts.pc, counts.mc, counts.ec, counts.tc],
-            backgroundColor: ['#4caf50', '#ff9800', '#9c27b0', '#2685d9']
-          }]
-        },
-        options: { responsive: true }
-      });
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
     }
+  });
+
+  // Continue with the totalReportsChart initialization
+  const totalCtx = document.getElementById('totalReportsChart');
+  if (!totalCtx) return;
+  if (totalReportsChart) totalReportsChart.destroy();
+  const counts = await fetchCount();
+  totalReportsChart = new Chart(totalCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Packages', 'Members', 'Equipments', 'Trainers'],
+      datasets: [{
+        data: [counts.pc, counts.mc, counts.ec, counts.tc],
+        backgroundColor: ['#4caf50', '#ff9800', '#9c27b0', '#2685d9']
+      }]
+    },
+    options: { responsive: true }
+  });
+}
+
 
     // --------------------
     // FORM HANDLERS AND CLICKABLE HEADINGS
@@ -673,6 +694,75 @@
     }
 
     // --------------------
+// Attendance Functions for Admin Dashboard
+// --------------------
+
+// Fetch Attendance Records and populate the table
+// --------------------
+// Attendance Functions for Admin Dashboard
+// --------------------
+
+// Fetch Attendance Records and populate the table
+async function fetchAttendanceRecords() {
+  try {
+    const response = await fetch('http://localhost:5000/api/attendance/report');
+    const data = await response.json();
+    const tbody = document.getElementById('attendanceTableBody');
+    tbody.innerHTML = '';
+
+    // Combine member and trainer records into one array if needed
+    const records = (data.members || []).concat(data.trainers || []);
+    if (records.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">No attendance records available.</td></tr>';
+      return;
+    }
+
+    records.forEach(record => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${record.email}</td>
+        <td>${record.clockIn ? new Date(record.clockIn).toLocaleTimeString() : 'N/A'}</td>
+        <td>${record.clockOut ? new Date(record.clockOut).toLocaleTimeString() : 'N/A'}</td>
+        <td>
+          <button onclick="markAttendance('${record._id}', this)">Mark Attendance</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error("❌ Error fetching attendance records:", err);
+    alert("Error fetching attendance records. Please try again.");
+  }
+}
+
+// Mark Attendance for a record
+async function markAttendance(recordId, btnElement) {
+  if (!confirm("Do you want to mark this attendance?")) return;
+  try {
+    const response = await fetch(`http://localhost:5000/api/attendance/mark/${recordId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+    if (response.ok && data.success) {
+      btnElement.textContent = "Attendance Marked";
+      btnElement.style.backgroundColor = "green";
+      btnElement.disabled = true;
+      alert("Attendance marked successfully!");
+      // Optionally refresh the attendance table
+      fetchAttendanceRecords();
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    console.error("❌ Error marking attendance:", err);
+    alert("Error marking attendance. Please try again.");
+  }
+}
+
+
+
+    // --------------------
     // Functions to fetch lists with Update/Delete buttons
     // --------------------
     function fetchTrainers() {
@@ -730,35 +820,45 @@
     }
 
     function fetchRegistration() {
-      fetch('http://localhost:5000/api/registrations')
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.getElementById('registrationTableBody');
-        tbody.innerHTML = '';
-        if(data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="7">No registrations added yet.</td></tr>';
-        } else {
-          data.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td>${item.name}</td>
-                             <td>${item.email}</td>
-                             <td>${item.contactNo}</td>
-                             <td>${item.height}</td>
-                             <td>${item.weight}</td>
-                             <td>${item.timeSlot}</td>
-                             <td>${item.date}</td>
-                             <td>${item.gender}</td>
-                             <td>${item.dob}</td>
-                             <td>${item.plans}</td>
-                             <td>
-                               <button class="action-btn update-btn" onclick="updateEntity('registration', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
-                               <button class="action-btn delete-btn" onclick="deleteEntity('registration', '${item._id}')">Delete</button>
-                             </td>`;
-            tbody.appendChild(row);
-          });
-        }
-      })
-      .catch(err => alert(err.message));
+  fetch('http://localhost:5000/api/registrations')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('registrationTableBody');
+      tbody.innerHTML = '';
+
+      // ✅ Check if the response contains an array
+      if (!data.success || !Array.isArray(data.data)) {
+        console.error("❌ Unexpected API response format:", data);
+        tbody.innerHTML = '<tr><td colspan="10">Error fetching registrations.</td></tr>';
+        return;
+      }
+
+      if (data.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10">No registrations added yet.</td></tr>';
+      } else {
+        data.data.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${item.name}</td>
+                           <td>${item.email}</td>
+                           <td>${item.contactNo}</td>
+                           <td>${item.height}</td>
+                           <td>${item.weight}</td>
+                           <td>${item.timeSlot}</td>
+                           <td>${item.date}</td>
+                           <td>${item.gender}</td>
+                           <td>${item.packageStartDate}</td> 
+                           <td>${item.plans}</td>
+                           <td>
+                             <button class="action-btn update-btn" onclick="updateEntity('registration', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                             <button class="action-btn delete-btn" onclick="deleteEntity('registration', '${item._id}')">Delete</button>
+                           </td>`;
+          tbody.appendChild(row);
+        });
+      }
+    })
+    .catch(err => {console.error("❌ Fetch Error:", err);
+      alert("Error fetching registrations. Please try again.");
+    });
     }
 
     function fetchMembers() {

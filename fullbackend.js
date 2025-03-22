@@ -11,6 +11,7 @@
 
 require('dotenv').config();
 const express = require('express');
+const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
@@ -125,8 +126,26 @@ const equipmentSchema = new mongoose.Schema({
 });
 const Equipment = mongoose.model('Equipment', equipmentSchema, 'equipment');
 
+// Define the MarkedAttendance schema and model
+const markedAttendanceSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  clockIn: { type: Date, required: true },
+  clockOut: { type: Date },
+  markedAt: { type: Date, default: Date.now }
+});
+const MarkedAttendance = mongoose.model("MarkedAttendance", markedAttendanceSchema, "marked_attendance");
+
+
 // ---------- Attendance Models ----------
 // Models
+const attendanceSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  clockIn: { type: Date, required: true },
+  clockOut: { type: Date, default: null }
+});
+
+const Attendance = mongoose.model("attendance", attendanceSchema, "attendance");
+
 const memberAttendanceSchema = new mongoose.Schema({
     email: String,
     date: String,      // Format: "YYYY-MM-DD"
@@ -145,6 +164,34 @@ const memberAttendanceSchema = new mongoose.Schema({
   
   // Routes
   
+// Mark Attendance API Endpoint
+// Mark Attendance Endpoint
+app.put('/api/attendance/mark/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // id of the attendance record to mark
+    // First, try to find the record in MemberAttendance
+    let record = await MemberAttendance.findById(id);
+    if (!record) {
+      // If not found, check in TrainerAttendance
+      record = await TrainerAttendance.findById(id);
+      if (!record) return res.status(404).json({ success: false, message: "Attendance record not found" });
+    }
+    
+    // Create a new marked attendance record in marked_attendance collection.
+    const marked = new MarkedAttendance({
+      email: record.email,
+      clockIn: record.clockIn,
+      clockOut: record.clockOut
+    });
+    await marked.save();
+    res.json({ success: true, message: "Attendance marked successfully", marked });
+  } catch (error) {
+    console.error("❌ Error marking attendance:", error);
+    res.status(500).json({ success: false, message: "Internal server error", error: error.message });
+  }
+});
+
+
   // Member Clock In
   app.post('/api/attendance/clock-in', async (req, res) => {
     try {
@@ -162,26 +209,92 @@ const memberAttendanceSchema = new mongoose.Schema({
       res.status(500).json({ success: false, error: err.message });
     }
   });
+
+  // ✅ Member Clock-Out API Route
+  app.put('/api/attendance/clock-out', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ success: false, message: "Email is required" });
+        }
+  
+        // Use today's date (as stored in clock-in)
+        const today = new Date().toISOString().split("T")[0];
+  
+        // Use the MemberAttendance model (which was used for clock-in)
+        const attendanceRecord = await MemberAttendance.findOneAndUpdate(
+            { email, date: today, clockOut: null },
+            { $set: { clockOut: new Date() } },
+            { new: true, sort: { clockIn: -1 } }
+        );
+  
+        if (!attendanceRecord) {
+            return res.status(404).json({ success: false, message: "No active clock-in found for this member today" });
+        }
+  
+        res.json({ success: true, message: "Clocked out successfully", time: attendanceRecord.clockOut });
+    } catch (error) {
+        console.error("❌ Clock-Out Error:", error);
+        return res.status(500).json({ success: false, message: "Internal server error", error: error.message });
+    }
+  });
+  
+
+
+// Trainer Clock In
+app.post('/api/attendance/trainer-clock-in', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ message: "Email is required" });
+
+        const trainer = await Trainer.findOne({ email });
+        if (!trainer) return res.status(404).json({ message: "Trainer not found" });
+
+        const clockInTime = new Date();
+
+        const attendance = new TrainerAttendance({
+            email,
+            name: trainer.name,
+            clockIn: clockInTime,
+            clockOut: null,
+        });
+
+        await attendance.save();
+        res.json({ success: true, message: "Clocked in successfully", time: clockInTime });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+
   
   // Trainer Clock Out
   app.put('/api/attendance/trainer-clock-out', async (req, res) => {
     try {
-      const { email } = req.body;
-      if (!email) return res.status(400).json({ message: "Email is required" });
-      const today = new Date().toISOString().split("T")[0];
-      const record = await TrainerAttendance.findOneAndUpdate(
-        { email, date: today, clockOut: null },
-        { clockOut: new Date() },
-        { new: true, sort: { clockIn: -1 } }
-      );
-      if (!record) {
-        return res.status(404).json({ message: "No active clock-in found" });
-      }
-      res.json({ success: true, message: "Clocked out successfully", time: record.clockOut });
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ success: false, message: "Email is required" });
+
+        // Find the latest active clock-in for this trainer (ensure correct matching)
+        console.log("🔍 Searching for active clock-in...");
+        const record = await TrainerAttendance.findOneAndUpdate(
+            { email, clockOut: null },  // 🔹 Fix: Remove date filter, just check clockOut is null
+            { clockOut: new Date() },
+            { new: true, sort: { clockIn: -1 } }
+        );
+
+        if (!record) {
+            console.log("⚠️ No active clock-in found!");
+            return res.status(404).json({ success: false, message: "No active clock-in found" });
+        }
+
+        console.log("✅ Trainer Clocked Out:", record);
+        res.json({ success: true, message: "Clocked out successfully", time: record.clockOut });
     } catch (err) {
-      res.status(500).json({ success: false, error: err.message });
+        console.error("❌ Clock-Out Error:", err);
+        res.status(500).json({ success: false, error: err.message });
     }
-  });
+});
+
   
   // ... [other routes]
 // ---------- Registration Model ----------
@@ -223,13 +336,17 @@ const Schedule = mongoose.model("Schedule", scheduleSchema);
 
 // ---------- Weight Track Model (Updated) ----------
 const weightSchema = new mongoose.Schema({
+  fullName: { type: String, required: true }, // ✅ Added Full Name
   emailID: { type: String, required: true },
   currentWeight: { type: Number, required: true },
   targetWeight: { type: Number, required: true },
   timePeriod: { type: String, required: true },
   createdDate: { type: Date, default: Date.now }
 });
+
 const Weight = mongoose.model("Weight", weightSchema, "weight_tracks");
+
+module.exports = Weight;
 
 // ---------- Enquiry & Feedback Models ----------
 const enquirySchema = new mongoose.Schema({
@@ -376,6 +493,27 @@ app.put('/api/attendance/clock-out', async (req, res) => {
   }
 });
 
+// ✅ Check if Trainer is Registered (For Attendance)
+app.get("/api/check-trainer/:email", async (req, res) => {
+  try {
+      const { email } = req.params;
+
+      // ✅ Check if the email exists in the trainers collection
+      const trainer = await Trainer.findOne({ email });
+
+      if (!trainer) {
+          return res.status(404).json({ success: false, message: "Trainer not found" });
+      }
+
+      res.json({ success: true, message: "Trainer is registered", user: trainer });
+
+  } catch (error) {
+      console.error("❌ Error checking trainer:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+
 // Trainer Clock In
 app.post('/api/attendance/trainer-clock-in', async (req, res) => {
   try {
@@ -399,18 +537,27 @@ app.put('/api/attendance/trainer-clock-out', async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
+
     const today = new Date().toISOString().split("T")[0];
+
+    // Check if there's an active clock-in for today
     const record = await TrainerAttendance.findOneAndUpdate(
       { email, date: today, clockOut: null },
       { $set: { clockOut: new Date() } },
-      { new: true, sort: { clockIn: -1 } }
+      { new: true }
     );
-    if (!record) return res.status(404).json({ success: false, message: "No active clock-in found for this trainer today" });
-    res.json({ success: true, record });
+
+    if (!record) {
+      return res.status(404).json({ success: false, message: "No active clock-in found for this trainer today" });
+    }
+
+    res.json({ success: true, message: "Trainer clocked out successfully", time: record.clockOut });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    console.error("❌ Trainer Clock-Out Error:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
 
 // GET Today's Attendance Report (Members & Trainers)
 app.get('/api/attendance/report', async (req, res) => {
@@ -424,9 +571,12 @@ app.get('/api/attendance/report', async (req, res) => {
   }
 });
 
-// GET Last Week Attendance Report (Aggregated)
-app.get('/api/attendance/last-week', async (req, res) => {
+// ✅ GET Last Week Attendance Report (Optimized)
+// ✅ GET Last Week Attendance Report (Using string dates)
+// GET Last Week Marked Attendance Report
+app.get('/api/attendance/last-week-marked', async (req, res) => {
   try {
+    // Generate an array of the last 7 days as strings "YYYY-MM-DD"
     const today = new Date();
     const dates = [];
     for (let i = 6; i >= 0; i--) {
@@ -434,27 +584,30 @@ app.get('/api/attendance/last-week', async (req, res) => {
       d.setDate(d.getDate() - i);
       dates.push(d.toISOString().split('T')[0]);
     }
-    const memberData = await MemberAttendance.aggregate([
-      { $match: { date: { $in: dates } } },
-      { $group: { _id: "$date", count: { $sum: 1 } } }
+    
+    // Match records based on markedAt date range
+    const startDate = new Date(dates[0]);
+    const endDate = new Date(dates[dates.length - 1]);
+    endDate.setHours(23, 59, 59, 999);
+    
+    const markedData = await MarkedAttendance.aggregate([
+      { $match: { markedAt: { $gte: startDate, $lte: endDate } } },
+      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$markedAt" } }, count: { $sum: 1 } } }
     ]);
-    const trainerData = await TrainerAttendance.aggregate([
-      { $match: { date: { $in: dates } } },
-      { $group: { _id: "$date", count: { $sum: 1 } } }
-    ]);
-    const memberCounts = dates.map(date => {
-      const found = memberData.find(item => item._id === date);
+    
+    const markedCounts = dates.map(date => {
+      const found = markedData.find(item => item._id === date);
       return found ? found.count : 0;
     });
-    const trainerCounts = dates.map(date => {
-      const found = trainerData.find(item => item._id === date);
-      return found ? found.count : 0;
-    });
-    res.json({ dates, memberCounts, trainerCounts });
+    
+    res.json({ dates, markedCounts });
   } catch (err) {
+    console.error("❌ Error fetching last week marked attendance:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
+
 
 /* ========= UPDATE & DELETE ENDPOINTS ========= */
 app.put('/api/trainers/:id', uploadTrainer.single('trainerImage'), (req, res) => {
@@ -581,6 +734,24 @@ app.get('/api/counts', async (req, res) => {
   }
 });
 
+// ✅ Check if Member is Registered (For Attendance)
+app.get('/api/check-registration/:email', async (req, res) => {
+  try {
+      const email = req.params.email;
+      const user = await Registration.findOne({ email });
+
+      if (!user) {
+          return res.status(404).json({ success: false, message: "User not found" });
+      }
+
+      res.json({ success: true, user });
+  } catch (error) {
+      console.error("❌ Error checking registration:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+
 /* ========= CLAIM OFFER BACKEND (with PDF Generation) ========= */
 app.post('/claim-offer', async (req, res) => {
   const { name, email } = req.body;
@@ -703,14 +874,18 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// ✅ Fetch All Registrations
+// ✅ Fetch All Registrations
 app.get("/api/registrations", async (req, res) => {
   try {
-    const registrations = await Registration.find();
-    res.json(registrations);
+      const registrations = await Registration.find(); // Fetch all registered members
+      res.json({ success: true, data: registrations }); // Return as an array inside 'data'
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error fetching data." });
+      console.error("❌ Error fetching registrations:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
 
 /* ========= SCHEDULE BACKEND (Already includes PDF Generation) ========= */
 app.post("/schedule", async (req, res) => {
@@ -775,13 +950,19 @@ app.post("/schedule", async (req, res) => {
 });
 
 /* ========= WEIGHT TRACK BACKEND (Updated) ========= */
-app.post('/api/weight-track', async (req, res) => {
+// ---------- POST: Track Weight ----------
+app.post("/api/weight-track", async (req, res) => {
   try {
-    const { emailID, currentWeight, targetWeight, timePeriod } = req.body;
-    if (!emailID || currentWeight == null || targetWeight == null || !timePeriod) {
-      return res.status(400).json({ success: false, message: "emailID, currentWeight, targetWeight, and timePeriod are required." });
+    const { fullName, emailID, currentWeight, targetWeight, timePeriod } = req.body;
+
+    // Validate required fields
+    if (!fullName || !emailID || !currentWeight || !targetWeight || !timePeriod) {
+      return res.status(400).json({ success: false, message: "All fields are required." });
     }
+
+    // Save data to MongoDB
     const newWeight = new Weight({
+      fullName,
       emailID,
       currentWeight,
       targetWeight,
@@ -789,20 +970,24 @@ app.post('/api/weight-track', async (req, res) => {
       createdDate: new Date()
     });
     await newWeight.save();
-    // Generate PDF summary of weight tracking
+
+    // Generate PDF summary
     const pdfPath = path.join(__dirname, `weighttrack_${Date.now()}.pdf`);
     const doc = new PDFDocument();
     const pdfStream = fs.createWriteStream(pdfPath);
     doc.pipe(pdfStream);
     doc.fontSize(16).text("Weight Tracking Summary", { align: "center" });
     doc.moveDown();
-    doc.fontSize(12).text(`Email: ${emailID}`);
+    doc.fontSize(12).text(`Full Name: ${fullName}`);
+    doc.text(`Email: ${emailID}`);
     doc.text(`Current Weight: ${currentWeight} kg`);
     doc.text(`Target Weight: ${targetWeight} kg`);
     doc.text(`Time Period: ${timePeriod}`);
     doc.text(`Date: ${new Date().toLocaleDateString()}`);
     doc.end();
+
     pdfStream.on("finish", async () => {
+      // Setup email transport
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -810,39 +995,47 @@ app.post('/api/weight-track', async (req, res) => {
           pass: process.env.EMAIL_PASS
         }
       });
+
+      // Email options
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: emailID,
         subject: "Weight Tracking Details",
         text: "Please find attached your weight tracking summary.",
-        attachments: [{
-          filename: "weighttrack.pdf",
-          path: pdfPath,
-          contentType: "application/pdf"
-        }]
+        attachments: [
+          {
+            filename: "weighttrack.pdf",
+            path: pdfPath,
+            contentType: "application/pdf"
+          }
+        ]
       };
+
       try {
         await transporter.sendMail(mailOptions);
-        fs.unlink(pdfPath, (unlinkErr) => {
-          if (unlinkErr) console.error("Error deleting weight track PDF:", unlinkErr);
+        fs.unlink(pdfPath, (err) => {
+          if (err) console.error("❌ Error deleting PDF:", err);
         });
-        res.status(200).json({ success: true, message: "Weight tracking data saved and summary sent via email." });
+        res.status(200).json({ success: true, message: "Weight tracking saved & email sent successfully." });
       } catch (emailError) {
+        console.error("❌ Email sending failed:", emailError);
         res.status(500).json({ success: false, message: "Data saved but email sending failed.", error: emailError.message });
       }
     });
   } catch (error) {
+    console.error("❌ Server error:", error);
     res.status(500).json({ success: false, message: "Server error saving weight track data.", error: error.message });
   }
 });
 
-// GET endpoint to fetch weight history by emailID
-app.get('/weight-history/:emailID', async (req, res) => {
+// ---------- GET: Fetch Weight History ----------
+app.get("/weight-history/:emailID", async (req, res) => {
   try {
     const emailID = req.params.emailID;
-    const records = await Weight.find({ emailID });
+    const records = await Weight.find({ emailID }).sort({ createdDate: -1 }); // Latest records first
     res.json(records);
   } catch (error) {
+    console.error("❌ Error fetching weight history:", error);
     res.status(500).json({ success: false, message: "Server error fetching weight history.", error: error.message });
   }
 });
