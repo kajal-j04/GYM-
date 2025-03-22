@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ DOM fully loaded!");
+
     const registerButton = document.getElementById("registerBtn");
-    const plansDropdown = document.getElementById("plans");
-    const qrCanvas = document.getElementById("qr-code");
+    const packageStartDateInput = document.getElementById("package-start-date");
 
     if (registerButton) {
         registerButton.addEventListener("click", async function (event) {
@@ -9,21 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("✅ Register button clicked!");
 
             if (validateForm()) {
-                registerUser();
+                await registerUser();
+            } else {
+                console.warn("⚠️ Form validation failed!");
             }
         });
     } else {
         console.error("❌ Register button not found!");
-    }
-
-    // Generate QR Code when plan is selected
-    if (plansDropdown) {
-        plansDropdown.addEventListener("change", function () {
-            let amount = this.value;
-            if (amount) {
-                generateQRCode(amount);
-            }
-        });
     }
 
     function validateForm() {
@@ -44,39 +37,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function registerUser() {
         const formData = {
-            gender: document.getElementById("gender")?.value || "",
-            name: document.getElementById("name")?.value || "",
-            dob: document.getElementById("dob")?.value || "",
-            contactNo: document.getElementById("contact-no")?.value || "",
-            email: document.getElementById("email")?.value || "",
-            plans: document.getElementById("plans")?.value || "",
-            height: document.getElementById("height")?.value || "",
-            weight: document.getElementById("weight")?.value || "",
-            timeSlot: document.getElementById("time-slot")?.value || "",
+            gender: document.getElementById("gender").value.trim(),
+            name: document.getElementById("name").value.trim(),
+            packageStartDate: document.getElementById("package-start-date").value,
+            contactNo: document.getElementById("contact-no").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            plans: document.getElementById("plans").value.trim(),
+            height: parseFloat(document.getElementById("height").value),
+            weight: parseFloat(document.getElementById("weight").value),
+            timeSlot: document.getElementById("time-slot").value.trim(),
         };
 
-        console.log("📩 Sending Data:", formData);
+        if (Object.values(formData).some(value => !value)) {
+            console.error("❌ Missing required fields!", formData);
+            alert("All fields are required!");
+            return;
+        }
+
+        console.log("📩 Sending Form Data:", formData);
 
         try {
-            const response = await fetch(`${window.location.origin.replace(":5500", ":5000")}/register`, {
+            const response = await fetch("http://localhost:5000/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                mode: "cors",
                 body: JSON.stringify(formData),
             });
 
             const result = await response.json();
-            console.log("📩 Server Response:", result);
-
-            if (response.ok && result.success) {
-                alert("✅ Registration Successful! Receipt will be sent to your email.");
-                resetForm();
-            } else {
-                alert("❌ Registration Failed: " + (result.message || "Unknown error"));
-            }
+            console.log("✅ Server Response:", result);
+            alert(result.message);
         } catch (error) {
             console.error("❌ Error submitting form:", error);
-            alert("✅ Registration Successful! Receipt will be sent to your email.");
+            alert("❌ Registration failed! Try again later.");
         }
     }
+
+    if (packageStartDateInput) {
+        const today = new Date();
+        const firstDayCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const lastDayNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+
+        function formatDate(date) {
+            return date.toISOString().split("T")[0];
+        }
+
+        packageStartDateInput.min = formatDate(firstDayCurrentMonth);
+        packageStartDateInput.max = formatDate(lastDayNextMonth);
+
+        packageStartDateInput.addEventListener("keydown", function (event) {
+            event.preventDefault();
+        });
+    }
+
+    // ✅ Autofill Form from URL Parameters
+    function autofillFormFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        document.getElementById("name").value = urlParams.get("name") || "";
+        document.getElementById("email").value = urlParams.get("email") || "";
+        document.getElementById("contact-no").value = urlParams.get("contactNo") || "";
+        document.getElementById("plans").value = urlParams.get("plans") || "";
+        document.getElementById("height").value = urlParams.get("height") || "";
+        document.getElementById("weight").value = urlParams.get("weight") || "";
+        document.getElementById("time-slot").value = urlParams.get("timeSlot") || "";
+        document.getElementById("package-start-date").value = urlParams.get("packageStartDate") || "";
+        document.getElementById("gender").value = urlParams.get("gender") || "";
+    }
+
+    // ✅ Run autofill when page loads
+    autofillFormFromURL();
 });
