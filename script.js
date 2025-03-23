@@ -19,6 +19,12 @@ window.onclick = function(event) {
   }
 };
 
+function showModal() {
+  if (!sessionStorage.getItem("popupShown")) {
+      document.getElementById("inquiryModal").style.display = "flex";
+      sessionStorage.setItem("popupShown", "true"); // Store flag in sessionStorage
+  }
+}
 // Close Inquiry Modal
 function closeModal() {
   document.getElementById("inquiryModal").style.display = "none";
@@ -69,7 +75,7 @@ function validateForm() {
 
   return valid;
 }
-
+showModal()
 // Form submission with validation
 document.getElementById("inquiryForm").addEventListener("submit", function(event) {
   event.preventDefault();

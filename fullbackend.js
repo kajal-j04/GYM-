@@ -352,7 +352,7 @@ app.post('/api/attendance/clock-in', async (req, res) => {
       clockIn: new Date()
     });
     await newRecord.save();
-    res.json({ success: true, record: newRecord });
+    res.json({ success: true, record: newRecord, message: 'clocked in' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -370,7 +370,7 @@ app.put('/api/attendance/clock-out', async (req, res) => {
       { new: true, sort: { clockIn: -1 } }
     );
     if (!record) return res.status(404).json({ success: false, message: "No active clock-in found for this member today" });
-    res.json({ success: true, record });
+    res.json({ success: true, record, message: 'clocked out' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -388,7 +388,7 @@ app.post('/api/attendance/trainer-clock-in', async (req, res) => {
       clockIn: new Date()
     });
     await newRecord.save();
-    res.json({ success: true, record: newRecord });
+    res.json({ success: true, record: newRecord, message: 'clocked in' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -406,7 +406,125 @@ app.put('/api/attendance/trainer-clock-out', async (req, res) => {
       { new: true, sort: { clockIn: -1 } }
     );
     if (!record) return res.status(404).json({ success: false, message: "No active clock-in found for this trainer today" });
-    res.json({ success: true, record });
+    res.json({ success: true, record, message: 'clocked clocked out' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get("/api/check-trainer/:email", async (req, res) => {
+  try {
+      const { email } = req.params;
+      const trainer = await Trainer.findOne({ email });
+      res.json({ exists: !!trainer, name: trainer? trainer.name : null });
+  } catch (error) {
+      console.error("Error fetching trainer:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/api/check-registration/:email", async (req, res) => {
+  try {
+      const { email } = req.params;
+      const user = await Registration.findOne({ email });
+      res.json({ exists: !!user, name: user ? user.name : null });
+  } catch (error) {
+      console.error("Error fetching member:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+app.get("/api/attendance/members", async (req, res) => {
+  try {
+      const attendance = await Attendance.find();
+      res.json(attendance);
+  } catch (error) {
+      console.error("Error fetching attendance records:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ✅ Fetch All Trainer Attendance Records (from "trainer_attendance")
+app.get("/api/attendance/trainers", async (req, res) => {
+  try {
+      const attendance = await TrainerAttendance.find();
+      res.json(attendance);
+  } catch (error) {
+      console.error("Error fetching trainer attendance records:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/enquiries-per-month/:year", async (req, res) => {
+  const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+  const year = parseInt(req.params.year);
+
+  if (isNaN(year) || year < 2000 || year > new Date().getFullYear()) {
+    return res.status(400).json({ error: "Invalid year provided." });
+  }
+
+  try {
+    const result = await Enquiry.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(`${year}-01-01`),
+            $lt: new Date(`${year + 1}-01-01`)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const formattedResult = MONTHS.map((month, index) => ({
+      month,
+      enquiries: result.find(r => r._id === index + 1)?.count || 0
+    }));
+
+    res.json({ year, data: formattedResult });
+  } catch (error) {
+    console.error("Error fetching enquiries:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get('/api/gender-ratio', async (req, res) => {
+  try {
+    const result = await Registration.aggregate([
+      { 
+        $group: { 
+          _id: "$gender", 
+          count: { $sum: 1 } 
+        } 
+      }
+    ]);
+
+    // Convert aggregation result to a usable format
+    const counts = { Male: 0, Female: 0, Other: 0 };
+    result.forEach(({ _id, count }) => {
+      counts[_id] = count;
+    });
+
+    const total = counts.Male + counts.Female;
+    const maleRatio = total > 0 ? (counts.Male / total) * 100 : 0;
+    const femaleRatio = total > 0 ? (counts.Female / total) * 100 : 0;
+
+    res.json({
+      success: true,
+      data: {
+        Male: counts.Male,
+        Female: counts.Female,
+        Other: counts.Other,
+        MalePercentage: `${maleRatio.toFixed(2)}%`,
+        FemalePercentage: `${femaleRatio.toFixed(2)}%`
+      }
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -539,6 +657,17 @@ app.delete('/api/equipments/:id', (req, res) => {
 });
 app.delete('/api/enquirys/:id', (req, res) => {
   Enquiry.findByIdAndDelete(req.params.id)
+    .then(() => res.json({ success: true }))
+    .catch(err => res.status(500).json({ success: false, error: err.message }));
+});
+
+app.delete('/api/trainerAttendances/:id', (req, res) => {
+  TrainerAttendance.findByIdAndDelete(req.params.id)
+    .then(() => res.json({ success: true }))
+    .catch(err => res.status(500).json({ success: false, error: err.message }));
+});
+app.delete('/api/memberAttendances/:id', (req, res) => {
+  MemberAttendance.findByIdAndDelete(req.params.id)
     .then(() => res.json({ success: true }))
     .catch(err => res.status(500).json({ success: false, error: err.message }));
 });

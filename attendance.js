@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!email) return;
   
       fetch(`${BASE_URL}/api/attendance/clock-out`, {
-        method: "POST", // Use PUT as per backend implementation
+        method: "PUT", // Use PUT as per backend implementation
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
       })
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!email) return;
   
       fetch(`${BASE_URL}/api/attendance/trainer-clock-out`, {
-        method: "POST", // Use PUT per backend implementation
+        method: "PUT", // Use PUT per backend implementation
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
       })

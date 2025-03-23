@@ -572,7 +572,7 @@ body {
   color: #29a396;
 }
 .modal {
-  display: flex;
+  display: none;
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -616,7 +616,7 @@ button {
   font-size: 12px;
 }
 .modal {
-  display: flex;
+  display: none;
   position: fixed;
   z-index: 1000;
   left: 0;

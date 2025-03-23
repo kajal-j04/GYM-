@@ -14,6 +14,8 @@
     /* RESET SOME DEFAULTS */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
     body { background: #f5f5f5; }
+    .container { max-width: 800px; margin: 30px;}
+    canvas {max-width: 100%;}
     .clickable:hover{ cursor: pointer;}
     .clickable{ color: blue; font-weight: 100;}
     /* SIDEBAR & HEADER */
@@ -117,7 +119,7 @@
         <a href="#" class="mdl-navigation__link" onclick="loadContent('enquiry')">
           <i class="material-icons">contact_support</i> Enquiry
         </a>
-        <a href="#" class="mdl-navigation__link" onclick="loadContent('attendance')">
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('attendance'); fetchAttendanceReport()">
           <i class="material-icons">how_to_reg</i> Attendance
         </a>
         <a href="#" class="mdl-navigation__link" onclick="loadContent('registration')">
@@ -168,39 +170,41 @@
           <canvas id="totalReportsChart"></canvas>
         </div>
       </div>
-      <!-- Attendance Report Section -->
-      <div class="report-section">
-        <h4>Today's Member Attendance</h4>
-        <div class="list-container">
-          <table id="memberAttendanceTable">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Clock In</th>
-                <th>Clock Out</th>
-              </tr>
-            </thead>
-            <tbody id="memberAttendanceBody">
-              <tr><td colspan="3">No attendance records for today.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <h4>Today's Trainer Attendance</h4>
-        <div class="list-container">
-          <table id="trainerAttendanceTable">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Clock In</th>
-                <th>Clock Out</th>
-              </tr>
-            </thead>
-            <tbody id="trainerAttendanceBody">
-              <tr><td colspan="3">No attendance records for today.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    </div>
+  </div>
+
+  <div class="hidden" id="attendance">
+    <h4>Today's Member Attendance</h4>
+    <div class="list-container">
+      <table id="memberAttendanceTable">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="memberAttendanceBody">
+          <tr><td colspan="4">No attendance records for today.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Today's Trainer Attendance</h4>
+    <div class="list-container">
+      <table id="trainerAttendanceTable">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="trainerAttendanceBody">
+          <tr><td colspan="4">No attendance records for today.</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -363,7 +367,17 @@
 
   <!-- EQUIPMENT SECTION -->
   <div id="enquiry" class="hidden">
-    <h4 class="section-heading">Enquiries</h4>
+    <h3 class="section-heading">Enquiries</h3>
+    <div class="container">
+      <h4>Monthly Enquiries</h4>
+      <select id="yearSelect">
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+      </select>
+      <button onclick="fetchEnquiryData()">Load Data</button>
+      <canvas id="enquiryChart" class="hidden"></canvas>
+    </div>
     <!-- Clickable list heading -->
     <h4 id="enquiryListHeading" class="section-heading clickable">Enquiries List (Click to Load)</h4>
     <div class="list-container">
@@ -387,6 +401,8 @@
   <!-- EQUIPMENT SECTION -->
   <div id="registration" class="hidden">
     <h4 class="section-heading">Registrations</h4>
+    <h4 class="clickable" onclick="fetchGenderData()">Male vs Female Registration Ratio</h4>
+    <canvas id="genderChart"></canvas>
     <!-- Clickable list heading -->
     <h4 id="registrationListHeading" class="section-heading clickable">Registrations List (Click to Load)</h4>
     <div class="list-container">
@@ -415,6 +431,79 @@
 
   <!-- FRONTEND SCRIPT -->
   <script>
+     async function fetchGenderData() {
+            try {
+                const response = await fetch('http://localhost:5000/api/gender-ratio');
+                const result = await response.json();
+                
+                if (!result.success) throw new Error(result.error);
+
+                // Extract Male & Female data
+                const maleCount = result.data.Male || 0;
+                const femaleCount = result.data.Female || 0;
+
+                renderChart(maleCount, femaleCount);
+            } catch (error) {
+                console.error("Error fetching gender ratio:", error);
+            }
+        }
+
+        function renderChart(maleCount, femaleCount) {
+            const ctx = document.getElementById('genderChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [{
+                        data: [maleCount, femaleCount],
+                        backgroundColor: ['#3498db', '#e74c3c']
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+        fetchGenderData()
+    let enquiryChart;
+
+    async function fetchEnquiryData() {
+        const year = document.getElementById("yearSelect").value;
+        const response = await fetch(`http://localhost:5000/enquiries-per-month/${year}`);
+        const data = await response.json();
+
+        const labels = data.data.map(item => item.month);
+        const values = data.data.map(item => item.enquiries);
+
+        if (enquiryChart) enquiryChart.destroy();
+
+        const ctx = document.getElementById("enquiryChart");
+        ctx.width = 500; // Set width dynamically
+        document.getElementById("enquiryChart").classList.remove('hidden')
+
+        enquiryChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: `Enquiries in ${year}`,
+                    data: values,
+                    backgroundColor: "rgba(75, 192, 192, 0.6)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
     // --------------------
     // LOGIN HANDLER
     // --------------------
@@ -858,13 +947,17 @@
         const mBody = document.getElementById('memberAttendanceBody');
         mBody.innerHTML = '';
         if(data.members.length === 0) {
-          mBody.innerHTML = '<tr><td colspan="3">No attendance records for today.</td></tr>';
+          mBody.innerHTML = '<tr><td colspan="4">No attendance records for today.</td></tr>';
         } else {
           data.members.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `<td>${item.email}</td>
                              <td>${new Date(item.clockIn).toLocaleTimeString()}</td>
-                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>`;
+                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('memberAttendance', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Approve</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('memberAttendance', '${item._id}')">Reject</button>
+                             </td>`;
             mBody.appendChild(row);
           });
         }
@@ -872,13 +965,17 @@
         const tBody = document.getElementById('trainerAttendanceBody');
         tBody.innerHTML = '';
         if(data.trainers.length === 0) {
-          tBody.innerHTML = '<tr><td colspan="3">No attendance records for today.</td></tr>';
+          tBody.innerHTML = '<tr><td colspan="4">No attendance records for today.</td></tr>';
         } else {
           data.trainers.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `<td>${item.email}</td>
                              <td>${new Date(item.clockIn).toLocaleTimeString()}</td>
-                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>`;
+                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('trainerAttendance', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Approve</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('trainerAttendance', '${item._id}')">Reject</button>
+                             </td>`;
             tBody.appendChild(row);
           });
         }
@@ -887,6 +984,18 @@
     }
 
     async function fetchCount() {
+      try {
+        const response = await fetch('http://localhost:5000/api/counts');
+        if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
+        const data = await response.json();
+        return data;
+      } catch (err) {
+        console.error("Error fetching counts:", err.message);
+        return { error: err.message };
+      }
+    }
+
+    async function fetchAttendance() {
       try {
         const response = await fetch('http://localhost:5000/api/counts');
         if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
@@ -913,6 +1022,7 @@
             else if(entity === 'package') fetchPackages();
             else if(entity === 'equipment') fetchEquipment();
             else if(entity === 'enquiry') fetchEnquiry();
+            else if(entity === 'attendance') fetchAttendanceReport();
           } else {
             alert(`Error deleting ${entity}.`);
           }
