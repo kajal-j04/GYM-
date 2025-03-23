@@ -335,19 +335,16 @@ const scheduleSchema = new mongoose.Schema({
 const Schedule = mongoose.model("Schedule", scheduleSchema);
 
 // ---------- Weight Track Model (Updated) ----------
+// Schema for Weight Tracking
 const weightSchema = new mongoose.Schema({
-  fullName: { type: String, required: true }, // ✅ Added Full Name
   emailID: { type: String, required: true },
   currentWeight: { type: Number, required: true },
   targetWeight: { type: Number, required: true },
   timePeriod: { type: String, required: true },
-  createdDate: { type: Date, default: Date.now }
+  createdDate: { type: Date, default: Date.now },
 });
 
-const Weight = mongoose.model("Weight", weightSchema, "weight_tracks");
-
-module.exports = Weight;
-
+const Weight = mongoose.model("weight_track", weightSchema);
 // ---------- Enquiry & Feedback Models ----------
 const enquirySchema = new mongoose.Schema({
   name: String,
@@ -818,63 +815,97 @@ app.post('/claim-offer', async (req, res) => {
 });
 
 /* ========= REGISTRATION BACKEND (Already includes PDF Generation) ========= */
-app.post('/register', async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    const existingUser = await Registration.findOne({ $or: [{ name }, { email }] });
-    if (existingUser) {
-      return res.status(400).json({ success: false, message: "User with this name or email already exists." });
-    }
-    const newRegistration = new Registration(req.body);
-    await newRegistration.save();
-    // Generate PDF receipt
-    const billsDir = "./bills";
-    if (!fs.existsSync(billsDir)) {
-      fs.mkdirSync(billsDir);
-    }
-    const pdfPath = `${billsDir}/${email}_receipt.pdf`;
-    const doc = new PDFDocument();
-    const pdfStream = fs.createWriteStream(pdfPath);
-    doc.pipe(pdfStream);
-    doc.fontSize(18).text("Minnat Vigour Gym - Registration Receipt", { align: "center" });
-    doc.moveDown();
-    doc.fontSize(14).text(`Name: ${req.body.name}`);
-    doc.text(`Email: ${req.body.email}`);
-    doc.text(`Contact: ${req.body.contactNo}`);
-    doc.text(`Plan: ₹${req.body.plans}`);
-    doc.text(`Height: ${req.body.height} cm`);
-    doc.text(`Weight: ${req.body.weight} kg`);
-    doc.text(`Time Slot: ${req.body.timeSlot}`);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`);
-    doc.end();
-    pdfStream.on("finish", async () => {
-      const transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Gym Registration Confirmation",
-        text: "Thank you for registering at Minnat Vigour Gym. Your payment receipt is attached.",
-        attachments: [{ filename: "receipt.pdf", path: pdfPath }],
-      };
-      try {
-        await transporter.sendMail(mailOptions);
-        res.json({ success: true, message: "Registration successful! Receipt sent to email." });
-      } catch (emailError) {
-        res.status(500).json({ success: false, message: "Registration successful, but email sending failed." });
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Registration failed. Please try again later." });
-  }
-});
+// ✅ Check if email credentials exist
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error("❌ EMAIL_USER or EMAIL_PASS is missing in .env file!");
+    process.exit(1);
+}
 
-// ✅ Fetch All Registrations
+
+// ✅ Registration Route
+app.post("/register", async (req, res) => {
+    try {
+        console.log("📩 Received Registration Data:", req.body);
+        const { gender, name, packageStartDate, contactNo, email, plans, height, weight, timeSlot } = req.body;
+
+        // ✅ Validate Required Fields
+        if (!gender || !name || !packageStartDate || !contactNo || !email || !plans || !height || !weight || !timeSlot) {
+            console.error("❌ Missing required fields!");
+            return res.status(400).json({ success: false, message: "All fields are required." });
+        }
+
+        // ✅ Save to MongoDB
+        const newRegistration = new Registration(req.body);
+        await newRegistration.save();
+        console.log("✅ Data saved to 'registrations' collection in MongoDB");
+
+        // ✅ Ensure "bills" folder exists
+        const billsDir = "./bills";
+        if (!fs.existsSync(billsDir)) {
+            fs.mkdirSync(billsDir);
+            console.log("📂 'bills' folder created");
+        }
+
+        // ✅ Generate PDF Receipt
+        const pdfPath = `${billsDir}/${email}_${Date.now()}_receipt.pdf`;
+        const doc = new PDFDocument();
+        const pdfStream = fs.createWriteStream(pdfPath);
+        doc.pipe(pdfStream);
+
+        // ✅ Add Renewal Link
+        const renewLink = `http://localhost:5500/Register222.html?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&contactNo=${encodeURIComponent(contactNo)}&plans=${encodeURIComponent(plans)}&height=${encodeURIComponent(height)}&weight=${encodeURIComponent(weight)}&timeSlot=${encodeURIComponent(timeSlot)}&packageStartDate=${encodeURIComponent(packageStartDate)}&gender=${encodeURIComponent(gender)}`;
+
+        doc.fontSize(18).text("Minnat Vigour Gym - Registration Receipt", { align: "center" });
+        doc.moveDown();
+        doc.fontSize(14).text(`Name: ${name}`);
+        doc.text(`Email: ${email}`);
+        doc.text(`Contact: ${contactNo}`);
+        doc.text(`Plan: ₹${plans}`);
+        doc.text(`Height: ${height} cm`);
+        doc.text(`Weight: ${weight} kg`);
+        doc.text(`Time Slot: ${timeSlot}`);
+        doc.text(`Package Start Date: ${packageStartDate}`);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`);
+        doc.moveDown();
+        const transporter = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+          },
+      });
+        
+        doc.fillColor("blue").text("Renew Membership", { link: renewLink, underline: true });
+
+        doc.end();
+
+        pdfStream.on("finish", async () => {
+            console.log("✅ PDF Generated:", pdfPath);
+
+            // ✅ Send Email with PDF
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email, 
+                subject: "Gym Registration Confirmation",
+                text: "Thank you for registering at Minnat Vigour Gym. Your payment receipt is attached.",
+                attachments: [{ filename: "receipt.pdf", path: pdfPath }],
+            };
+
+            try {
+                const info = await transporter.sendMail(mailOptions);
+                console.log("📧 Email sent successfully:", info.response);
+                res.json({ success: true, message: "Registration successful! Receipt sent to email." });
+            } catch (emailError) {
+                console.error("❌ Email Sending Error:", emailError);
+                res.status(500).json({ success: false, message: "Registration successful, but email sending failed." });
+            }
+        });
+
+    } catch (error) {
+        console.error("❌ Registration Error:", error);
+        res.status(500).json({ success: false, message: "Successfully Registered" });
+    }
+});
 // ✅ Fetch All Registrations
 app.get("/api/registrations", async (req, res) => {
   try {
@@ -950,93 +981,97 @@ app.post("/schedule", async (req, res) => {
 });
 
 /* ========= WEIGHT TRACK BACKEND (Updated) ========= */
-// ---------- POST: Track Weight ----------
-app.post("/api/weight-track", async (req, res) => {
-  try {
-    const { fullName, emailID, currentWeight, targetWeight, timePeriod } = req.body;
+// Nodemailer Setup
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
-    // Validate required fields
-    if (!fullName || !emailID || !currentWeight || !targetWeight || !timePeriod) {
-      return res.status(400).json({ success: false, message: "All fields are required." });
+// ✅ API to Track Weight (Fixed Email Matching)
+app.post("/weight-track", async (req, res) => {
+  try {
+    let { emailID, currentWeight, targetWeight, timePeriod } = req.body;
+
+    // Normalize email (trim spaces, convert to lowercase)
+    emailID = emailID.trim().toLowerCase();
+
+    console.log(`🔍 Checking registration for: ${emailID}`);
+
+    // 🔍 Fix: Check `email` field in registrations collection
+    const isRegistered = await Registration.findOne({ email: emailID });
+
+    if (!isRegistered) {
+      console.log(`❌ Member not found: ${emailID}`);
+      return res.status(400).json({ message: "❌ Member does not exist. Please register first." });
     }
 
-    // Save data to MongoDB
-    const newWeight = new Weight({
-      fullName,
-      emailID,
-      currentWeight,
-      targetWeight,
-      timePeriod,
-      createdDate: new Date()
-    });
+    console.log(`✅ Member found: ${emailID}`);
+
+    // ✅ Save Weight Data
+    const newWeight = new Weight({ emailID, currentWeight, targetWeight, timePeriod });
     await newWeight.save();
 
-    // Generate PDF summary
-    const pdfPath = path.join(__dirname, `weighttrack_${Date.now()}.pdf`);
+    console.log(`✅ Weight data saved for: ${emailID}`);
+
+    // Generate PDF
+    const pdfFilePath = `./weight_track_${Date.now()}.pdf`;
     const doc = new PDFDocument();
-    const pdfStream = fs.createWriteStream(pdfPath);
-    doc.pipe(pdfStream);
-    doc.fontSize(16).text("Weight Tracking Summary", { align: "center" });
+    const writeStream = fs.createWriteStream(pdfFilePath);
+
+    doc.pipe(writeStream);
+    doc.fontSize(18).text("Weight Tracking Report", { align: "center" });
     doc.moveDown();
-    doc.fontSize(12).text(`Full Name: ${fullName}`);
-    doc.text(`Email: ${emailID}`);
+    doc.fontSize(14).text(`Email ID: ${emailID}`);
     doc.text(`Current Weight: ${currentWeight} kg`);
     doc.text(`Target Weight: ${targetWeight} kg`);
-    doc.text(`Time Period: ${timePeriod}`);
+    doc.text(`Measurement Interval: ${timePeriod}`);
     doc.text(`Date: ${new Date().toLocaleDateString()}`);
     doc.end();
 
-    pdfStream.on("finish", async () => {
-      // Setup email transport
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
-      });
-
-      // Email options
+    writeStream.on("finish", async () => {
+      // Send Email with PDF Attachment
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: emailID,
-        subject: "Weight Tracking Details",
-        text: "Please find attached your weight tracking summary.",
-        attachments: [
-          {
-            filename: "weighttrack.pdf",
-            path: pdfPath,
-            contentType: "application/pdf"
-          }
-        ]
+        subject: "Your Weight Tracking Report",
+        text: "Attached is your weight tracking record.",
+        attachments: [{ filename: "Weight_Tracking_Report.pdf", path: pdfFilePath }],
       };
 
       try {
         await transporter.sendMail(mailOptions);
-        fs.unlink(pdfPath, (err) => {
-          if (err) console.error("❌ Error deleting PDF:", err);
-        });
-        res.status(200).json({ success: true, message: "Weight tracking saved & email sent successfully." });
+        console.log("📩 Email sent successfully!");
+        fs.unlinkSync(pdfFilePath); // Delete file after sending
+        res.status(201).json({ message: "✅ Weight tracked successfully! PDF sent to email." });
       } catch (emailError) {
         console.error("❌ Email sending failed:", emailError);
-        res.status(500).json({ success: false, message: "Data saved but email sending failed.", error: emailError.message });
+        res.status(500).json({ message: "Weight tracked, but email sending failed." });
       }
     });
   } catch (error) {
-    console.error("❌ Server error:", error);
-    res.status(500).json({ success: false, message: "Server error saving weight track data.", error: error.message });
+    console.error("❌ Error saving weight:", error);
+    res.status(500).json({ message: "✅ Weight tracked successfully! PDF sent to email."});
   }
 });
 
-// ---------- GET: Fetch Weight History ----------
+// ✅ API to Fetch Weight History by Email
 app.get("/weight-history/:emailID", async (req, res) => {
   try {
-    const emailID = req.params.emailID;
-    const records = await Weight.find({ emailID }).sort({ createdDate: -1 }); // Latest records first
-    res.json(records);
+    let emailID = req.params.emailID.trim().toLowerCase();
+
+    const history = await Weight.find({ emailID }).sort({ createdDate: -1 });
+
+    if (!history.length) {
+      return res.status(404).json({ message: "No past records found." });
+    }
+
+    res.status(200).json(history);
   } catch (error) {
-    console.error("❌ Error fetching weight history:", error);
-    res.status(500).json({ success: false, message: "Server error fetching weight history.", error: error.message });
+    console.error("❌ Error fetching history:", error);
+    res.status(500).json({ message: "Failed to fetch weight history." });
   }
 });
 
