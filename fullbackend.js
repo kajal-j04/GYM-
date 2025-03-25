@@ -21,6 +21,7 @@ const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
+
 const app = express();
 const PORT = 5000; // Changed to 5000
 
@@ -1254,21 +1255,49 @@ app.post('/api/enquiry', async (req, res) => {
     res.status(500).json({ success: false, message: "Server error submitting enquiry.", error: error.message });
   }
 });
+//feedback api get
+app.get('/api/check-member', async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required." });
+    }
+
+    // Ensure you're querying the correct 'registrations' collection
+    const user = await Registration.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User does not exist. Only members can give feedback." });
+    }
+
+    res.status(200).json({ success: true, message: "User is a registered member." });
+
+  } catch (error) {
+    console.error("Error checking membership:", error);
+    res.status(500).json({ success: false, message: "Server error.", error: error.message });
+  }
+});
 
 // Feedback Endpoint with PDF attachment
 app.post('/api/feedback', async (req, res) => {
   try {
     console.log("Feedback received:", req.body);
-    const feedback = new Feedback(req.body);
-    await feedback.save();
-    
+
     const { firstName, lastName, email, cleanlinessRating, equipmentRating, trainerRating, comments } = req.body;
+
+    // Save feedback to MongoDB
+    const feedback = new Feedback({ firstName, lastName, email, cleanlinessRating, equipmentRating, trainerRating, comments });
+    await feedback.save();
+    console.log("Feedback saved to database");
+
+    // Generate PDF
     const pdfPath = path.join(__dirname, `feedback_${Date.now()}.pdf`);
     const doc = new PDFDocument();
     const pdfStream = fs.createWriteStream(pdfPath);
+
     doc.pipe(pdfStream);
-    doc.fontSize(16).text("Feedback Details", { align: "center" });
-    doc.moveDown();
+    doc.fontSize(16).text("Feedback Details", { align: "center" }).moveDown();
     doc.fontSize(12).text(`Name: ${firstName} ${lastName}`);
     doc.text(`Email: ${email}`);
     doc.text(`Cleanliness Rating: ${cleanlinessRating}`);
@@ -1278,8 +1307,16 @@ app.post('/api/feedback', async (req, res) => {
       doc.text(`Comments: ${comments}`);
     }
     doc.end();
-    
+
     pdfStream.on("finish", async () => {
+      console.log("PDF generated successfully:", pdfPath);
+
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.error("Email credentials are missing in .env file");
+        return res.status(500).json({ success: false, message: "Email credentials missing." });
+      }
+
+      // Email setup
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -1287,31 +1324,57 @@ app.post('/api/feedback', async (req, res) => {
           pass: process.env.EMAIL_PASS
         }
       });
+
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
         subject: "Your Feedback Details",
         text: "Thank you for your feedback. Attached is a summary of your submitted feedback.",
-        attachments: [{
-          filename: "feedback.pdf",
-          path: pdfPath,
-          contentType: "application/pdf"
-        }]
+        attachments: [{ filename: "feedback.pdf", path: pdfPath, contentType: "application/pdf" }]
       };
+
       try {
         await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully");
+
+        // Delete the PDF after sending the email
         fs.unlink(pdfPath, (unlinkErr) => {
           if (unlinkErr) console.error("Error deleting feedback PDF:", unlinkErr);
+          else console.log("PDF deleted successfully");
         });
-        res.status(200).json({ success: true, message: "Feedback submitted and details sent via email." });
+
+        return res.status(200).json({ success: true, message: "Feedback submitted and details sent via email." });
+
       } catch (emailError) {
-        res.status(500).json({ success: false, message: "Feedback submitted but email sending failed.", error: emailError.message });
+        console.error("Error sending email:", emailError);
+        return res.status(500).json({ success: false, message: "Feedback submitted but email sending failed.", error: emailError.message });
       }
     });
+
+    pdfStream.on("error", (err) => {
+      console.error("Error generating PDF:", err);
+      return res.status(500).json({ success: false, message: "Error generating PDF." });
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error submitting feedback.", error: error.message });
+    console.error("Server error submitting feedback:", error);
+    return res.status(500).json({ success: false, message: "Server error submitting feedback.", error: error.message });
   }
 });
+
+// Fetch all feedbacks from the database
+router.get('/api/feedbacks', async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find(); // Fetch all feedback entries
+    res.status(200).json(feedbacks); // Send JSON response
+  } catch (error) {
+    console.error('Error fetching feedbacks:', error);
+    res.status(500).json({ message: 'Error fetching feedbacks', error: error.message });
+  }
+});
+
+module.exports = router;
+
 
 /***************************************
  * START SERVER

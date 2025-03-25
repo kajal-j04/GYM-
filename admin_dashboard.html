@@ -126,6 +126,11 @@
         <a href="#" class="mdl-navigation__link" onclick="loadContent('registration')">
           <i class="material-icons">face</i> Registrations
         </a>
+
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('feedback')">
+          <i class="material-icons">face</i> Feedback
+        </a>
+
       </nav>
     </div>
     <!-- MAIN CONTENT -->
@@ -449,6 +454,33 @@
     </table>
   </div>
 </div>
+
+<!-- Feedback Section -->
+<div id="feedback" class="hidden page-content">
+  <h4 id="feedbackListHeading" class="section-heading" style="cursor: pointer;">
+    Feedback (Click to Refresh)
+  </h4>
+
+  <div class="list-container">
+    <table id="feedbackTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Cleanliness Rating</th>
+          <th>Equipment Rating</th>
+          <th>Trainer Rating</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody id="feedbackTableBody">
+        <!-- Feedback data will be inserted here dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
 
   <!-- FRONTEND SCRIPT -->
   <script>
@@ -1106,6 +1138,50 @@ async function markAttendance(recordId, btnElement) {
         return { error: err.message };
       }
     }
+document.addEventListener('DOMContentLoaded', function () {
+  const feedbackListHeading = document.getElementById('feedbackListHeading');
+
+  if (feedbackListHeading) {
+    feedbackListHeading.addEventListener('click', function () {
+      console.log("Fetching feedback..."); // Debugging log
+      loadFeedbackData(); // Load feedback when clicked
+    });
+  }
+
+  // Load feedback data when the page is opened
+  loadFeedbackData();
+});
+
+function loadFeedbackData() {
+  fetch('/api/feedbacks')
+    .then(response => response.json())
+    .then(data => {
+      let tableBody = document.getElementById('feedbackTableBody');
+      tableBody.innerHTML = ''; // Clear previous data
+
+      if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6">No feedback available</td></tr>`;
+        return;
+      }
+
+      data.forEach(feedback => {
+        let row = `<tr>
+          <td>${feedback.firstName} ${feedback.lastName}</td>
+          <td>${feedback.email}</td>
+          <td>${feedback.cleanlinessRating}</td>
+          <td>${feedback.equipmentRating}</td>
+          <td>${feedback.trainerRating}</td>
+          <td>${feedback.comments || 'No Comments'}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    })
+    .catch(error => console.error('Error fetching feedback:', error));
+}
+
+
+
+
 
     // --------------------
     // DELETE and UPDATE FUNCTIONS
