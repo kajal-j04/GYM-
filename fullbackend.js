@@ -1363,7 +1363,7 @@ app.post('/api/feedback', async (req, res) => {
 });
 
 // Fetch all feedbacks from the database
-router.get('/api/feedbacks', async (req, res) => {
+app.get('/api/feedbacks', async (req, res) => {
   try {
     const feedbacks = await Feedback.find(); // Fetch all feedback entries
     res.status(200).json(feedbacks); // Send JSON response

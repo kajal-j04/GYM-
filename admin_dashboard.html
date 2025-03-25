@@ -457,9 +457,10 @@
 
 <!-- Feedback Section -->
 <div id="feedback" class="hidden page-content">
-  <h4 id="feedbackListHeading" class="section-heading" style="cursor: pointer;">
+  <h4 id="feedbackListHeading" class="section-heading clickable" style="cursor: pointer;">
     Feedback (Click to Refresh)
   </h4>
+  <canvas id="feedbackChart" class="hidden"></canvas>
 
   <div class="list-container">
     <table id="feedbackTable">
@@ -812,6 +813,8 @@ async function initCharts() {
       if(enquiryListHeading) { enquiryListHeading.addEventListener('click', fetchEnquiry); }
       const registrationListHeading = document.getElementById('registrationListHeading');
       if(registrationListHeading) { registrationListHeading.addEventListener('click', fetchRegistration); }
+      const feedbackListHeading= document.getElementById('feedbackListHeading');
+      if(feedbackListHeading) { feedbackListHeading.addEventListener('click', loadFeedbackData); }
     }
 
     // --------------------
@@ -1138,33 +1141,26 @@ async function markAttendance(recordId, btnElement) {
         return { error: err.message };
       }
     }
-document.addEventListener('DOMContentLoaded', function () {
-  const feedbackListHeading = document.getElementById('feedbackListHeading');
-
-  if (feedbackListHeading) {
-    feedbackListHeading.addEventListener('click', function () {
-      console.log("Fetching feedback..."); // Debugging log
-      loadFeedbackData(); // Load feedback when clicked
-    });
-  }
-
-  // Load feedback data when the page is opened
-  loadFeedbackData();
-});
 
 function loadFeedbackData() {
-  fetch('/api/feedbacks')
+  fetch('http://localhost:5000/api/feedbacks')
     .then(response => response.json())
     .then(data => {
       let tableBody = document.getElementById('feedbackTableBody');
+      document.getElementById('feedbackChart').classList.remove('hidden')
       tableBody.innerHTML = ''; // Clear previous data
 
       if (data.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="6">No feedback available</td></tr>`;
         return;
       }
+      let totalCleanliness = 0, totalEquipment = 0, totalTrainer = 0;
+      let count = data.length;
 
       data.forEach(feedback => {
+        totalCleanliness += feedback.cleanlinessRating;
+        totalEquipment += feedback.equipmentRating;
+        totalTrainer += feedback.trainerRating;
         let row = `<tr>
           <td>${feedback.firstName} ${feedback.lastName}</td>
           <td>${feedback.email}</td>
@@ -1175,8 +1171,39 @@ function loadFeedbackData() {
         </tr>`;
         tableBody.innerHTML += row;
       });
+
+      let avgCleanliness = (totalCleanliness / count).toFixed(2);
+      let avgEquipment = (totalEquipment / count).toFixed(2);
+      let avgTrainer = (totalTrainer / count).toFixed(2);
+
+      renderChart(avgCleanliness, avgEquipment, avgTrainer);
     })
     .catch(error => console.error('Error fetching feedback:', error));
+
+    function renderChart(cleanliness, equipment, trainer) {
+            let ctx = document.getElementById('feedbackChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Cleanliness', 'Equipment', 'Trainer'],
+                    datasets: [{
+                        label: 'Average Ratings',
+                        data: [cleanliness, equipment, trainer],
+                        backgroundColor: ['#4CAF50', '#FF9800', '#2196F3'],
+                        borderColor: ['#388E3C', '#F57C00', '#1976D2'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            });
+        }
 }
 
 
