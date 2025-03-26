@@ -423,7 +423,6 @@
             <th>TimeSlot</th>
             <th>Date</th>
             <th>Gender</th>
-            <th>DOB</th>
             <th>Plans</th>
             <th>Actions</th>
           </tr>
@@ -970,11 +969,9 @@ async function markAttendance(recordId, btnElement) {
                            <td>${item.timeSlot}</td>
                            <td>${item.date}</td>
                            <td>${item.gender}</td>
-                           <td>${item.packageStartDate}</td> 
                            <td>${item.plans}</td>
                            <td>
-                             <button class="action-btn update-btn" onclick="updateEntity('registration', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
-                             <button class="action-btn delete-btn" onclick="deleteEntity('registration', '${item._id}')">Delete</button>
+                              <button class="action-btn delete-btn" onclick="deleteEntity('registration', '${item._id}')">Delete</button>
                            </td>`;
           tbody.appendChild(row);
         });

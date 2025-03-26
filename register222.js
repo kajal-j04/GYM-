@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ DOM fully loaded!");
 
     const registerButton = document.getElementById("registerBtn");
@@ -63,11 +63,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify(formData),
             });
 
+            if (!response.ok) {
+                console.error("❌ Server responded with an error:", response.status);
+                alert("❌ Registration failed! Try again later.");
+                return;
+            }
+
             const result = await response.json();
             console.log("✅ Server Response:", result);
             alert(result.message);
         } catch (error) {
-            console.error("❌ Error submitting form:", error);
+            console.error("❌ Error submitting form:"+ error);
             alert("❌ Registration failed! Try again later.");
         }
     }
@@ -104,6 +110,30 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("gender").value = urlParams.get("gender") || "";
     }
 
+    async function fetchPlans() {
+        try {
+            const response = await fetch('http://localhost:5000/api/packages'); // Replace with your API URL
+            const data = await response.json();
+
+            const dropdown = document.getElementById('plans');
+
+            data.forEach(plan => {
+                const planName = `${plan.name} (${plan.duration} Month - ${plan.price} Rs)`
+                // Check if the option already exists to avoid duplicates
+                let exists = Array.from(dropdown.options).some(option => option.textContent === planName);
+                if (!exists) {
+                    let option = document.createElement('option');
+                    option.value = plan.price;
+                    option.textContent = planName;
+                    dropdown.appendChild(option);
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
     // ✅ Run autofill when page loads
     autofillFormFromURL();
+    fetchPlans();
 });

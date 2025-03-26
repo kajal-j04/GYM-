@@ -252,9 +252,11 @@ app.post('/api/attendance/trainer-clock-in', async (req, res) => {
         if (!trainer) return res.status(404).json({ message: "Trainer not found" });
 
         const clockInTime = new Date();
+        const today = new Date().toISOString().split("T")[0];
 
         const attendance = new TrainerAttendance({
             email,
+            date: today,
             name: trainer.name,
             clockIn: clockInTime,
             clockOut: null,
@@ -562,16 +564,6 @@ app.get("/api/check-trainer/:email", async (req, res) => {
   }
 });
 
-app.get("/api/check-registration/:email", async (req, res) => {
-  try {
-      const { email } = req.params;
-      const user = await Registration.findOne({ email });
-      res.json({ exists: !!user, name: user ? user.name : null });
-  } catch (error) {
-      console.error("Error fetching member:", error);
-      res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 app.get("/api/attendance/members", async (req, res) => {
   try {
       const attendance = await Attendance.find();
@@ -818,6 +810,11 @@ app.delete('/api/memberAttendances/:id', (req, res) => {
     .then(() => res.json({ success: true }))
     .catch(err => res.status(500).json({ success: false, error: err.message }));
 });
+app.delete('/api/registrations/:id', (req, res) => {
+  Registration.findByIdAndDelete(req.params.id)
+    .then(() => res.json({ success: true }))
+    .catch(err => res.status(500).json({ success: false, error: err.message }));
+});
 
 /* ========= GET LISTS ========= */
 app.get('/api/trainers', (req, res) => {
@@ -861,15 +858,19 @@ app.get('/api/counts', async (req, res) => {
 app.get('/api/check-registration/:email', async (req, res) => {
   try {
       const email = req.params.email;
-      const user = await Registration.findOne({ email });
+      let user = await Registration.findOne({ email });
 
       if (!user) {
-          return res.status(404).json({ success: false, message: "User not found" });
+         user = await Member.findOne({email})
+      }
+
+      if(!user){
+        return res.status(404).json({ success: false, message: "User not found" });
       }
 
       res.json({ success: true, user });
   } catch (error) {
-      console.error("❌ Error checking registration:", error);
+      console.error("Successfully register:", error);
       res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
@@ -964,6 +965,8 @@ app.post("/register", async (req, res) => {
         const newRegistration = new Registration(req.body);
         await newRegistration.save();
         console.log("✅ Data saved to 'registrations' collection in MongoDB");
+        // ✅ Send Success Response Early
+        res.json({ success: true, message: "Registration successful! Receipt will be emailed shortly." });
 
         // ✅ Ensure "bills" folder exists
         const billsDir = "./bills";
@@ -1020,10 +1023,8 @@ app.post("/register", async (req, res) => {
             try {
                 const info = await transporter.sendMail(mailOptions);
                 console.log("📧 Email sent successfully:", info.response);
-                res.json({ success: true, message: "Registration successful! Receipt sent to email." });
             } catch (emailError) {
                 console.error("❌ Email Sending Error:", emailError);
-                res.status(500).json({ success: false, message: "Registration successful, but email sending failed." });
             }
         });
 
