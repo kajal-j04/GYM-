@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gym Discounts - Session Offer Included</title>
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    /* Fixed Header */
+    header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    /* Registration Banner */
+    .registration-banner {
+      background: #29a396;
+      color: #000;
+      padding: 15px;
+      margin-top: 80px; /* for header space */
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    .registration-banner button {
+      background: #000;
+      color: #29a396;
+      border: 2px solid #29a396;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .registration-banner button:hover {
+      background: #29a396;
+      color: #000;
+    }
+    /* Card Container */
+    .card-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    /* Discount Card Styles */
+    .discount-card {
+      background: #1a1a1a;
+      border: 2px solid #29a396;
+      border-radius: 10px;
+      margin: 20px 0;
+      padding: 20px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateX(-50px);
+      animation: slideIn 0.6s forwards;
+    }
+    /* Staggered animation delays */
+    .discount-card:nth-child(1) { animation-delay: 0.2s; }
+    .discount-card:nth-child(2) { animation-delay: 0.4s; }
+    .discount-card:nth-child(3) { animation-delay: 0.6s; }
+    .discount-card:nth-child(4) { animation-delay: 0.8s; }
+    
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .discount-card h2 {
+      margin-top: 0;
+      color: #29a396;
+    }
+    
+    .discount-card p {
+      margin: 10px 0;
+    }
+    
+    .discount-card button {
+      background: #29a396;
+      color: #000;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.3s;
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+    }
+    
+    .discount-card button:hover {
+      background: #29a396;
+      transform: scale(1.1);
+    }
+    
+    /* Specific styles for session offer image */
+    .discount-card img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>Get Discounts</header>
+  
+  <div class="registration-banner">
+    <p><strong>Offer claim karne ke liye, pehle register karein!</strong></p>
+    <button id="openModal" onclick="window.location.href='Register222.html';">Register Now</button>
+  </div>
+  
+  <div class="card-container">
+    <div class="discount-card">
+      <h2>New Year Offer</h2>
+      <p>Get 30% off on annual membership when you sign up today.</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+    <div class="discount-card">
+      <h2>Student Special</h2>
+      <p>Show your student ID and enjoy a 20% discount.</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+    <div class="discount-card">
+      <h2>Refer a Friend</h2>
+      <p>Refer a friend and get 1 month free membership.</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+    <div class="discount-card">
+      <h2>Session Offer</h2>
+      <img src="https://via.placeholder.com/550x300?text=Training+Session+Offer" alt="Session Offer">
+      <p>Get 50% off on your first personal training session!</p>
+      <button class="claimBtn">Claim Offer</button>
+    </div>
+  </div>
+  
+  <script>
+    document.querySelectorAll('.claimBtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.location.href = 'claim_offer.html';
+      });
+    });
+  </script>
+</body>
+</html>

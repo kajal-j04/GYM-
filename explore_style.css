@@ -1,0 +1,84 @@
+<<<<<<< HEAD
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.heading {
+    color: #333;
+    font-size: 2em;
+}
+
+.explore-btn {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.explore-btn:hover {
+    background-color: #e65c00;
+}
+
+.gym-images {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.5s ease-in-out;
+}
+
+.hidden {
+    display: none;
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+=======
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+.gym-images {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.gym-images img {
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.gym-images img:hover {
+    transform: scale(1.05);
+}
+
+.explore-btn {
+    background-color: #29a396;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    border-radius: 50px;
+}
+
+.explore-btn:hover {
+    background-color: #29a396;
+>>>>>>> 6a5ba3cd4ed1cfd0b60e49cee64344fd6dada0f4
+}

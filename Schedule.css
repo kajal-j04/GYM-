@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100%;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #091919;
+}
+
+.heading {
+    color: #29a396;
+    font-size: 50px;
+    text-align: center;
+}
+
+.container {
+    width: 550px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 5px 5px 20px gray;
+}
+
+.schedule-btn, .clkbtn {
+    height: 50px;
+    width: 200px;
+    border-radius: 25px;
+    background-color: #29a396;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.schedule-btn:hover, .clkbtn:hover {
+    background-color: #3be0c4;
+}
+
+.field {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.field label {
+    font-size: 16px;
+    color: #29a396;
+    font-weight: bold;
+    display: block;
+}
+
+.ele, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
+
+/* Checkbox & Radio Button Styling */
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+input[type="checkbox"] {
+    accent-color: black;
+}
+
+.checkbox-group label, 
+.radio-group label {
+    color: black;
+    font-weight: normal; /* Removed bold */
+}

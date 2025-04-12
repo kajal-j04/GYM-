@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+
+
+<style>
+    .black {
+        background-color: black;
+        color: white
+    }
+
+    .black>nav>a {
+        color: white
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    /* Style for the rectangular big button */
+    .big-button {
+        width: 80%;
+        /* Full width of the column */
+        padding: 20px 10px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        align-items: left;
+        border-radius: 10px;
+        background-color: #bdbdbd30;
+        /* Purple background color */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 20px;
+        /* Space between buttons */
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        /* Shadow added to the button */
+    }
+
+    /* Space between buttons */
+    .mdl-grid--no-spacing .mdl-cell {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    /* Style for the button content (logo and text) */
+    .button-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        align-items: left;
+    }
+
+    /* Style for the logo */
+    .button-logo {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 5px;
+    }
+
+    /* Style for the button text */
+    .button-text {
+        font-size: 15px;
+        color: black;
+    }
+
+    /* Hover effect: Scale and shadow */
+    .big-button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hover effect: Highlight on hover */
+    .big-button:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    #profilePicPreview {
+        display: none;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-top: 10px;
+    }
+
+    .mdl-card{
+        background: transparent;
+    }
+</style>
+
+<body>
+    <!-- All pages -->
+    <div class="mdl-layout__content">
+        <div id="trainer">
+            <div class="mdl-grid">
+                <!-- First Column (Left) with an image that spans 2 rows -->
+                <div class="mdl-cell mdl-cell--2-col mdl-cell--12-col-phone">
+                    <div class="mdl-card">
+                        <div class="mdl-card__supporting-text">
+                            <!-- Image spanning two rows -->
+                            <img src="https://cdn-icons-png.flaticon.com/512/7241/7241777.png" alt="Placeholder Image"
+                                style="width: 50%; height: auto;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Column (Right) with two rows -->
+                <div class="mdl-cell mdl-cell--10-col mdl-cell--12-col-phone">
+                    <div class="mdl-card">
+                        <div class="mdl-card__supporting-text">
+                            <!-- First Row: Hello -->
+                            <h4><strong>Hello Admin</strong></h4>
+                            <p>Manage Packages For Your Member</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button 1 -->
+                <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--3-col-phone">
+                    <div class="big-button">
+                        <div class="button-content" onclick="loadDivContent('addTrainer')">
+                            <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
+                                <i class="material-icons" style="color: red;">add</i>
+                            </label>
+                            <span class="button-text">Add Package</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button 2 -->
+                <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--3-col-phone">
+                    <div class="big-button" onclick="loadDivContent('getTrainer')">
+                        <div class="button-content">
+                            <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
+                                <i class="material-icons" style="color: blue;">visibility</i>
+                            </label>
+                            <span class="button-text">View Trainer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="addTrainer" class="hidden">
+            <div class="mdl-card mdl-shadow--2dp" style="width: 400px; margin: 50px auto; padding: 20px;">
+                <h4 class="mdl-typography--headline">Package Form</h4>
+                <form id="traienrform">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="name" name="name">
+                        <label class="mdl-textfield__label" for="name">Package Name</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="Description" name="Description">
+                        <label class="mdl-textfield__label" for="mobile">Description</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="Amount" name="Amount">
+                        <label class="mdl-textfield__label" for="experience">Amount</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="Duration" name="Duration">
+                        <label class="mdl-textfield__label" for="shift">Duration</label>
+                    </div>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit"
+                        onclick="addPackage()">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="getpackage" class="hidden">
+            <div class="mdl-card mdl-shadow--2dp" style="width: 80%; margin: 50px auto; padding: 20px;">
+                <h4 class="mdl-typography--headline">package Data</h4>
+                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric">Profile</th>
+                            <th class="mdl-data-table__cell--non-numeric">Name</th>
+                            <th>Mobile</th>
+                            <th>Experience</th>
+                            <th>Shift</th>
+                        </tr>
+                    </thead>
+                    <tbody id="packagetableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+    function loadContent(page) {
+
+        // Show the selected content
+        const contentDiv = document.getElementById(page);
+        if (contentDiv) {
+            document.getElementById('main-content').innerHTML = contentDiv.innerHTML;
+            if (page == 'getpackage') {
+                fetchTrainers()
+            }
+        } else {
+            console.warn("Content not found for page:", page);
+        }
+    }
+
+    async function fetchPackage() {
+    try {
+        const response = await fetch('http://localhost:3000/package');
+        const packages = await response.json();
+        const tableBody = document.getElementById('packagetableBody'); // Corrected ID
+
+        tableBody.innerHTML = ''; // Clear table before adding new rows
+
+        packages.forEach(pkg => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="mdl-data-table__cell--non-numeric">${pkg.name}</td>
+                <td>${pkg.description}</td>
+                <td>${pkg.amount}</td>
+                <td>${pkg.duration}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error fetching package data:', error);
+    }
+}
+
+    async function addPackage() {
+        event.preventDefault()
+        const name = document.getElementById('Package name').value;
+        const Description = document.getElementById('Description').value;
+        const Amount = document.getElementById('Amount').value;
+        const Duration = document.getElementById('Duration').value;
+       
+
+        if (!Packagename || !Description || !Amount || !Duration ) {
+ 
+        }
+
+        const PackageData = { Packagename, Description, Amount,Duration};
+
+        try {
+            await fetch('http://localhost:3000/package', { // Replace with actual API endpoint
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(packageData)
+            }).then(res => {
+                if (res.status == 200) {
+                    alert("Added successfully")
+                    loadContent('Package')
+                } else {
+                    alert("Error occured while adding Package")
+                }
+            });
+        } catch (error) {
+            console.error('Error saving package data:', error);
+        }
+
+        document.getElementById('PackageForm').reset();
+    }
+</script>
+
+</html>

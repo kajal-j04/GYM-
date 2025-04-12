@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* --- Body Styling --- */
+body {
+    min-height: 100vh;  /* Allow content to grow beyond viewport height */
+    width: 100vw;
+    background-color: #0b1215;
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+    /* Remove vertical centering so that content starts at the top */
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* horizontally center */
+    overflow-y: auto;  /* enable vertical scrolling */
+}
+
+/* --- Header Styling --- */
+header {
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #29a396;
+    padding: 20px;
+}
+
+/* --- Glassmorphism Container for Attendance --- */
+.attendance-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    margin-bottom: 30px; /* spacing between containers */
+}
+
+/* --- Input Fields --- */
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    transition: background 0.3s;
+    font-size: 16px;
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    outline: none;
+}
+
+/* --- Attendance Buttons --- */
+button {
+    background: linear-gradient(135deg, #29a396, #1e7d6f);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+    width: 100%;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #1e7d6f, #186b5c);
+}
+
+/* --- Attendance Status Box --- */
+.attendance-status {
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #29a396;
+    text-align: center;
+}
+
+/* --- Modal for Alerts --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+/* --- Modal Content --- */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    color: black;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+}
+
+/* --- Close Button for Modal --- */
+.close {
+    color: black;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #29a396;
+}
+
+/* --- Theme Toggle Button --- */
+.theme-toggle {
+    background-color: transparent;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 10px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+}
+
+/* --- Dark Theme --- */
+body.dark-theme {
+    background-color: #0b1215;
+    color: white;
+}
+
+/* --- Light Theme --- */
+body.light-theme {
+    background-color: #ffffff;
+    color: black;
+}
+
+/* --- Responsive Design --- */
+@media screen and (max-width: 650px) {
+    .attendance-container {
+        width: 90%;
+    }
+
+    button {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .attendance-container {
+        width: 95%;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}

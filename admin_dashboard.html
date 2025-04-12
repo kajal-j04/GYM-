@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Minnat Vigour Gym</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Material Icons and MDL CSS -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* RESET SOME DEFAULTS */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+    body { background: #f5f5f5; }
+    .container { max-width: 800px; margin: 30px;}
+    canvas {max-width: 100%;}
+    .clickable:hover{ cursor: pointer;}
+    .clickable{ color: blue; font-weight: 100;}
+    /* SIDEBAR & HEADER */
+    .mdl-layout__drawer { width: 240px; background: #1f1f1f; }
+    .mdl-layout__drawer .mdl-layout-title { color: #fff; margin-left: 16px; font-size: 18px; line-height: 48px; }
+    .mdl-navigation__link { color: #ccc !important; }
+    .mdl-navigation__link:hover { background: #333; color: #fff !important; }
+    .mdl-layout__header { background: #1f1f1f; color: #fff; }
+    .mdl-layout-title { font-size: 20px; }
+    /* LOGOUT BUTTON */
+    .logout-button { background-color: #ff5722; color: #fff; margin-right: 20px; }
+    /* MAIN CONTENT AREA */
+    .page-content { padding: 20px; width: 100%; }
+    /* HIDING SECTIONS */
+    .hidden { display: none; }
+    /* LOGIN SECTION */
+    .login-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+    .login-box { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 300px; }
+    .login-box h3 { margin-bottom: 20px; color: #333; }
+    .login-box label { display: block; text-align: left; margin-bottom: 5px; font-weight: bold; }
+    .login-box input { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; }
+    .login-box button { background: #3f51b5; color: #fff; border: none; width: 100%; padding: 10px; border-radius: 5px; cursor: pointer; }
+    .login-box button:hover { background: #303f9f; }
+    /* DASHBOARD SECTION */
+    .dashboard-container { display: flex; flex-direction: column; gap: 20px; color: #333; }
+    .dashboard-header { margin-bottom: 20px; }
+    .dashboard-header h3 { font-weight: 400; margin-bottom: 5px; }
+    .dashboard-header p { color: #555; }
+    .stats-boxes { display: flex; flex-wrap: wrap; gap: 20px; }
+    .stats-box { flex: 1; min-width: 180px; background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+    .stats-box h4 { margin-bottom: 10px; color: #333; font-weight: 500; }
+    .stats-box p { font-size: 24px; font-weight: bold; color: #111; }
+    .charts-container { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+    .chart-box { flex: 1; min-width: 300px; background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+    .chart-box h4 { margin-bottom: 10px; color: #333; }
+    canvas { width: 100% !important; max-height: 300px; }
+    /* FORMS & TABLES SECTION */
+    .form-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 64px); text-align: center; padding: 20px; }
+    form { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 500px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    form label { display: block; text-align: left; font-weight: bold; }
+    input, button { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    button { background-color: #3f51b5; color: white; border: none; cursor: pointer; transition: background 0.3s; }
+    button:hover { background-color: #303f9f; }
+    .list-container { margin: 20px auto; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 100%; max-width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    table, th, td { border: 1px solid #ccc; }
+    th, td { padding: 10px; text-align: center; }
+    /* Attendance Report Section */
+    .report-section { margin-top: 30px; }
+    .report-section h4 { margin-bottom: 10px; }
+    /* Action Buttons */
+    .action-btn { padding: 5px 10px; margin: 0 2px; border: none; border-radius: 3px; cursor: pointer; }
+    .update-btn { background-color: #4caf50; color: #fff; }
+    .delete-btn { background-color: #f44336; color: #fff; }
+  </style>
+</head>
+<body>
+  <!-- LOGIN SECTION -->
+  <div id="login" class="login-container">
+    <div class="login-box">
+      <h3>Admin login here</h3>
+      <form id="loginForm">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Username" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP LAYOUT -->
+  <div id="appLayout" class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header hidden">
+    <!-- HEADER -->
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">Minnat Vigour Gym</span>
+        <div class="mdl-layout-spacer"></div>
+        <button class="mdl-button mdl-js-button mdl-button--raised logout-button" onclick="logoutUser()">LOGOUT</button>
+      </div>
+    </header>
+    <!-- NAV DRAWER -->
+    <div class="mdl-layout__drawer">
+      <span class="mdl-layout-title">Navigation</span>
+      <nav class="mdl-navigation">
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('Dashboard')">
+          <i class="material-icons">dashboard</i> Dashboard
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('trainer')">
+          <i class="material-icons">fitness_center</i> Trainer
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('member')">
+          <i class="material-icons">people</i> Member
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('package')">
+          <i class="material-icons">inventory_2</i> Package
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('equipment')">
+          <i class="material-icons">build</i> Equipment
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('enquiry')">
+          <i class="material-icons">contact_support</i> Enquiry
+        </a>
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('attendance'); fetchAttendanceReport()">
+          <i class="material-icons">how_to_reg</i> Attendance
+        </a>
+        
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('registration')">
+          <i class="material-icons">face</i> Registrations
+        </a>
+
+        <a href="#" class="mdl-navigation__link" onclick="loadContent('feedback')">
+          <i class="material-icons">face</i> Feedback
+        </a>
+
+      </nav>
+    </div>
+    <!-- MAIN CONTENT -->
+    <main class="mdl-layout__content">
+      <div id="content-area" class="form-container">
+        <!-- Loaded Content Goes Here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- DASHBOARD SECTION -->
+  <div id="Dashboard" class="hidden page-content">
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h3>Hello Admin</h3>
+        <p>Welcome to your admin dashboard!</p>
+      </div>
+      <div class="stats-boxes">
+        <div class="stats-box">
+          <h4>Number of Members</h4>
+          <p id="dashMembers">0</p>
+        </div>
+        <div class="stats-box">
+          <h4>Number of Equipments</h4>
+          <p id="dashEquipment">0</p>
+        </div>
+        <div class="stats-box">
+          <h4>Number of Packages</h4>
+          <p id="dashPackages">0</p>
+        </div>
+        <div class="stats-box">
+          <h4>Number of Trainers</h4>
+          <p id="dashTrainers">0</p>
+        </div>
+      </div>
+      <div class="charts-container">
+        <div class="chart-box">
+          <h4>Attendance Reports (Last Week)</h4>
+          <canvas id="attendanceChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <h4>Total Reports</h4>
+          <canvas id="totalReportsChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden" id="attendance">
+    <h4>Today's Member Attendance</h4>
+    <div class="list-container">
+      <table id="memberAttendanceTable">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="memberAttendanceBody">
+          <tr><td colspan="4">No attendance records for today.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Today's Trainer Attendance</h4>
+    <div class="list-container">
+      <table id="trainerAttendanceTable">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="trainerAttendanceBody">
+          <tr><td colspan="4">No attendance records for today.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TRAINER SECTION -->
+  <div id="trainer" class="hidden">
+    <h4 class="section-heading">Add Trainer</h4>
+    <form id="trainerForm" enctype="multipart/form-data">
+      <label for="trainerName">Trainer Name</label>
+      <input type="text" id="trainerName" name="trainerName" placeholder="Trainer Name" required>
+      <label for="trainerEmail">Email</label>
+      <input type="email" id="trainerEmail" name="trainerEmail" placeholder="Email" required>
+      <label for="trainerSpecialization">Specialization</label>
+      <input type="text" id="trainerSpecialization" name="trainerSpecialization" placeholder="Specialization" required>
+      <label for="trainerPhone">Phone Number</label>
+      <input type="text" id="trainerPhone" name="trainerPhone" placeholder="Phone Number" required>
+      <label for="trainerExperience">Years of Experience</label>
+      <input type="text" id="trainerExperience" name="trainerExperience" placeholder="Years of Experience" required>
+      <label for="trainerImage">Upload Image</label>
+      <input type="file" id="trainerImage" name="trainerImage" accept="image/*" required>
+      <button type="submit">Submit</button>
+    </form>
+    <!-- Clickable list heading -->
+    <h4 id="trainerListHeading" class="section-heading clickable">Trainer List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="trainerTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Specialization</th>
+            <th>Phone</th>
+            <th>Experience</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="trainerTableBody">
+          <tr><td colspan="7">No trainers added yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MEMBER SECTION -->
+  <div id="member" class="hidden">
+    <h4 class="section-heading">Add Member</h4>
+    <form id="memberForm" enctype="multipart/form-data">
+      <label for="memberName">Full Name</label>
+      <input type="text" id="memberName" name="memberName" placeholder="Full Name" required>
+      <label for="memberEmail">Email Address</label>
+      <input type="email" id="memberEmail" name="memberEmail" placeholder="Email Address" required>
+      <label for="memberPhone">Phone Number</label>
+      <input type="text" id="memberPhone" name="memberPhone" placeholder="Phone Number" required>
+      <label for="memberGender">Gender</label>
+      <input type="text" id="memberGender" name="memberGender" placeholder="Gender" required>
+      <label for="memberDOB">Date of Birth</label>
+      <input type="date" id="memberDOB" name="memberDOB" required>
+      <label for="memberAddress">Address</label>
+      <input type="text" id="memberAddress" name="memberAddress" placeholder="Address">
+      <label for="memberImage">Upload Image</label>
+      <input type="file" id="memberImage" name="memberImage" accept="image/*">
+      <button type="submit">Submit</button>
+    </form>
+    <!-- Clickable list heading -->
+    <h4 id="memberListHeading" class="section-heading clickable">Member List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="memberTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Address</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="memberTableBody">
+          <tr><td colspan="8">No members added yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PACKAGE SECTION -->
+  <div id="package" class="hidden">
+    <h4 class="section-heading">Add Package</h4>
+    <form id="packageForm" enctype="multipart/form-data">
+      <label for="packageName">Package Name</label>
+      <input type="text" id="packageName" name="packageName" placeholder="Package Name" required>
+      <label for="packageDuration">Duration (in months)</label>
+      <input type="text" id="packageDuration" name="packageDuration" placeholder="Duration (in months)" required>
+      <label for="packagePrice">Price</label>
+      <input type="number" id="packagePrice" name="packagePrice" placeholder="Price" required>
+      <label for="packageFeatures">Features</label>
+      <input type="text" id="packageFeatures" name="packageFeatures" placeholder="Features">
+      <label for="packageImage">Upload Image</label>
+      <input type="file" id="packageImage" name="packageImage" accept="image/*">
+      <button type="submit">Submit</button>
+    </form>
+    <!-- Clickable list heading -->
+    <h4 id="packageListHeading" class="section-heading clickable">Package List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="packageTable">
+        <thead>
+          <tr>
+            <th>Package Name</th>
+            <th>Duration</th>
+            <th>Price</th>
+            <th>Features</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="packageTableBody">
+          <tr><td colspan="6">No packages added yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT SECTION -->
+  <div id="equipment" class="hidden">
+    <h4 class="section-heading">Add Equipment</h4>
+    <form id="equipmentForm" enctype="multipart/form-data">
+      <label for="equipmentName">Equipment Name</label>
+      <input type="text" id="equipmentName" name="equipmentName" placeholder="Equipment Name" required>
+      <label for="equipmentBrand">Brand</label>
+      <input type="text" id="equipmentBrand" name="equipmentBrand" placeholder="Brand" required>
+      <label for="equipmentType">Type</label>
+      <input type="text" id="equipmentType" name="equipmentType" placeholder="Type" required>
+      <label for="equipmentCount">Number of Items</label>
+      <input type="number" id="equipmentCount" name="equipmentCount" placeholder="Number of Items" required>
+      <label for="equipmentImage">Upload Image</label>
+      <input type="file" id="equipmentImage" name="equipmentImage" accept="image/*">
+      <button type="submit">Submit</button>
+    </form>
+    <!-- Clickable list heading -->
+    <h4 id="equipmentListHeading" class="section-heading clickable">Equipment List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="equipmentTable">
+        <thead>
+          <tr>
+            <th>Equipment Name</th>
+            <th>Brand</th>
+            <th>Type</th>
+            <th>Count</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="equipmentTableBody">
+          <tr><td colspan="6">No equipments added yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT SECTION -->
+  <div id="enquiry" class="hidden">
+    <h3 class="section-heading">Enquiries</h3>
+    <div class="container">
+      <h4>Monthly Enquiries</h4>
+      <select id="yearSelect">
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+      </select>
+      <button onclick="fetchEnquiryData()">Load Data</button>
+      <canvas id="enquiryChart" class="hidden"></canvas>
+    </div>
+    <!-- Clickable list heading -->
+    <h4 id="enquiryListHeading" class="section-heading clickable">Enquiries List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="enquiryTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone No.</th>
+            <th>Message</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="enquiryTableBody">
+          <tr><td colspan="6">No Enquiries.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT SECTION -->
+  <div id="registration" class="hidden">
+    <h4 class="section-heading">Registrations</h4>
+    <h4 class="clickable" onclick="fetchGenderData()">Male vs Female Registration Ratio</h4>
+    <canvas id="genderChart"></canvas>
+    <!-- Clickable list heading -->
+    <h4 id="registrationListHeading" class="section-heading clickable">Registrations List (Click to Load)</h4>
+    <div class="list-container">
+      <table id="registrationTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact No.</th>
+            <th>Height</th>
+            <th>Weight</th>
+            <th>TimeSlot</th>
+            <th>Date</th>
+            <th>Gender</th>
+            <th>Plans</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="registrationTableBody">
+          <tr><td colspan="11">No Registrations.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- NEW ATTENDANCE SECTION -->
+<div id="attendance" class="hidden page-content">
+  <h4 class="section-heading">Attendance</h4>
+  <div class="list-container">
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Clock In</th>
+          <th>Clock Out</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTableBody">
+        <tr><td colspan="4">No attendance records available.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Feedback Section -->
+<div id="feedback" class="hidden page-content">
+  <h4 id="feedbackListHeading" class="section-heading clickable" style="cursor: pointer;">
+    Feedback (Click to Refresh)
+  </h4>
+  <canvas id="feedbackChart" class="hidden"></canvas>
+
+  <div class="list-container">
+    <table id="feedbackTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Cleanliness Rating</th>
+          <th>Equipment Rating</th>
+          <th>Trainer Rating</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody id="feedbackTableBody">
+        <!-- Feedback data will be inserted here dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+  <!-- FRONTEND SCRIPT -->
+  <script>
+     async function fetchGenderData() {
+            try {
+                const response = await fetch('http://localhost:5000/api/gender-ratio');
+                const result = await response.json();
+                
+                if (!result.success) throw new Error(result.error);
+
+                // Extract Male & Female data
+                const maleCount = result.data.Male || 0;
+                const femaleCount = result.data.Female || 0;
+
+                renderChart(maleCount, femaleCount);
+            } catch (error) {
+                console.error("Error fetching gender ratio:", error);
+            }
+        }
+
+        function renderChart(maleCount, femaleCount) {
+            const ctx = document.getElementById('genderChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [{
+                        data: [maleCount, femaleCount],
+                        backgroundColor: ['#3498db', '#e74c3c']
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+        fetchGenderData()
+    let enquiryChart;
+
+    async function fetchEnquiryData() {
+        const year = document.getElementById("yearSelect").value;
+        const response = await fetch(`http://localhost:5000/enquiries-per-month/${year}`);
+        const data = await response.json();
+
+        const labels = data.data.map(item => item.month);
+        const values = data.data.map(item => item.enquiries);
+
+        if (enquiryChart) enquiryChart.destroy();
+
+        const ctx = document.getElementById("enquiryChart");
+        ctx.width = 500; // Set width dynamically
+        document.getElementById("enquiryChart").classList.remove('hidden')
+
+        enquiryChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: `Enquiries in ${year}`,
+                    data: values,
+                    backgroundColor: "rgba(75, 192, 192, 0.6)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    // --------------------
+    // LOGIN HANDLER
+    // --------------------
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Login failed');
+        return res.json();
+      })
+      .then(data => {
+        if(data.success) {
+          localStorage.setItem('loggedIn', 'true');
+          document.getElementById('login').classList.add('hidden');
+          document.getElementById('appLayout').classList.remove('hidden');
+          loadContent('Dashboard');
+          alert('Logged in successfully!');
+        }
+      })
+      .catch(err => alert(err.message));
+    });
+
+    // --------------------
+    // LOGOUT FUNCTION
+    // --------------------
+    function logoutUser() {
+      const now = new Date().toLocaleString();
+      alert(`You have been logged out at: ${now}`);
+      localStorage.removeItem('loggedIn');
+      document.getElementById('appLayout').classList.add('hidden');
+      document.getElementById('login').classList.remove('hidden');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+
+    // --------------------
+    // LOAD CONTENT & DASHBOARD FUNCTIONS
+    // --------------------
+    function loadContent(page) {
+      document.getElementById('content-area').innerHTML = document.getElementById(page).innerHTML;
+      if(page === 'Dashboard') {
+        initCharts();
+        updateDashboardCounts();
+        fetchAttendanceReport();
+      }else if(page === 'attendance') {
+    // When the Attendance page is loaded, fetch attendance records
+    fetchAttendanceRecords();
+  }
+      attachFormHandlers();
+    }
+
+    // Update dashboard counts by fetching actual data
+    function updateDashboardCounts() {
+      fetch('http://localhost:5000/api/members')
+        .then(res => res.json())
+        .then(data => { document.getElementById('dashMembers').textContent = data.length; })
+        .catch(() => document.getElementById('dashMembers').textContent = 0);
+
+      fetch('http://localhost:5000/api/equipments')
+        .then(res => res.json())
+        .then(data => { document.getElementById('dashEquipment').textContent = data.length; })
+        .catch(() => document.getElementById('dashEquipment').textContent = 0);
+
+      fetch('http://localhost:5000/api/packages')
+        .then(res => res.json())
+        .then(data => { document.getElementById('dashPackages').textContent = data.length; })
+        .catch(() => document.getElementById('dashPackages').textContent = 0);
+
+      fetch('http://localhost:5000/api/trainers')
+        .then(res => res.json())
+        .then(data => { document.getElementById('dashTrainers').textContent = data.length; })
+        .catch(() => document.getElementById('dashTrainers').textContent = 0);
+    }
+
+    // --------------------
+    // CHARTS
+    // --------------------
+    let attendanceChart, totalReportsChart;
+async function initCharts() {
+  const attCtx = document.getElementById('attendanceChart');
+  if (!attCtx) return;
+  if (attendanceChart) attendanceChart.destroy();
+
+  // 1) Fetch Marked Attendance Data
+  const response = await fetch('http://localhost:5000/api/attendance/last-week-marked');
+  const attendanceData = await response.json();
+  console.log("📊 Marked Attendance Data:", attendanceData);
+
+  // Convert date strings to weekday names (e.g., Mon, Tue, etc.)
+  const labels = attendanceData.dates.map(dateStr => {
+    const dateObj = new Date(dateStr);
+    return dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+  });
+
+  // Create a bar chart with one dataset (Marked Attendance)
+  attendanceChart = new Chart(attCtx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Marked Attendance',
+          data: attendanceData.markedCounts,
+          backgroundColor: '#2196f3'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // Continue with the totalReportsChart initialization
+  const totalCtx = document.getElementById('totalReportsChart');
+  if (!totalCtx) return;
+  if (totalReportsChart) totalReportsChart.destroy();
+  const counts = await fetchCount();
+  totalReportsChart = new Chart(totalCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Packages', 'Members', 'Equipments', 'Trainers'],
+      datasets: [{
+        data: [counts.pc, counts.mc, counts.ec, counts.tc],
+        backgroundColor: ['#4caf50', '#ff9800', '#9c27b0', '#2685d9']
+      }]
+    },
+    options: { responsive: true }
+  });
+}
+
+
+    // --------------------
+    // FORM HANDLERS AND CLICKABLE HEADINGS
+    // --------------------
+    let originalTrainerHandler, originalMemberHandler, originalPackageHandler, originalEquipmentHandler;
+
+    function attachFormHandlers() {
+      // Trainer Form Submission
+      const trainerForm = document.getElementById('trainerForm');
+      if (trainerForm) {
+        originalTrainerHandler = trainerForm.onsubmit;
+        trainerForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          if(document.getElementById('trainerId') && document.getElementById('trainerId').value) return;
+          const formData = new FormData(trainerForm);
+          fetch('http://localhost:5000/api/trainers', {
+            method: 'POST',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Trainer added successfully!');
+              trainerForm.reset();
+              fetchTrainers();
+            } else { alert('Error adding trainer.'); }
+          })
+          .catch(err => alert(err.message));
+        });
+      }
+
+      // Member Form Submission
+      const memberForm = document.getElementById('memberForm');
+      if (memberForm) {
+        originalMemberHandler = memberForm.onsubmit;
+        memberForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          if(document.getElementById('memberId') && document.getElementById('memberId').value) return;
+          const formData = new FormData(memberForm);
+          fetch('http://localhost:5000/api/members', {
+            method: 'POST',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Member added successfully!');
+              memberForm.reset();
+              fetchMembers();
+            } else { alert('Error adding member.'); }
+          })
+          .catch(err => alert(err.message));
+        });
+      }
+
+      // Package Form Submission
+      const packageForm = document.getElementById('packageForm');
+      if (packageForm) {
+        originalPackageHandler = packageForm.onsubmit;
+        packageForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          if(document.getElementById('packageId') && document.getElementById('packageId').value) return;
+          const formData = new FormData(packageForm);
+          fetch('http://localhost:5000/api/packages', {
+            method: 'POST',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Package added successfully!');
+              packageForm.reset();
+              fetchPackages();
+            } else { alert('Error adding package.'); }
+          })
+          .catch(err => alert(err.message));
+        });
+      }
+
+      // Equipment Form Submission
+      const equipmentForm = document.getElementById('equipmentForm');
+      if (equipmentForm) {
+        originalEquipmentHandler = equipmentForm.onsubmit;
+        equipmentForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          if(document.getElementById('equipmentId') && document.getElementById('equipmentId').value) return;
+          const formData = new FormData(equipmentForm);
+          fetch('http://localhost:5000/api/equipments', {
+            method: 'POST',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Equipment added successfully!');
+              equipmentForm.reset();
+              fetchEquipment();
+            } else { alert('Error adding equipment.'); }
+          })
+          .catch(err => alert(err.message));
+        });
+      }
+
+      // Clickable headings to load lists
+      const trainerListHeading = document.getElementById('trainerListHeading');
+      if(trainerListHeading) { trainerListHeading.addEventListener('click', fetchTrainers); }
+      const memberListHeading = document.getElementById('memberListHeading');
+      if(memberListHeading) { memberListHeading.addEventListener('click', fetchMembers); }
+      const packageListHeading = document.getElementById('packageListHeading');
+      if(packageListHeading) { packageListHeading.addEventListener('click', fetchPackages); }
+      const equipmentListHeading = document.getElementById('equipmentListHeading');
+      if(equipmentListHeading) { equipmentListHeading.addEventListener('click', fetchEquipment); }
+      const enquiryListHeading = document.getElementById('enquiryListHeading');
+      if(enquiryListHeading) { enquiryListHeading.addEventListener('click', fetchEnquiry); }
+      const registrationListHeading = document.getElementById('registrationListHeading');
+      if(registrationListHeading) { registrationListHeading.addEventListener('click', fetchRegistration); }
+      const feedbackListHeading= document.getElementById('feedbackListHeading');
+      if(feedbackListHeading) { feedbackListHeading.addEventListener('click', loadFeedbackData); }
+    }
+
+    // --------------------
+// Attendance Functions for Admin Dashboard
+// --------------------
+
+// Fetch Attendance Records and populate the table
+// --------------------
+// Attendance Functions for Admin Dashboard
+// --------------------
+
+// Fetch Attendance Records and populate the table
+async function fetchAttendanceRecords() {
+  try {
+    const response = await fetch('http://localhost:5000/api/attendance/report');
+    const data = await response.json();
+    const tbody = document.getElementById('attendanceTableBody');
+    tbody.innerHTML = '';
+
+    // Combine member and trainer records into one array if needed
+    const records = (data.members || []).concat(data.trainers || []);
+    if (records.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">No attendance records available.</td></tr>';
+      return;
+    }
+
+    records.forEach(record => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${record.email}</td>
+        <td>${record.clockIn ? new Date(record.clockIn).toLocaleTimeString() : 'N/A'}</td>
+        <td>${record.clockOut ? new Date(record.clockOut).toLocaleTimeString() : 'N/A'}</td>
+        <td>
+          <button onclick="markAttendance('${record._id}', this)">Mark Attendance</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error("❌ Error fetching attendance records:", err);
+    alert("Error fetching attendance records. Please try again.");
+  }
+}
+
+// Mark Attendance for a record
+async function markAttendance(recordId, btnElement) {
+  if (!confirm("Do you want to mark this attendance?")) return;
+  try {
+    const response = await fetch(`http://localhost:5000/api/attendance/mark/${recordId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+    if (response.ok && data.success) {
+      btnElement.textContent = "Attendance Marked";
+      btnElement.style.backgroundColor = "green";
+      btnElement.disabled = true;
+      alert("Attendance marked successfully!");
+      // Optionally refresh the attendance table
+      fetchAttendanceRecords();
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    console.error("❌ Error marking attendance:", err);
+    alert("Error marking attendance. Please try again.");
+  }
+}
+
+
+
+    // --------------------
+    // Functions to fetch lists with Update/Delete buttons
+    // --------------------
+    function fetchTrainers() {
+      fetch('http://localhost:5000/api/trainers')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('trainerTableBody');
+        tbody.innerHTML = '';
+        if(data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7">No trainers added yet.</td></tr>';
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.name}</td>
+                             <td>${item.email}</td>
+                             <td>${item.specialization}</td>
+                             <td>${item.phone}</td>
+                             <td>${item.experience}</td>
+                             <td><img src="./uploads/trainer/${item.imageName}" alt="${item.imageName}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('trainer', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('trainer', '${item._id}')">Delete</button>
+                             </td>`;
+            tbody.appendChild(row);
+          });
+        }
+        updateDashboardCounts();
+      })
+      .catch(err => alert(err.message));
+    }
+
+    function fetchEnquiry() {
+      fetch('http://localhost:5000/api/enquiry')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('enquiryTableBody');
+        tbody.innerHTML = '';
+        if(data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7">No Enquiry added yet.</td></tr>';
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.name}</td>
+                             <td>${item.email}</td>
+                             <td>${item.phone}</td>
+                             <td>${item.message}</td>
+                             <td>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('enquiry', '${item._id}')">Delete</button>
+                             </td>`;
+            tbody.appendChild(row);
+          });
+        }
+      })
+      .catch(err => alert(err.message));
+    }
+
+    function fetchRegistration() {
+  fetch('http://localhost:5000/api/registrations')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('registrationTableBody');
+      tbody.innerHTML = '';
+
+      // ✅ Check if the response contains an array
+      if (!data.success || !Array.isArray(data.data)) {
+        console.error("❌ Unexpected API response format:", data);
+        tbody.innerHTML = '<tr><td colspan="10">Error fetching registrations.</td></tr>';
+        return;
+      }
+
+      if (data.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10">No registrations added yet.</td></tr>';
+      } else {
+        data.data.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${item.name}</td>
+                           <td>${item.email}</td>
+                           <td>${item.contactNo}</td>
+                           <td>${item.height}</td>
+                           <td>${item.weight}</td>
+                           <td>${item.timeSlot}</td>
+                           <td>${item.date}</td>
+                           <td>${item.gender}</td>
+                           <td>${item.plans}</td>
+                           <td>
+                              <button class="action-btn delete-btn" onclick="deleteEntity('registration', '${item._id}')">Delete</button>
+                           </td>`;
+          tbody.appendChild(row);
+        });
+      }
+    })
+    .catch(err => {console.error("❌ Fetch Error:", err);
+      alert("Error fetching registrations. Please try again.");
+    });
+    }
+
+    function fetchMembers() {
+      fetch('http://localhost:5000/api/members')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('memberTableBody');
+        tbody.innerHTML = '';
+        if(data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8">No members added yet.</td></tr>';
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.name}</td>
+                             <td>${item.email}</td>
+                             <td>${item.phone}</td>
+                             <td>${item.gender}</td>
+                             <td>${new Date(item.dob).toLocaleDateString()}</td>
+                             <td>${item.address}</td>
+                             <td>${item.imageName || 'No image'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('member', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('member', '${item._id}')">Delete</button>
+                             </td>`;
+            tbody.appendChild(row);
+          });
+        }
+        updateDashboardCounts();
+      })
+      .catch(err => alert(err.message));
+    }
+
+    function fetchPackages() {
+      fetch('http://localhost:5000/api/packages')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('packageTableBody');
+        tbody.innerHTML = '';
+        if(data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">No packages added yet.</td></tr>';
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.name}</td>
+                             <td>${item.duration}</td>
+                             <td>${item.price}</td>
+                             <td>${item.features}</td>
+                             <td>${item.imageName || 'No image'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('package', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('package', '${item._id}')">Delete</button>
+                             </td>`;
+            tbody.appendChild(row);
+          });
+        }
+        updateDashboardCounts();
+      })
+      .catch(err => alert(err.message));
+    }
+
+    function fetchEquipment() {
+      fetch('http://localhost:5000/api/equipments')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('equipmentTableBody');
+        tbody.innerHTML = '';
+        if(data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">No equipments added yet.</td></tr>';
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.name}</td>
+                             <td>${item.brand}</td>
+                             <td>${item.type}</td>
+                             <td>${item.count}</td>
+                             <td>${item.imageName || 'No image'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('equipment', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Update</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('equipment', '${item._id}')">Delete</button>
+                             </td>`;
+            tbody.appendChild(row);
+          });
+        }
+        updateDashboardCounts();
+      })
+      .catch(err => alert(err.message));
+    }
+
+    // --------------------
+    // Attendance Report Fetcher (for today's attendance)
+    // --------------------
+    function fetchAttendanceReport() {
+      fetch('http://localhost:5000/api/attendance/report')
+      .then(res => res.json())
+      .then(data => {
+        // Populate member attendance table
+        const mBody = document.getElementById('memberAttendanceBody');
+        mBody.innerHTML = '';
+        if(data.members.length === 0) {
+          mBody.innerHTML = '<tr><td colspan="4">No attendance records for today.</td></tr>';
+        } else {
+          data.members.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.email}</td>
+                             <td>${new Date(item.clockIn).toLocaleTimeString()}</td>
+                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('memberAttendance', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Approve</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('memberAttendance', '${item._id}')">Reject</button>
+                             </td>`;
+            mBody.appendChild(row);
+          });
+        }
+        // Populate trainer attendance table
+        const tBody = document.getElementById('trainerAttendanceBody');
+        tBody.innerHTML = '';
+        if(data.trainers.length === 0) {
+          tBody.innerHTML = '<tr><td colspan="4">No attendance records for today.</td></tr>';
+        } else {
+          data.trainers.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.email}</td>
+                             <td>${new Date(item.clockIn).toLocaleTimeString()}</td>
+                             <td>${item.clockOut ? new Date(item.clockOut).toLocaleTimeString() : 'N/A'}</td>
+                             <td>
+                               <button class="action-btn update-btn" onclick="updateEntity('trainerAttendance', '${item._id}', '${encodeURIComponent(JSON.stringify(item))}')">Approve</button>
+                               <button class="action-btn delete-btn" onclick="deleteEntity('trainerAttendance', '${item._id}')">Reject</button>
+                             </td>`;
+            tBody.appendChild(row);
+          });
+        }
+      })
+      .catch(err => alert("Error fetching attendance report: " + err.message));
+    }
+
+    async function fetchCount() {
+      try {
+        const response = await fetch('http://localhost:5000/api/counts');
+        if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
+        const data = await response.json();
+        return data;
+      } catch (err) {
+        console.error("Error fetching counts:", err.message);
+        return { error: err.message };
+      }
+    }
+
+    async function fetchAttendance() {
+      try {
+        const response = await fetch('http://localhost:5000/api/counts');
+        if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
+        const data = await response.json();
+        return data;
+      } catch (err) {
+        console.error("Error fetching counts:", err.message);
+        return { error: err.message };
+      }
+    }
+
+function loadFeedbackData() {
+  fetch('http://localhost:5000/api/feedbacks')
+    .then(response => response.json())
+    .then(data => {
+      let tableBody = document.getElementById('feedbackTableBody');
+      document.getElementById('feedbackChart').classList.remove('hidden')
+      tableBody.innerHTML = ''; // Clear previous data
+
+      if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6">No feedback available</td></tr>`;
+        return;
+      }
+      let totalCleanliness = 0, totalEquipment = 0, totalTrainer = 0;
+      let count = data.length;
+
+      data.forEach(feedback => {
+        totalCleanliness += feedback.cleanlinessRating;
+        totalEquipment += feedback.equipmentRating;
+        totalTrainer += feedback.trainerRating;
+        let row = `<tr>
+          <td>${feedback.firstName} ${feedback.lastName}</td>
+          <td>${feedback.email}</td>
+          <td>${feedback.cleanlinessRating}</td>
+          <td>${feedback.equipmentRating}</td>
+          <td>${feedback.trainerRating}</td>
+          <td>${feedback.comments || 'No Comments'}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+
+      let avgCleanliness = (totalCleanliness / count).toFixed(2);
+      let avgEquipment = (totalEquipment / count).toFixed(2);
+      let avgTrainer = (totalTrainer / count).toFixed(2);
+
+      renderChart(avgCleanliness, avgEquipment, avgTrainer);
+    })
+    .catch(error => console.error('Error fetching feedback:', error));
+
+    function renderChart(cleanliness, equipment, trainer) {
+            let ctx = document.getElementById('feedbackChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Cleanliness', 'Equipment', 'Trainer'],
+                    datasets: [{
+                        label: 'Average Ratings',
+                        data: [cleanliness, equipment, trainer],
+                        backgroundColor: ['#4CAF50', '#FF9800', '#2196F3'],
+                        borderColor: ['#388E3C', '#F57C00', '#1976D2'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            });
+        }
+}
+
+
+
+
+
+    // --------------------
+    // DELETE and UPDATE FUNCTIONS
+    // --------------------
+    function deleteEntity(entity, id) {
+      if (confirm("Do you really want to delete?")) {
+        fetch(`http://localhost:5000/api/${entity}s/${id}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(data => {
+          if(data.success) {
+            alert(`${entity} deleted successfully!`);
+            if(entity === 'trainer') fetchTrainers();
+            else if(entity === 'member') fetchMembers();
+            else if(entity === 'package') fetchPackages();
+            else if(entity === 'equipment') fetchEquipment();
+            else if(entity === 'enquiry') fetchEnquiry();
+            else if(entity === 'attendance') fetchAttendanceReport();
+          } else {
+            alert(`Error deleting ${entity}.`);
+          }
+        })
+        .catch(err => alert(err.message));
+      }
+    }
+
+    function updateEntity(entity, id, itemEncoded) {
+      const item = JSON.parse(decodeURIComponent(itemEncoded));
+      if(entity === 'trainer') {
+        const trainerForm = document.getElementById('trainerForm');
+        trainerForm.trainerName.value = item.name;
+        trainerForm.trainerEmail.value = item.email;
+        trainerForm.trainerSpecialization.value = item.specialization;
+        trainerForm.trainerPhone.value = item.phone;
+        trainerForm.trainerExperience.value = item.experience;
+        let trainerIdInput = document.getElementById('trainerId');
+        if(!trainerIdInput) {
+          trainerIdInput = document.createElement('input');
+          trainerIdInput.type = 'hidden';
+          trainerIdInput.id = 'trainerId';
+          trainerIdInput.name = 'trainerId';
+          trainerForm.appendChild(trainerIdInput);
+        }
+        trainerIdInput.value = id;
+        trainerForm.querySelector('button[type="submit"]').textContent = "Update";
+        trainerForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(trainerForm);
+          fetch(`http://localhost:5000/api/trainers/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Trainer updated successfully!');
+              trainerForm.reset();
+              trainerForm.querySelector('button[type="submit"]').textContent = "Submit";
+              trainerIdInput.value = '';
+              trainerForm.onsubmit = originalTrainerHandler;
+              fetchTrainers();
+            } else { alert('Error updating trainer.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
+      else if(entity === 'member') {
+        const memberForm = document.getElementById('memberForm');
+        memberForm.memberName.value = item.name;
+        memberForm.memberEmail.value = item.email;
+        memberForm.memberPhone.value = item.phone;
+        memberForm.memberGender.value = item.gender;
+        memberForm.memberDOB.value = item.dob ? new Date(item.dob).toISOString().split('T')[0] : '';
+        memberForm.memberAddress.value = item.address;
+        let memberIdInput = document.getElementById('memberId');
+        if(!memberIdInput) {
+          memberIdInput = document.createElement('input');
+          memberIdInput.type = 'hidden';
+          memberIdInput.id = 'memberId';
+          memberIdInput.name = 'memberId';
+          memberForm.appendChild(memberIdInput);
+        }
+        memberIdInput.value = id;
+        memberForm.querySelector('button[type="submit"]').textContent = "Update";
+        memberForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(memberForm);
+          fetch(`http://localhost:5000/api/members/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Member updated successfully!');
+              memberForm.reset();
+              memberForm.querySelector('button[type="submit"]').textContent = "Submit";
+              memberIdInput.value = '';
+              memberForm.onsubmit = originalMemberHandler;
+              fetchMembers();
+            } else { alert('Error updating member.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
+      else if(entity === 'package') {
+        const packageForm = document.getElementById('packageForm');
+        packageForm.packageName.value = item.name;
+        packageForm.packageDuration.value = item.duration;
+        packageForm.packagePrice.value = item.price;
+        packageForm.packageFeatures.value = item.features;
+        let packageIdInput = document.getElementById('packageId');
+        if(!packageIdInput) {
+          packageIdInput = document.createElement('input');
+          packageIdInput.type = 'hidden';
+          packageIdInput.id = 'packageId';
+          packageIdInput.name = 'packageId';
+          packageForm.appendChild(packageIdInput);
+        }
+        packageIdInput.value = id;
+        packageForm.querySelector('button[type="submit"]').textContent = "Update";
+        packageForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(packageForm);
+          fetch(`http://localhost:5000/api/packages/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Package updated successfully!');
+              packageForm.reset();
+              packageForm.querySelector('button[type="submit"]').textContent = "Submit";
+              packageIdInput.value = '';
+              packageForm.onsubmit = originalPackageHandler;
+              fetchPackages();
+            } else { alert('Error updating package.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
+      else if(entity === 'equipment') {
+        const equipmentForm = document.getElementById('equipmentForm');
+        equipmentForm.equipmentName.value = item.name;
+        equipmentForm.equipmentBrand.value = item.brand;
+        equipmentForm.equipmentType.value = item.type;
+        equipmentForm.equipmentCount.value = item.count;
+        let equipmentIdInput = document.getElementById('equipmentId');
+        if(!equipmentIdInput) {
+          equipmentIdInput = document.createElement('input');
+          equipmentIdInput.type = 'hidden';
+          equipmentIdInput.id = 'equipmentId';
+          equipmentIdInput.name = 'equipmentId';
+          equipmentForm.appendChild(equipmentIdInput);
+        }
+        equipmentIdInput.value = id;
+        equipmentForm.querySelector('button[type="submit"]').textContent = "Update";
+        equipmentForm.onsubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(equipmentForm);
+          fetch(`http://localhost:5000/api/equipments/${id}`, {
+            method: 'PUT',
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            if(data.success) {
+              alert('Equipment updated successfully!');
+              equipmentForm.reset();
+              equipmentForm.querySelector('button[type="submit"]').textContent = "Submit";
+              equipmentIdInput.value = '';
+              equipmentForm.onsubmit = originalEquipmentHandler;
+              fetchEquipment();
+            } else { alert('Error updating equipment.'); }
+          })
+          .catch(err => alert(err.message));
+        }
+      }
+    }
+
+    // On page load, check login state and show appropriate layout
+    window.onload = function() {
+      if(localStorage.getItem('loggedIn') === 'true') {
+        document.getElementById('login').classList.add('hidden');
+        document.getElementById('appLayout').classList.remove('hidden');
+        loadContent('Dashboard');
+      } else {
+        document.getElementById('login').classList.remove('hidden');
+        document.getElementById('appLayout').classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

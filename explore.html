@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: #111;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .services-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .service-card {
+            background: #222;
+            width: 300px;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 8px 15px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .service-card:hover {
+            transform: scale(1.07);
+            box-shadow: 0 8px 20px rgba(8, 84, 1, 0.6);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 90%;
+            object-fit: cover;
+            filter: brightness(80%);
+        }
+
+        .service-card h2 {
+            font-size: 1.3em;
+            padding: 15px;
+            background: #333;
+            color: white;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 500px;
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease-in-out;
+            text-align: left;
+            z-index: 1000;
+            color: white;
+        }
+
+        .modal.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal li {
+            background: #333;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .services-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .modal {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Our Services</h1>
+
+    <div class="services-container">
+        <div class="service-card" onclick="showDetails('Gym', ['Dumbbells', 'Treadmills', 'Bench Press'])">
+            <img src="https://strengthgym.in/wp-content/uploads/2024/02/gym2-1.jpg" alt="Gym">
+            <h2>Gym</h2>
+        </div>
+
+        <div class="service-card" onclick="showDetails('Cardio', ['Elliptical Machine', 'Stationary Bike', 'Rowing Machine'])">
+            <img src="https://strengthgym.in/wp-content/uploads/2024/02/cardio2.jpg" alt="Cardio">
+            <h2>Cardio</h2>
+        </div>
+
+        <div class="service-card" onclick="showDetails('Sauna', ['Dry Sauna', 'Infrared Sauna', 'Herbal Sauna'])">
+            <img src="https://strengthgym.in/wp-content/uploads/2024/02/sauna-1.jpg" alt="Sauna">
+            <h2>Sauna</h2>
+        </div>
+
+        <div class="service-card" onclick="showDetails('Steam Room', ['Hot Steam Therapy', 'Aromatherapy Steam'])">
+            <img src="https://strengthgym.in/wp-content/uploads/2024/02/sauna2.jpg" alt="Steam Room">
+            <h2>Steam Room</h2>
+        </div>
+
+        <div class="service-card" onclick="showDetails('Ice Bath', ['Cold Plunge Pool', 'Cryotherapy Tub'])">
+            <img src="https://strengthgym.in/wp-content/uploads/2024/02/ice-bath.jpg" alt="Ice Bath">
+            <h2>Ice Bath</h2>
+        </div>
+
+        <div class="service-card" onclick="showDetails('Aqua Rehab Therapy', ['Hydrotherapy Pool', 'Underwater Treadmill'])">
+            <img src="https://strengthgym.in/wp-content/uploads/2024/02/aqua.jpg" alt="Aqua Rehab Therapy">
+            <h2>Aqua Rehab Therapy</h2>
+        </div>
+
+        <div class="service-card" onclick="showDetails('Personal Training', ['One-on-One Coaching', 'Fitness Assessment'])">
+            <img src="https://strengthgym.in/wp-content/uploads/2024/02/personal-traning.jpg" alt="Personal Training">
+            <h2>Personal Training</h2>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <h2 id="modal-title">Service Details</h2>
+        <ul id="modal-list"></ul>
+        <button onclick="closeModal()">Back</button>
+    </div>
+
+    <div id="overlay" class="overlay" onclick="closeModal()"></div>
+
+    <script>
+        function showDetails(title, items) {
+            document.getElementById("modal-title").innerText = title;
+            const list = document.getElementById("modal-list");
+            list.innerHTML = "";
+            items.forEach(item => {
+                let li = document.createElement("li");
+                li.innerText = item;
+                li.onclick = () => alert(item + " clicked!");
+                list.appendChild(li);
+            });
+            document.getElementById("modal").classList.add("active");
+            document.getElementById("overlay").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("modal").classList.remove("active");
+            document.getElementById("overlay").classList.remove("active");
+        }
+    </script>
+</body>
+</html>

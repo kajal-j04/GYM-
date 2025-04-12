@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gym Gallery - Single Color Theme</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      color: #000;
+      line-height: 1.6;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px 0;
+    }
+    /* Header */
+    header {
+      background: #29a396;
+      text-align: center;
+      padding: 20px 0;
+      color: #fff;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 300px;
+      background: url('https://source.unsplash.com/1200x300/?gym') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: rgba(0,0,0,0.5);
+    }
+    .hero h2 {
+      position: relative;
+      font-size: 2.5rem;
+      text-align: center;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    }
+    /* Filter Navigation */
+    .filter-nav {
+      text-align: center;
+      margin: px 0;
+    }
+    .filter-nav button {
+      background: #29a396;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 0px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    .filter-nav button:hover,
+    .filter-nav button.active {
+      opacity: 0.8;
+    }
+    /* Gallery Grid */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      padding: 40px 0;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: zoomIn 0.8s ease forwards;
+    }
+    /* Stagger animation delays */
+    .gallery-item:nth-child(1) { animation-delay: 0.2s; }
+    .gallery-item:nth-child(2) { animation-delay: 0.4s; }
+    .gallery-item:nth-child(3) { animation-delay: 0.6s; }
+    .gallery-item:nth-child(4) { animation-delay: 0.8s; }
+    .gallery-item:nth-child(5) { animation-delay: 1s; }
+    .gallery-item:nth-child(6) { animation-delay: 1.2s; }
+    @keyframes zoomIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .gallery-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+    .gallery-item::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(41,163,150,0.3);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .gallery-item:hover::after {
+      opacity: 1;
+    }
+    /* Modal Lightbox */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      animation: modalOpen 0.5s ease forwards;
+    }
+    @keyframes modalOpen {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+    /* Footer */
+    footer {
+      background: #29a396;
+      text-align: center;
+      padding: 20px 0;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      .hero h2 { font-size: 2rem; }
+      header h1 { font-size: 1.8rem; }
+    }
+    .gallery-item img {
+            width: 50%; /* ✅ Make images fill the grid cell */
+            height: 250px; /* ✅ Set fixed height */
+            object-fit: cover; /* ✅ Crop images properly */
+            border-radius: 8px;
+            display: block;
+        }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <h1>Gym Gallery</h1>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h2>Our Gym Moments</h2>
+    </div>
+  </section>
+
+  <!-- Filter Navigation -->
+  <div class="container filter-nav">
+    <button data-filter="all" class="active">All</button>
+    <button data-filter="equipment">Equipment</button>
+    <button data-filter="infrastructure">Infrastructure</button>
+  </div>
+
+  <!-- Gallery Grid -->
+  <section class="container">
+    <div class="gallery">
+      <!-- Equipment items -->
+      <div class="gallery-item" data-category="equipment">
+        <img src="https://www.puregym.com/media/dyjpjkhu/guildford202411_062.jpg?quality=80&width=640" alt="Gym Equipment">
+      </div>
+      <div class="gallery-item" data-category="equipment">
+        <img src="https://media.gettyimages.com/id/625739874/photo/heavy-weight-exercise.jpg?s=612x612&w=0&k=20&c=B1uzJW1DBei2Rx5hnt139tt9dt3L7TbKrpgwbMR-LrI=" alt="Weights">
+      </div>
+      <div class="gallery-item" data-category="equipment">
+        <img src="https://media.gettyimages.com/id/80488814/photo/treadmills-in-a-row.jpg?s=612x612&w=0&k=20&c=_nDKxbnJVazDDztmTDOO884wCJrqkJi0WefbLC2T1Ac=" alt="Treadmill">
+      </div>
+      <!-- Infrastructure items -->
+      <div class="gallery-item" data-category="infrastructure">
+        <img src="https://mir-s3-cdn-cf.behance.net/project_modules/1400_opt_1/07809680778075.5ceb8de9554ef.jpg" alt="Gym Interior">
+      </div>
+      <div class="gallery-item" data-category="infrastructure">
+        <img src="https://antonovich-design.com/uploads/gallery/2022/5/2022KGrx71Dtlk5k.jpg" alt="Gym Architecture">
+      </div>
+      <div class="gallery-item" data-category="infrastructure">
+        <img src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/c47ef680778075.5ceb8de95529e.jpg" alt="Gym Facility">
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Lightbox -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <img src="" alt="Enlarged Image" id="modalImg">
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Gym Gallery. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+      async function fetchEquipmentImages() {
+        try {
+          const response = await fetch('http://localhost:5000/api/equipments');
+          const equipments = await response.json();
+          const gallery = document.getElementsByClassName('gallery')[0];
+          // gallery.innerHTML = ''; // ✅ Clear gallery before appending new images
+          equipments.forEach(equip => {
+            const div = document.createElement('div');
+            div.classList.add('gallery-item');
+            div.setAttribute('data-category', 'equipment'); // Set data-category dynamically
+            div.innerHTML = `<img src="/uploads/equipment/${equip.imageName}" alt="Uploaded Image">`;
+            gallery.appendChild(div);
+          });
+        } catch (error) {
+          console.error('Error loading images:', error);
+        }
+      }
+    // Filtering Functionality
+    const filterButtons = document.querySelectorAll('.filter-nav button');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        fetchEquipmentImages();
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        const filterValue = button.getAttribute('data-filter');
+        galleryItems.forEach(item => {
+          if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+            item.style.display = 'block';
+            item.style.animation = 'none';
+            setTimeout(() => { item.style.animation = ''; }, 10);
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Modal Lightbox Functionality
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const closeModal = document.getElementById('closeModal');
+
+    galleryItems.forEach(item => {
+      item.addEventListener('click', () => {
+        modalImg.src = item.querySelector('img').src;
+        modal.style.display = 'flex';
+      });
+    });
+    
+
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

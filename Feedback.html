@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Form</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #141615;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      width: 1000px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.2);
+      background-color: white;
+      color: black;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .form-section {
+      display: none;
+      width: 100%;
+    }
+    .active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .button-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 15px;
+    }
+    button {
+      padding: 12px 24px;
+      border: none;
+      background-color: #3be0c4;
+      color: black;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+    input, select, textarea {
+      padding: 12px;
+      margin: 6px 0;
+      width: 85%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f2f2f2;
+      color: black;
+      font-size: 16px;
+    }
+    h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    label {
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .stars {
+      display: flex;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .stars span {
+      font-size: 30px;
+      color: gray;
+    }
+    .stars span.filled {
+      color: gold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="form-section active" id="step1">
+      <h2>Submit Your Feedback</h2>
+      <p>Please fill in this form to let us know what you think about our services and help us improve your experience.</p>
+      <div class="button-container">
+        <button onclick="nextStep(2)">Next</button>
+      </div>
+    </div>
+
+    <div class="form-section" id="step2">
+      <h2>Your Information</h2>
+      <label for="first-name">First Name *</label>
+      <input type="text" id="first-name" placeholder="Enter your first name">
+      <label for="last-name">Last Name *</label>
+      <input type="text" id="last-name" placeholder="Enter your last name">
+      <label for="email">What’s your email? *</label>
+      <input type="email" id="email" placeholder="Ex. username@email.com">
+      <div class="button-container">
+        <button onclick="prevStep(1)">Previous</button>
+        <button onclick="nextStep(3)">Next</button>
+      </div>
+    </div>
+
+    <div class="form-section" id="step3">
+      <h3>Please rate the cleanliness of our gym *</h3>
+      <div class="stars" id="rating1">
+        <span onclick="rate(this, 'rating1')">&#9733;</span>
+        <span onclick="rate(this, 'rating1')">&#9733;</span>
+        <span onclick="rate(this, 'rating1')">&#9733;</span>
+        <span onclick="rate(this, 'rating1')">&#9733;</span>
+        <span onclick="rate(this, 'rating1')">&#9733;</span>
+      </div>
+      <h3>How would you rate the quality of gym equipment? *</h3>
+      <div class="stars" id="rating2">
+        <span onclick="rate(this, 'rating2')">&#9733;</span>
+        <span onclick="rate(this, 'rating2')">&#9733;</span>
+        <span onclick="rate(this, 'rating2')">&#9733;</span>
+        <span onclick="rate(this, 'rating2')">&#9733;</span>
+        <span onclick="rate(this, 'rating2')">&#9733;</span>
+      </div>
+      <h3>How satisfied are you with our trainers' assistance? *</h3>
+      <div class="stars" id="rating3">
+        <span onclick="rate(this, 'rating3')">&#9733;</span>
+        <span onclick="rate(this, 'rating3')">&#9733;</span>
+        <span onclick="rate(this, 'rating3')">&#9733;</span>
+        <span onclick="rate(this, 'rating3')">&#9733;</span>
+        <span onclick="rate(this, 'rating3')">&#9733;</span>
+      </div>
+      <div class="button-container">
+        <button onclick="prevStep(2)">Previous</button>
+        <button onclick="nextStep(4)">Next</button>
+      </div>
+    </div>
+
+    <div class="form-section" id="step4">
+      <h2>Additional Comments</h2>
+      <textarea id="comment" rows="4" cols="30" placeholder="Your feedback..."></textarea>
+      <div class="button-container">
+        <button onclick="prevStep(3)">Previous</button>
+        <button onclick="submitForm()">Submit</button>
+      </div>
+    </div>
+
+    <div class="form-section" id="thankYou">
+      <h2>Thank You!</h2>
+      <p>Your feedback has been submitted successfully.</p>
+    </div>
+  </div>
+
+  <script>
+    function nextStep(step) {
+      document.querySelector('.active').classList.remove('active');
+      document.getElementById('step' + step).classList.add('active');
+    }
+
+    function prevStep(step) {
+      document.querySelector('.active').classList.remove('active');
+      document.getElementById('step' + step).classList.add('active');
+    }
+
+    function submitForm() {
+      document.querySelector('.active').classList.remove('active');
+      document.getElementById('thankYou').classList.add('active');
+      addFeeback();
+    }
+
+    function rate(star, group) {
+      let stars = document.getElementById(group).querySelectorAll('span');
+      let index = Array.from(stars).indexOf(star);
+      stars.forEach((s, i) => {
+        s.classList.toggle('filled', i <= index);
+      });
+      localStorage.setItem(group, index + 1);
+    }
+
+    function addFeeback() {
+      const firstName = document.getElementById("first-name").value;
+      const lastName = document.getElementById("last-name").value;
+      const email = document.getElementById("email").value;
+      const cleanlinessRating = localStorage.getItem("rating1");
+      const equipmentRating = localStorage.getItem("rating2");
+      const trainerRating = localStorage.getItem("rating3");
+      const comments = document.getElementById("comment").value;
+
+      const fb = {
+        firstName,
+        lastName,
+        email,
+        cleanlinessRating,
+        equipmentRating,
+        trainerRating,
+        comments
+      };
+
+      // Updated URL to match the backend route (/api/feedback)
+      fetch('http://localhost:5000/api/feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(fb),
+      })
+      .then(response => response.json())
+      .then(data => {
+          alert("Feedback successfully created!");
+          // If your backend returns a redirect flag, handle it here:
+          if (data.redirect) {
+              window.location.href = "dashboard.html"; // Redirect to dashboard
+          }
+      })
+      .catch(err => {
+          console.error(err);
+          alert("Successfully Submitted");
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalyan's GYM</title>
+    <link rel="stylesheet" href="weight track.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="heading">Minnat Vigour Gym</h1>
+    </header>
+
+    <div class="container glass">
+        <div class="slider"></div>
+        <div class="btn">
+            <button id="toggleFormBtn" class="Register">Track Your Weight</button>
+        </div>
+
+        <div class="form-section" id="formSection">
+            <form id="weightForm" class="register-box">
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" id="fullName" class="ele" placeholder="Enter Full Name" required>
+                </div>
+
+                <!-- Email ID -->
+                <div class="form-group">
+                    <label for="emailID" class="form-label">Email ID</label>
+                    <input type="email" id="emailID" class="ele" placeholder="Enter Email ID" required>
+                </div>
+
+                <!-- Current Weight -->
+                <div class="form-group">
+                    <label for="currentWeight" class="form-label">Current Weight (kg)</label>
+                    <input type="number" id="currentWeight" class="ele" placeholder="Enter Current Weight" step="0.01" required>
+                </div>
+
+                <!-- Target Weight -->
+                <div class="form-group">
+                    <label for="targetWeight" class="form-label">Target Weight (kg)</label>
+                    <input type="number" id="targetWeight" class="ele" placeholder="Enter Target Weight" step="0.01" required>
+                </div>
+
+                <!-- Time Period of Every Measurement -->
+                <div class="form-group">
+                    <label for="timePeriod" class="form-label">Time Period of Every Measurement</label>
+                    <select id="timePeriod" class="ele" required>
+                        <option value="" disabled selected>Select Time Period</option>
+                        <option value="One Week">One Week</option>
+                        <option value="15 Days">15 Days</option>
+                        <option value="One Month">One Month</option>
+                    </select>
+                </div>
+
+                <!-- Previous Weight Entries -->
+                <div class="form-group">
+                    <label for="previousWeightEntries" class="form-label">Previous Weight Entries</label>
+                    <textarea id="previousWeightEntries" class="ele" placeholder="Enter Previous Weight Entries" required></textarea>
+                </div>
+
+                <!-- Button -->
+                <button type="submit" class="clkbtn">Track</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="weight track.js"></script>
+</body>
+
+</html>

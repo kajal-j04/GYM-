@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Our Professional Trainers</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px 0;
+    }
+    /* Header */
+    header {
+      background: #29a396;
+      text-align: center;
+      padding: 20px 0;
+      color: #fff;
+      animation: fadeInDown 1s ease forwards;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 300px;
+      background: url('https://source.unsplash.com/1200x300/?fitness,trainer') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: rgba(0,0,0,0.5);
+    }
+    .hero h2 {
+      position: relative;
+      font-size: 2.5rem;
+      text-align: center;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+      animation: slideInDown 1s ease forwards;
+    }
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Trainers Grid */
+    .trainers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px 0;
+    }
+    .trainer-card {
+      background: #fff;
+      border: 1px solid #29a396;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(41,163,150,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    .trainer-card:nth-child(1) { animation-delay: 0.2s; }
+    .trainer-card:nth-child(2) { animation-delay: 0.4s; }
+    .trainer-card:nth-child(3) { animation-delay: 0.6s; }
+    .trainer-card:nth-child(4) { animation-delay: 0.8s; }
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .trainer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(41,163,150,0.4);
+    }
+    .trainer-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+    .trainer-card:hover img {
+      transform: scale(1.05);
+    }
+    .trainer-card h3 {
+      margin: 15px 0 5px;
+      font-size: 1.2rem;
+      color: #29a396;
+    }
+    .trainer-card p {
+      font-size: 1rem;
+      color: #666;
+      line-height: 1.5;
+    }
+    .trainer-card a {
+      display: inline-block;
+      margin-top: 10px;
+      background: #29a396;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 25px;
+      transition: background 0.3s ease;
+      text-decoration: none;
+    }
+    .trainer-card a:hover {
+      background: #2ecc71;
+    }
+    /* Modal Lightbox for Trainer Details */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      position: relative;
+      max-width: 600px;
+      max-height: 90%;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      animation: modalOpen 0.5s ease forwards;
+    }
+    @keyframes modalOpen {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+    .trainer-info {
+      text-align: left;
+      padding: 10px 0;
+    }
+    .trainer-info h3 {
+      font-size: 1.5rem;
+      color: #29a396;
+      margin-bottom: 10px;
+    }
+    .trainer-info p {
+      font-size: 1rem;
+      color: #333;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 2rem;
+      color: #333;
+      cursor: pointer;
+    }
+    /* Footer */
+    footer {
+      background: #29a396;
+      text-align: center;
+      padding: 20px 0;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      .hero h2 { font-size: 2rem; }
+      header h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <h1>Our Professional Trainers</h1>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h2 id="heroText">Meet Our Trainers</h2>
+    </div>
+  </section>
+
+  <!-- Trainers Grid (Dynamic) -->
+  <section class="container">
+    <div class="trainers" id="trainers"></div>
+  </section>
+
+  <!-- Modal Lightbox for Trainer Details -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <img src="" alt="Trainer Image" id="modalImg">
+      <div class="trainer-info">
+        <h3 id="modalName">Trainer Name</h3>
+        <p id="modalDesc">Trainer description goes here. This is a brief bio of the professional trainer, including their specialization and training philosophy.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; Minnat Vigour Gym</p>
+    </div>
+  </footer>
+
+  <script>
+    // Array of dynamic trainer data
+    const trainersData = [
+      {
+        name: "Sumaiya Shaikh",
+        specialization: "International Athle in MMA",
+        image: "https://tse2.mm.bing.net/th?id=OIP.IIjz-w0Gmft8WFBr_l4EJwHaE7&pid=Api&P=0&h=220",
+        description: "Sumaiya Shaikh, our founder and owner, is an international athlete and a master in taekwondo, kickboxing, and MMA. As President of an Arm-Wrestling Organization, she brings passion, expertise, and inspiring leadership to every training session."
+      },
+      {
+        name: "Huda Shaikh",
+        specialization: "Taekwondo-kick boxing Instructor International Athlete",
+        image: "https://tse1.mm.bing.net/th?id=OIP.6oBIZ2AnHsHLwr-b6uDHXwHaE8&pid=Api&P=0&h=220",
+        description: "Huda Shaikh, our co-owner and certified fitness trainer, is a powerhouse in taekwondo and kickboxing. As an international athlete, she brings unparalleled energy and expertise to inspire you every step of the way."
+      },
+      {
+        name: "Mohan",
+        specialization: "High-Intensity Training",
+        image: "https://tse3.mm.bing.net/th?id=OIP.j1_hHcSBZHLY3lWMaE2x_QHaE8&pid=Api&P=0&h=220",
+        description: "Mohan is an expert in HIIT workouts designed to maximize calorie burn and boost performance."
+      },
+      {
+        name: "Shifa Shaikh",
+        specialization: " Co-owner & Zumba Trainer",
+        image: "https://tse2.mm.bing.net/th?id=OIP.ST07jMwpb70x_BaT13QesQHaE8&pid=Api&P=0&h=220",
+        description: "Shifa Shaikh is a dynamic and passionate Zumba Trainer with years of experience in high-energy dance workouts. As a co-owner, she plays a pivotal role in shaping the fitness culture at our studio, inspiring members to embrace a fun, active lifestyle. Her innovative routines and infectious enthusiasm make every class an engaging and transformative experience."
+      }
+    ];
+
+    const trainersContainer = document.getElementById("trainers");
+
+    // Function to render trainer cards dynamically
+    function renderTrainers(data) {
+      trainersContainer.innerHTML = "";
+      data.forEach((trainer, index) => {
+        const card = document.createElement("div");
+        card.className = "trainer-card";
+        card.style.animationDelay = (0.2 + index * 0.2) + "s";
+        card.innerHTML = `
+          <img src="${trainer.image}" alt="${trainer.name}">
+          <h3>${trainer.name}</h3>
+          <p>${trainer.specialization}</p>
+        `;
+        trainersContainer.appendChild(card);
+      });
+      addModalListeners();
+    }
+    // Initial render
+    renderTrainers(trainersData);
+
+    // Modal Lightbox Functionality for Trainer Details
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modalImg");
+    const modalName = document.getElementById("modalName");
+    const modalDesc = document.getElementById("modalDesc");
+    const closeModal = document.getElementById("closeModal");
+
+    function addModalListeners() {
+      const trainerCards = document.querySelectorAll(".trainer-card");
+      trainerCards.forEach((card, index) => {
+        card.addEventListener("click", () => {
+          const trainer = trainersData[index];
+          modalImg.src = trainer.image;
+          modalName.textContent = trainer.name;
+          modalDesc.textContent = trainer.description;
+          modal.style.display = "flex";
+        });
+      });
+    }
+
+    closeModal.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+
+    // Dynamic Hero Text Rotation
+    const heroText = document.getElementById("heroText");
+    const heroMessages = [
+      "Meet Our Trainers",
+      "Our Expert Coaches",
+      "Professional & Passionate",
+      "Achieve Your Fitness Goals"
+    ];
+    let heroIndex = 0;
+    setInterval(() => {
+      heroIndex = (heroIndex + 1) % heroMessages.length;
+      heroText.textContent = heroMessages[heroIndex];
+    }, 3000);
+  </script>
+</body>
+</html>

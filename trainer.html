@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Members Only Workout Plan</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Animate.css for animations -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    /* Global Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Roboto', sans-serif; background: #f4f4f4; color: #333; padding: 20px; }
+    header { background: #29a396; color: #fff; padding: 20px; text-align: center; margin-bottom: 20px; }
+    header h1 { margin-bottom: 5px; }
+    .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .login, .plan { margin-top: 20px; }
+    .login input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    .login button { background: #29a396; color: #fff; border: none; padding: 10px; border-radius: 4px; cursor: pointer; }
+    .login button:hover { background: #1e7a63; }
+    .error-message { color: red; margin-bottom: 10px; }
+    .plan h2 { margin-bottom: 10px; color: #29a396; }
+    .exercise { padding: 10px; border-bottom: 1px solid #ddd; }
+    .exercise:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <header class="animate__animated animate__fadeInDown">
+    <h1>Members Only Workout Plan</h1>
+    <p>Exclusive workout plan for our gym members</p>
+  </header>
+
+  <div class="container">
+    <!-- Login Section -->
+    <div id="loginSection" class="login animate__animated animate__fadeIn">
+      <h2>Member Login</h2>
+      <div id="loginError" class="error-message"></div>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button id="loginBtn">Login</button>
+    </div>
+    
+    <!-- Workout Plan Section (Hidden until login) -->
+    <div id="planSection" class="plan" style="display:none;">
+      <h2>Your Workout Plan</h2>
+      <div id="planContent">
+        <p>No workout plan available. Please contact your trainer.</p>
+      </div>
+      <!-- For demo, a button to simulate fetching plan from backend -->
+      <button id="loadPlanBtn">Load My Workout Plan</button>
+    </div>
+  </div>
+  
+  <script>
+    // Dummy authentication credentials
+    const validUsername = "member";
+    const validPassword = "gym123";
+    
+    // Elements
+    const loginSection = document.getElementById('loginSection');
+    const planSection = document.getElementById('planSection');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+    const loadPlanBtn = document.getElementById('loadPlanBtn');
+    const planContent = document.getElementById('planContent');
+    
+    // Login button click event
+    loginBtn.addEventListener('click', function() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      
+      // Dummy validation
+      if(username === validUsername && password === validPassword) {
+        // Successful login: hide login section and show plan section with animation
+        loginSection.style.display = 'none';
+        planSection.style.display = 'block';
+        planSection.classList.add('animate__fadeIn');
+      } else {
+        loginError.textContent = "Invalid username or password.";
+      }
+    });
+    
+    // Load workout plan button click event
+    loadPlanBtn.addEventListener('click', function() {
+      // Simulate fetching data from backend
+      // In production, use fetch() to get the workout plan from your backend endpoint.
+      fetch('http://localhost:3000/save-workout-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // For demonstration, we send a dummy plan object
+        body: JSON.stringify({
+          title: "Morning Burn",
+          exercises: [
+            { type: "Cardio", name: "Running", duration: 30, notes: "Warm up first" },
+            { type: "Strength", name: "Push-ups", duration: 15, notes: "3 sets" }
+          ]
+        })
+      })
+      .then(response => {
+        if(response.status === 201 || response.status === 200) {
+          return response.json();
+        } else {
+          throw new Error("Failed to load plan.");
+        }
+      })
+      .then(data => {
+        // Display the plan dynamically with animation
+        planContent.innerHTML = `<h3>${data.title}</h3>`;
+        data.exercises.forEach((ex, index) => {
+          const exDiv = document.createElement('div');
+          exDiv.className = 'exercise animate__animated animate__fadeIn';
+          exDiv.innerHTML = `<strong>${index + 1}. ${ex.name}</strong> (${ex.type}) - ${ex.duration} mins
+                             ${ex.notes ? `<br><em>Notes: ${ex.notes}</em>` : ''}`;
+          planContent.appendChild(exDiv);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        planContent.innerHTML = `<p style="color:red;">Error loading workout plan. Please try again later.</p>`;
+      });
+    });
+  </script>
+</body>
+</html>

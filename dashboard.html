@@ -4,35 +4,57 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gym management system</title>
+    <title>Minnat Vigour Gym</title>
+    <script src="https://kit.fontawesome.com/a73143bbc5.js" crossorigin="anonymous"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
-   
   </head>
-  
-  <body>
+<!-- Inquiry Form Popup -->
+<div id="inquiryModal" class="modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Enquiry Form</h2>
+      <form id="inquiryForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+          <small id="nameError" class="error"></small>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+          <small id="emailError" class="error"></small>
+
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" name="phone" required>
+          <small id="phoneError" class="error"></small>
+
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
+          <small id="messageError" class="error"></small>
+
+          <button type="submit">Submit</button>
+      </form>
+  </div>
+</div>
     <!-- Menu -->
     <div class="menu">
       <div class="container flex">
         <!-- Mobile Button -->
         <div class="mobile-btn">
           <ion-icon name="grid"></ion-icon>
-        </div>
-        <div class="logo">
-          <h2>Kalyan's GYM</h2>
-        </div>
+                  </div>
+        <div class="logo"></div>
         <ul class="nav">
-          <li class="nav-item"><a href="#">Home</a></li>
-          <li class="nav-item"><a href="#">About Us</a></li>
+          <li class="nav-item"><a href="About us.html">About Us</a></li>
           <li class="nav-item"><a href="#why-us">Features</a></li>
           <li class="nav-item"><a href="#explore">Explore</a></li>
-          <li class="nav-item"><a href="#">Membership</a></li>
           <li class="nav-item"><a href="#discount">Register</a></li>
-          <li class="nav-item"><a href="E-Gym">E-Gym</a></li>
+          <li class="nav-item"><a href="#plan-your-workout">Workout Schedule</a></li>
+          <li class="nav-item"><a href="#weight-track">Weight Track</a></li>
+          <li class="nav-item"><a href="#testimonial">Feedback</a></li>
+          <li class="nav-item"><a href="admin_dashboard.html">Admin</a></li>
         </ul>
+        <a href="attendance.html" class="btn">Attendance</a>
 
-        <a href="login_index.html" class="btn">Register</a>
-        
       </div>
     </div>
     <!-- End Menu -->
@@ -42,20 +64,19 @@
       <div class="container flex">
         <div class="text">
           <h1 class="mb">
-            Complete Daily <br />
-            <span>Workout</span> At Home
+            Welcome to <br />
+            <span>Minnat Vigour Gym</span> and International Martial Arts Academy
           </h1>
-
           <p class="mb">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla
-            saepe quisquam error, dolor dicta tempora excepturi assumenda
-            repellendus quo atque.
+            Your fitness journey starts here—commit, conquer, and transform with us!
           </p>
-
-          <a href="#" class="btn mt">Get Started Now</a>
         </div>
-
-        <div class="visual"><img src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/banner-img.png?raw=true" alt="" /></div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
+        </div>
       </div>
     </header>
     <!-- End Header -->
@@ -65,93 +86,130 @@
       <div class="container flex">
         <div class="text">
           <h2 class="primary mb">Why Choose Us?</h2>
-          <a href="" class="btn">Explore Here </a>
-          <h3 class="secondary mb"><span></span> Consultation with Expert.</h3>
+          <h3 class="secondary mb"></h3>
           <p class="tertiary mb">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate
-            quae facere eos esse odit hic beatae!
+            <b><i></i>All Fitness Level are Welcome!</i></b>
+            Empowering you to achieve your Fitness Goals in a Supportive and Inclusive Environment.
           </p>
 
           <h3 class="secondary mb mt">
-            <span></span> Consultation with Expert.
           </h3>
-          <p class="tertiary mb">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum
-            aperiam porro, rerum mollitia ad atque veritatis.
-          </p>
-        </div>
+          <ul class="tertiary mb">
 
-        <div class="visual"><img src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/why-us.png?raw=true" alt="" /></div>
+            <br> <a href="explore.html" class="btn">Why Choose Us?</a></br>
+          </ul>
+        </div>
+        <div class="visual">
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/why-us.png?raw=true"
+            alt=""
+          />
+        </div>
       </div>
     </div>
     <!-- End Why Us -->
 
-    <!-- Explore -->
-    <div class="section" id="explore">
-      <div class="container flex">
-        <div class="visual">
-          <img src="img/explore.jpg" alt="" />
-        </div>
-        <div class="text">
-          <h2 class="primary mb">
-            Explore Our Fitness <br />
-            Studio
-          </h2>
-          <p class="tertiary mb">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium
-            corrupti obcaecati natus ad laborum repellendus consequuntur. Id
-            quam non quisquam molestias quasi blanditiis, animi inventore itaque
-            tempore mollitia dolor earum!
-          </p>
-
-          <a href="#" class="btn mt">Get Started Now</a>
-        </div>
-      </div>
+<!-- Explore -->
+<div class="section" id="explore">
+  <div class="container flex">
+    <div class="visual">
+      <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
     </div>
-    <!-- End Explore -->
+    <div class="text">
+      <h2 class="primary mb">
+        Explore Our Fitness <br />
+        Studio
+      </h2>
+      <p class="tertiary mb"></p>
+      Featuring Strength Machines, Weight Lifting Platforms, Group/Personal Training.
+            We also offer a wide range of classes including Yoga, Zumba, Cardio, Aerobics, Animal Flow.
+          </p>
+          
+          <p class="tertiary mb">
+            "We believe in the power of community. Our gym is more than just a place to work out; it's a place to connect with other women, find support, and celebrate your victories."         </p>
+          </p>
+      <a href="serviece.html" class="btn mt"> Explore Here </a>
+    </div>
+  </div>
+</div>
+<!-- End Explore -->
+
 
     <!-- Trainer -->
     <div class="section" id="trainers">
-      <h2 class="primary mb">Our Professional Trainers</h2>
-      <div class="container flex">
-        <div class="trainer">
-          <img src="img/trainer1.jpg" alt="" />
-          <h3 class="secondary mb">Alan Smith</h3>
-          <p class="tertiary mb">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </p>
-
-          <a href="#" class="btn-2"
-            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
-          ></a>
-        </div>
-
-        <div class="trainer">
-          <img src="img/trainer2.jpg" alt="" />
-          <h3 class="secondary mb">Alan Smith</h3>
-          <p class="tertiary mb">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </p>
-
-          <a href="#" class="btn-2"
-            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
-          ></a>
-        </div>
-
-        <div class="trainer">
-          <img src="img/trainer3.jpg" alt="" />
-          <h3 class="secondary mb">Alan Smith</h3>
-          <p class="tertiary mb">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </p>
-
-          <a href="#" class="btn-2"
-            ><ion-icon name="arrow-redo-circle-outline"></ion-icon
-          ></a>
-        </div>
-      </div>
+      <h1 class="primary mb">Our Professional Trainers</h1>
+      <p class="tertiary mb"></p>
+      "Our professional trainers are dedicated partners in your fitness journey—experienced, passionate, and here to inspire you every step of the way."
+      <br> <a href="traina dashboard .html" class="btn">See our Professional Trainers</a></br>
     </div>
     <!-- End Trainer -->
+
+    <!-- Discount -->
+<div class="section" id="discount">
+  <div class="container flex">
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/discount.png?raw=true"
+        alt=""
+      />
+    </div>
+    <div class="text">
+      <h2 class="primary mb">
+        Fitness Classes This Summer, Pay Now And Get 25% Discount
+      </h2>
+      <p class="tertiary mb">
+        
+      </p>
+      <br> <a href="discount.html" class="btn">Register Now</a></br>
+    </div>
+  </div>
+</div>
+<!-- End Discount -->
+
+ <!-- Workout Schedule -->
+ <div class="section" id="plan-your-workout">
+  <div class="container flex">
+    <div class="text">
+      <h2 class="primary mb">Plan Your Workout</h2>
+      <p class="tertiary mb">
+        Take charge of your fitness journey by creating a personalized workout schedule. Our trainers will guide you to achieve your fitness goals effectively and efficiently.
+      </p>
+      <a href="Schedule.html" class="btn mt">Make Your Schedule</a>
+    </div>
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+        alt=""
+      />
+    </div>
+  </div>
+</div>
+<!-- End Workout Schedule -->
+
+<!-- Discount -->
+<div class="section" id="track-weight">
+  <div class="container flex">
+    <div class="visual">
+      <img
+        src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/discount.png?raw=true"
+        alt=""
+      />
+    </div>
+    <div class="text">
+      <h2 class="primary mb">
+        Track your weights, reps, and sets to visualize your progress and fuel your motivation. Every lift counts!
+      </h2>
+      <p class="tertiary mb">
+        
+      </p>
+      <br> <a href="weight track.html" class="btn">Track Your Weight </a></br>
+    </div>
+  </div>
+</div>
+<!-- End Discount -->
 
     <!-- Testimonial -->
     <div class="section" id="testimonial">
@@ -159,97 +217,77 @@
         <div class="text">
           <h2 class="primary">
             That's What Our Super <br />
-            Client Says
+            Clients Say
           </h2>
-
-          <br />
-          <br />
-          <br />
 
           <div class="client">
-            <img src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/client1.jpg?raw=true" alt="" />
-            <h2 class="secondary">Exelent Training</h2>
+            <img
+              src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/client1.jpg?raw=true"
+              alt=""
+            />
+            <h2 class="secondary">Excellent Training</h2>
             <p class="tertiary">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias,
-              dolorem vitae nulla totam dolores assumenda debitis architecto qui
-              blanditiis inventore voluptatum deleniti similique, consequatur
-              ratione cum? Omnis, ratione itaque nam praesentium vel
-              consequatur.
+              I’ve been a member of <b>Minnat Vigour Gym</b> for a few months now, and I couldn’t be happier with my experience. The facilities are top-notch, always clean, and well-maintained. The trainers are knowledgeable, supportive, and genuinely care about helping you reach your goals. Whether you’re looking to build strength or learn martial arts, they’ve got it all. I also love the positive, motivating environment. Definitely recommend this gym to anyone looking to level up their fitness journey!"
             </p>
           </div>
+          <a href="Feedback.html" class="btn mt">Give your Feedback</a>
         </div>
-
         <div class="visual">
-          <img src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true" alt="" />
+          <img
+            src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/testimonial.png?raw=true"
+            alt=""
+          />
         </div>
       </div>
     </div>
-    <!-- End Testimonial -->
+    <!-- End kajal Testimonial -->
 
-    <!-- Discount -->
-    <div class="section" id="discount">
-      <div class="container flex">
-        <div class="visual">
-          <img src="https://github.com/PallelaKalyan/Gym-Management-System/blob/main/img/discount.png?raw=true" alt="" />
-        </div>
-        <div class="text">
-          <h2 class="primary mb">
-            Fitness Classes This Summer, Pay Now And Get 25% Discount
-          </h2>
 
-          <p class="tertiary mb">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
-            adipisci provident incidunt rerum quos ea aliquam in. In aliquam a
-            non odio recusandae! Dolorem modi facere ducimus ullam?
-          </p>
-
-          <a href="#" class="btn mt">Book Now</a>
-        </div>
-      </div>
-    </div>
-    <!-- End Discount -->
-
-    
- <!--===========Footer=================-->
- <div class="footer">
-  <div class="links">
-      <h3>Quick Links</h3>
-      <ul>
-          <li>Offers & Discounts</li>
+    <!-- Footer -->
+    <div class="footer">
+      <div class="links">
+        <h3>Contact Us</h3>
+        <ul>
+          <li>te</li>
           <li>Get Coupon</li>
           <li>Contact Us</li>
           <li>About</li>
-      </ul>
-  </div>
-  <div class="links">
-      <h3>Fashion in Area</h3>
-      <ul>
+        </ul>
+      </div>
+      <div class="links">
+        <h3>Fashion in Area</h3>
+        <ul>
           <li>Gym Accessories</li>
-          <li>helath tips</li>
-          <li>choose your timings</li>
+          <li>Health Tips</li>
+          <li>Choose Your Timings</li>
           <li>Rules for Gym</li>
-      </ul>
-  </div>
-  <div class="links">
-      <h3>Support</h3>
-      <ul>
+        </ul>
+      </div>
+      <div class="links">
+        <h3>Support</h3>
+        <ul>
           <li>Frequently Asked Questions</li>
           <li>Report a Payment Issue</li>
           <li>Terms & Conditions</li>
           <li>Privacy Policy</li>
-      </ul>
-  </div>
-</div> <br><br>
-<footer>
-<div class="container flex">
-  <p class="tertiary">
-    &copy; 2023 Kalyan's GYM. All Rights Reserved
-  </p>
-</div>
+        </ul>
+      </div>
+    </div>
+    <br /><br />
+    <footer>
+      <div class="footer-container">
+        <div class="social-icons">
+          <a href="https://wa.me/+918591121925" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://www.instagram.com/okkkkajal" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="https://twitter.com/YOUR_PROFILE" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.youtube.com/@CarryMinati" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p class="tertiary">&copy; 2023 Minnat Vigour's GYM. All Rights Reserved</p>
+      </div>
+    </footer>
 
-</footer>
-
-    <!-- Ion Icons Js -->
+    <!-- Ion Icons JS -->
     <script
       type="module"
       src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"
@@ -259,6 +297,6 @@
       src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"
     ></script>
     <!-- JS -->
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

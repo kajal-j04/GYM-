@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalyan's Gym</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Schedule.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="heading">Minnat Vigour Gym</h1>
+    </header>
+
+    <div class="container">
+        <div class="btn">
+            <button id="scheduleBtn" class="schedule-btn">Schedule</button>
+        </div>
+
+        <div class="form-section" id="formSection">
+            
+            <div class="Schedule-box">
+                <!-- Full Name -->
+                <div class="field">
+                    <label for="full_name">Full Name:</label>
+                    <input type="text" id="full_name" class="ele" placeholder="Enter your full name" required>
+                </div>
+
+                <!-- Email Address -->
+                <div class="field">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" class="ele" placeholder="Enter your email" required>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="field">
+                    <label for="phone">Phone Number:</label>
+                    <input type="number" id="phone" class="ele" placeholder="Enter your phone number" required>
+                </div>
+
+                <!-- Preferred Workout Days -->
+                <div class="field">
+                    <label>Preferred Workout Days:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="monday" value="Monday"><label for="monday">Monday</label>
+                        <input type="checkbox" id="tuesday" value="Tuesday"><label for="tuesday">Tuesday</label>
+                        <input type="checkbox" id="wednesday" value="Wednesday"><label for="wednesday">Wednesday</label>
+                        <input type="checkbox" id="thursday" value="Thursday"><label for="thursday">Thursday</label>
+                        <input type="checkbox" id="friday" value="Friday"><label for="friday">Friday</label>
+                        <input type="checkbox" id="saturday" value="Saturday"><label for="saturday">Saturday</label>
+                        <input type="checkbox" id="sunday" value="Sunday"><label for="sunday">Sunday</label>
+                    </div>
+                </div>
+
+                <!-- Preferred Time Slot -->
+                <div class="field">
+                    <label for="time_slot">Preferred Time Slot:</label>
+                    <select id="time_slot" class="ele">
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                        <option value="Evening">Evening</option>
+                        <option value="Night">Night</option>
+                    </select>
+                </div>
+
+                <!-- Workout Type -->
+                <div class="field">
+                    <label>Workout Type:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="strength" value="Strength Training"><label for="strength">Strength Training</label>
+                        <input type="checkbox" id="cardio" value="Cardio"><label for="cardio">Cardio</label>
+                        <input type="checkbox" id="yoga" value="Yoga"><label for="yoga">Yoga</label>
+                        <input type="checkbox" id="hiit" value="HIIT"><label for="hiit">HIIT</label>
+                        <input type="checkbox" id="crossfit" value="CrossFit"><label for="crossfit">CrossFit</label>
+                    </div>
+                </div>
+
+                <!-- Duration per Session -->
+                <div class="field">
+                    <label for="duration">Duration per Session:</label>
+                    <select id="duration" class="ele">
+                        <option value="30 min">30 min</option>
+                        <option value="45 min">45 min</option>
+                        <option value="1 hour">1 hour</option>
+                        <option value="1.5 hours">1.5 hours</option>
+                    </select>
+                </div>
+
+                <!-- Primary Goal -->
+                <div class="field">
+                    <label for="goal">Primary Goal:</label>
+                    <select id="goal" class="ele">
+                        <option value="Weight Loss">Weight Loss</option>
+                        <option value="Muscle Gain">Muscle Gain</option>
+                        <option value="Endurance">Endurance</option>
+                        <option value="Flexibility">Flexibility</option>
+                        <option value="General Fitness">General Fitness</option>
+                    </select>
+                </div>
+
+                <!-- Group or Individual Sessions -->
+                <div class="field">
+                    <label>Group or Individual Sessions?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="group" name="session_type" value="Group"><label for="group">Group</label>
+                        <input type="radio" id="individual" name="session_type" value="Individual"><label for="individual">Individual</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="clkbtn">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Schedule.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare Products - Gym Store</title>
+  <!-- Google Font for enhanced typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Basic Reset & Theme */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary-color: #29a396;
+      --header-bg: linear-gradient(135deg, #222 0%, #333 100%);
+      --body-bg: #f8f9fa;
+      --text-color: #333;
+      --card-bg: #fff;
+      --footer-bg: #222;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--body-bg);
+      color: var(--text-color);
+      line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
+      padding-bottom: 60px;
+    }
+    /* Dark mode styles */
+    body.dark-mode {
+      --primary-color: #80cbc4;
+      --header-bg: #111;
+      --body-bg: #222;
+      --text-color: #ddd;
+      --card-bg: #333;
+      --footer-bg: #111;
+      background: var(--body-bg);
+      color: var(--text-color);
+    }
+    header {
+      background: var(--header-bg);
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    header h1 { font-size: 1.8rem; }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+    /* Compare Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table th, table td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+    }
+    table th {
+      background: var(--primary-color);
+      color: #fff;
+    }
+    .remove-btn {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .remove-btn:hover {
+      background: #238f7d;
+    }
+    .no-items {
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 40px;
+    }
+    footer {
+      background: var(--footer-bg);
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Compare Products</h1>
+    <nav>
+      <a href="products.html">Home</a>
+      <a href="cart.html">Cart</a>
+      <a href="favorites.html">Favorites</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <table id="compareTable">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="compareTableBody">
+        <!-- Compare items will be loaded here -->
+      </tbody>
+    </table>
+    <div id="noCompareMessage" class="no-items" style="display: none;">
+      <p>No items to compare.</p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Gym Store. All Rights Reserved.
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let compareList = JSON.parse(localStorage.getItem("compareList")) || [];
+      const tableBody = document.getElementById("compareTableBody");
+      const noCompareMessage = document.getElementById("noCompareMessage");
+
+      if(compareList.length === 0){
+        noCompareMessage.style.display = "block";
+      } else {
+        compareList.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.name}</td>
+            <td>$${parseFloat(item.price).toFixed(2)}</td>
+            <td><button class="remove-btn">Remove</button></td>
+          `;
+          row.querySelector(".remove-btn").addEventListener("click", function() {
+            compareList = compareList.filter(compareItem => compareItem.id !== item.id);
+            localStorage.setItem("compareList", JSON.stringify(compareList));
+            row.remove();
+            if(compareList.length === 0){
+              noCompareMessage.style.display = "block";
+            }
+          });
+          tableBody.appendChild(row);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
